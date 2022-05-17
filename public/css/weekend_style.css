@@ -1,0 +1,75 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+html {
+    height: 100%;
+}
+
+.container {
+
+    width: 370px;
+    height: 450px;
+    margin-top: 100px;
+    padding: 2px;
+    border: 0;
+    border-radius: 12px;
+    background-color: white;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+}
+
+.image {
+    margin: 12px 12px;
+}
+
+.heading {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.date-button {
+    margin-top: 12px;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.fa-calendar{
+    padding-top: 3px;
+}
+
+.btn1 {
+    margin-top: 10px;
+    /* width: 100%; */
+    border: none;
+    background-color: rgb(239, 83, 102);
+    height: 60%;
+    display: inline-block;
+}
+
+.date {
+    margin: 5px 5px;
+}
+
+
+.datepicker drop-down{
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    min-width: 10rem;
+    padding: 0.5rem 0;
+    margin: 22rem 0 0 5rem;
+    font-size: 1rem;
+    color: #212529;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 0.25rem;
+}
+
