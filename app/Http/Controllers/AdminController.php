@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
+    //admin dashboard
     public function show()
     {
         $date = date("Y-m-d");
@@ -35,6 +36,8 @@ class AdminController extends Controller
         $lunched = $dates->where('is_taken', 1)->count('is_taken');
         return view('admin.admindashboard', ['records' => $dates, 'guests' => $guests, 'totaltaken' => $lunched, 'avdate' => $avdate2]);
     }
+
+    //off days for admin
     public function offday()
     {
         $dates = LunchDate::all();
@@ -44,14 +47,8 @@ class AdminController extends Controller
         }
         return view('admin.offday', ['dates' => $d]);
     }
-    public function check()
-    {
-        $record = Record::first();
-        $timestamp = $record->updated_at;
-        $datetime = explode(" ", $timestamp);
-        dd($datetime[0], $datetime[1]);
 
-    }
+    //Datewise records of users
     public function dateWise(Request $request)
     {
         $date = date('Y-m-d', strtotime($request->date . ' -1 day'));
@@ -60,6 +57,8 @@ class AdminController extends Controller
         return view('admin.dateWiserecord', ['records' => $record, 'guests' => $guests]);
 
     }
+
+    //monthwise records
     public function monthWise($id)
     {
         $record = Record::with('user')->whereMonth('created_at', '=', $id)->get();

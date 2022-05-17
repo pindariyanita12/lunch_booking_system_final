@@ -53,6 +53,8 @@ class AuthController extends Controller
 
         return response(["message" => "Success"], 200);
     }
+
+    //get user data api
     public function get_data(Request $request)
     {
 

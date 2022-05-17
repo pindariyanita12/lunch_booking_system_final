@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class RecordController extends Controller
 {
-
+    //add lunch request
     public function addRequest(Request $request)
     {
 
@@ -26,6 +26,8 @@ class RecordController extends Controller
             }
         }
     }
+
+    //add request with guests
     public function addGuests(Request $request)
     {
         $check = Record::where('email', $request->mail)->where('is_taken', 0)->get();
@@ -40,6 +42,8 @@ class RecordController extends Controller
             }
         }
     }
+
+    //delete request
     public function deleteRequest(Request $request)
     {
         $check = Record::where('email', $request->mail)->where('is_taken', 0)->orderBy('created_at', 'DESC')->first();
@@ -54,6 +58,8 @@ class RecordController extends Controller
             return response(['message' => 'You are not registered for lunch'], 404);
         }
     }
+
+    //checks whether lunch taken or not
     public function lunchTaken(Request $request)
     {
         $check = Record::where('email', $request->mail)->where('is_taken', 0)->orderBy('created_at', 'DESC')->first();

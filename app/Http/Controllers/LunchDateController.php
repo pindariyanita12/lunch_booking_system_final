@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class LunchDateController extends Controller
 {
+    //update offdays
     public function addWeekend(Request $request)
     {
         LunchDate::truncate();
@@ -34,6 +35,8 @@ class LunchDateController extends Controller
             return redirect('/admindashboard')->with('message', 'Duplicate Entry');
         }
     }
+
+    //shows all off days
     public function showWeekend(Request $req)
     {
         $user = User::where('email', $req->mail)->get();
@@ -43,19 +46,11 @@ class LunchDateController extends Controller
 
             $offDay = LunchDate::all();
 
-            return response([
-
-                $offDay,
-
-            ], 200);
+            return response([$offDay], 200);
 
         } else {
 
-            return response([
-
-                "message" => "something went wrong",
-
-            ], 404);
+            return response(["message" => "something went wrong"], 404);
 
         }
     }
