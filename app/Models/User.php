@@ -25,7 +25,8 @@ class User extends Authenticatable
         'password',
         'type',
         'is_admin',
-        'is_active'
+        'is_active',
+
 
     ];
 

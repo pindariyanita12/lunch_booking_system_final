@@ -19,14 +19,14 @@ class isActive
     public function handle(Request $request, Closure $next)
     {
 
-        $abc = $request->mail;
 
-        $record = User::where('email', $abc)->where('is_active',1)->get();
 
-        // dd($record);
+        $record = User::where('email', $request->mail)->where('is_active',1)->where('remember_token',$request->token)->get();
+
+
 
         if ($record->count()) {
-       //     dd('hello');
+
             return $next($request);
         } else {
             return response(['message' => 'Not Authenticated'], 401);

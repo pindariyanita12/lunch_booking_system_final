@@ -28,8 +28,6 @@ class AuthController extends Controller
 
         $authUrl = $oauthClient->getAuthorizationUrl();
 
-
-
         // Save client state so we can validate in callback
         session(['oauthState' => $oauthClient->getState()]);
 
@@ -38,7 +36,6 @@ class AuthController extends Controller
 
         return response()->json(["link" => $authUrl]);
     }
-
 
     public function signout(Request $request)
     {
@@ -78,6 +75,8 @@ class AuthController extends Controller
 
         $var = $response->access_token;
 
+        //dd($var);
+
         $graph = new Graph();
         $graph->setAccessToken($var);
 
@@ -87,9 +86,30 @@ class AuthController extends Controller
 
         $isactive = User::where('email', $user->getmail())->first();
 
-        $isactive->is_active = 1;
-        $isactive->save();
-        return response(["user" => $user]);
+        if (!$isactive) {
+// dd("not in list");
+            $isactive = User::create([
+
+                'emp_id' => null,
+                'name' => $user->getgivenName(),
+                'email' => $user->getmail(),
+                'department' => null,
+                'password' => '23',
+                'type' => 1,
+                'is_admin' => 0,
+                'is_active' => 0,
+            ]);
+            $isactive->is_active = 1;
+            $isactive->remember_token = $var;
+            $isactive->save();
+        } else {
+            //dd("in list");
+            $isactive->is_active = 1;
+            $isactive->remember_token = $var;
+            $isactive->save();
+        }
+        //dd($isactive);
+        return response(["user" => $isactive]);
 
     }
 
