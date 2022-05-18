@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Laravel Datatable using Yajra Tutorial Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    {{-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"> --}}
+    {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
@@ -12,9 +13,31 @@
     </script>
     <style>
         @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css");
-    </style>
-</head>
 
+    </style>
+    <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+        <script type="text/javascript">
+   $(document).ready(function() {
+        $('.data-table').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: "{{ route('admin.dateWiserecord.dateWise') }}",
+
+            columns: [
+                {data: 'id', name: 'id'},
+                {data: 'lunch_dates', name: 'lunch_dates'},
+                {data: 'userempid', name: 'Emp Id'},
+                {data: 'username', name: 'Name'},
+                {data: 'guests', name: 'guests'},
+                {data: 'lunched', name: '$lunched'},
+            ]
+        });
+    });
+</script>
+</head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-dark">
         <div class="container-fluid">
@@ -32,7 +55,7 @@
                     <li class="nav-item">
                         <a class="nav-link text-white" href="/offday">Off Day</a>
                     </li>
-                   
+
                     <li class="nav-item dropdown">
                         <a id="navbarDropdown" class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                             {{ Auth::user()->name }}
@@ -54,7 +77,7 @@
                         <a id="navbarDropdown" class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                         Select Month
                         </a>
-    
+
                         <div class="dropdown-menu dropdown-menu-end text-black" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="/users/01">January</a>
                             <a class="dropdown-item" href="/users/02">February</a>
@@ -68,20 +91,20 @@
                             <a class="dropdown-item" href="/users/10">October</a>
                             <a class="dropdown-item" href="/users/11">November</a>
                             <a class="dropdown-item" href="/users/12">December</a>
-    
+
                         </div>
                     </li>
-                 </ul>   
+                 </ul>
                  <ul class="ms-auto mb-0">
                  <li >
-                         <form class="d-flex" action="/date-wise" method="post">
-                            @csrf
+                         <form class="d-flex" action="/date-wise" method="get">
+                            {{-- @csrf --}}
                             <input class="form-control me-2" name="date" type="date" placeholder="Search" aria-label="Search">
                             <button class="btn btn-outline-success" type="submit">Search</button>
                           </form>
                 </li>
                  </ul>
-              
+
             </ul>
              </div>
         </div>
@@ -94,50 +117,29 @@
       </div>
       @endif
     </div>
-    
-    
+
+
     <div class="container">
+        <br>
         @if(sizeof($records))
-        <table class="table table-hover mt-3 ml-3 border border-dark">
-            <thead class="bg-dark text-white">
+        <table class="table table-bordered data-table" id="dataTable">
+            <thead>
                 <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">EMPLOYEE ID</th>
-                    <th scope="col">EMPLOYEE NAME</th>
-                    <th scope="col">IS TAKEN</th>
-                    <th scope="col">GUESTS</th>
-                    <th scope="col">LUNCH DATE</th>
+                    <th>ID</th>
+
+                    <th >Date</th>
+                    <th >Emp Id</th>
+                    <th>NAME</th>
+                    <th>GUEST</th>
+                    <th>Lunch Taken</th>
                 </tr>
             </thead>
-            <tbody>
-              
-                <?php
-                $i=1;
-                ?>
-                @foreach ($records as $record)
-                    <tr>
-                        <th scope="row"><?php echo $i;$i++;?></th>
-                        <td>{{ $record->user->emp_id }}</td>
-                        <td>{{ $record->user->name }}</td>
-                        <td>{{ $record->is_taken }}</td>
-                        <td>{{ $record->guests }}</td>
-                        <td>{{ date('d-m-Y', strtotime($record->created_at .' +1 day')) }}</td>
-                    </tr>
-                @endforeach
-                <tr style="background-color: #3ff198">
-                    <td>Total Person :</td>
-                    <td>{{ sizeof($records) }}</td>
-                    <td>Total Guests :</td>
-                    <td>{{ $guests }}</td>
-                    <td>Total : </td>
-                    <td>{{ $guests + sizeof($records) }}</td>
-                </tr>
-
-            </tbody>
         </table>
-@else
+        @else
 <h5 class="text-success text-center">Not Found Data</h5>
 @endif
+    </div>
+
 </div>
 </body>
 </html>

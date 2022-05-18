@@ -18,7 +18,7 @@ class CreateRecordsTable extends Migration
             $table->string('email');
             $table->foreign('email')->references('email')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->boolean('is_taken')->default(0);
-            $table->integer('guests')->default(0); 
+            $table->integer('guests')->default(0);
             $table->timestamps();
         });
     }

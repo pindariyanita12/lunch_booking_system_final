@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>Laravel Datatable using Yajra Tutorial Example</title>
     <meta charset="utf-8">
@@ -16,28 +17,29 @@
         @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css");
 
     </style>
-    <link  href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
-    {{-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script> --}}
+    <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-    <script>
-        $(function() {
-            $('#dataTable').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: '{{ url('get') }}',
-                columns: [
-                    { data: 'id', name: 'id' },
-                    // { data: 'avdate', name: 'avdate' },
-                    // { data: 'empid', name: 'empid' },
-                    { data: 'name', name: 'users.name' },
-                    { data: 'guests', name: 'guests' },
-                    { data: 'is_taken', name: 'is_taken' },
 
-                ]
-            });
+        <script type="text/javascript">
+   $(document).ready(function() {
+        $('.data-table').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: "{{ route('admin.admindashboard.show') }}",
+            columns: [
+                {data: 'id', name: 'id'},
+                {data: 'lunch_dates', name: 'lunch_dates'},
+                {data: 'userempid', name: 'Emp Id'},
+                {data: 'username', name: 'Name'},
+                {data: 'guests', name: 'guests'},
+                {data: 'is_taken', name: 'is_taken'},
+            ]
         });
-    </script>
+    });
+</script>
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-dark">
         <div class="container-fluid">
@@ -106,8 +108,8 @@
                 </ul>
                 <ul class="ms-auto mb-0">
                     <li>
-                        <form class="d-flex" action="/date-wise" method="post">
-                            @csrf
+                        <form class="d-flex" action="/date-wise" method="get">
+                            {{-- @csrf --}}
                             <input class="form-control me-2" name="date" type="date" placeholder="Search"
                                 aria-label="Search">
                             <button class="btn btn-outline-success" type="submit">Search</button>
@@ -125,21 +127,22 @@
             </div>
         @endif
     </div>
-<div class="container">
-    <br>
-    <table class="table table-bordered" id="dataTable">
-        <thead>
-        <tr>
-            <th >ID</th>
+    <div class="container">
+        <br>
+        <table class="table table-bordered data-table" id="dataTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
 
-                    {{-- <th >Date</th> --}}
-                    {{-- <th >EMP ID</th> --}}
-                    <th >NAME</th>
-                    <th >GUEST</th>
-                    <th >Lunch Taken</th>
-        </tr>
-        </thead>
-    </table>
-</div>
+                    <th >Date</th>
+                    <th >Emp Id</th>
+                    <th>NAME</th>
+                    <th>GUEST</th>
+                    <th>Lunch Taken</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
 </body>
+
 </html>
