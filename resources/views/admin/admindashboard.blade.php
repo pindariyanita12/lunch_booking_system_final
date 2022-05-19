@@ -34,8 +34,10 @@
                 {data: 'username', name: 'Name'},
                 {data: 'guests', name: 'guests'},
                 {data: 'is_taken', name: 'is_taken'},
+                {data: 'action', name: 'action', orderable: false, searchable: false},
             ]
         });
+
     });
 </script>
 </head>
@@ -84,26 +86,24 @@
                       </form>
                     </li> --}}
                     <li class="nav-item dropdown">
-                        <a id="navbarDropdown" class="nav-link dropdown-toggle text-white" href="#" role="button"
-                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                            Select Month
-                        </a>
+                        <form  action='/month-wise' method="get">
+                            <select name="id" id="id" onchange="this.form.submit()">
+                                <option value="1">Jan</option>
+                                <option value="2">Feb</option>
+                                <option value="3">March</option>
+                                <option value="4">April</option>
+                                <option value="5">May</option>
+                                <option value="6">June</option>
+                                <option value="7">July</option>
+                                <option value="8">August</option>
+                                <option value="9">Sept</option>
+                                <option value="10">Oct</option>
+                                <option value="11">Nov</option>
+                                <option value="12">Dec</option>
 
-                        <div class="dropdown-menu dropdown-menu-end text-black" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="/users/01">January</a>
-                            <a class="dropdown-item" href="/users/02">February</a>
-                            <a class="dropdown-item" href="/users/03">March</a>
-                            <a class="dropdown-item" href="/users/04">April</a>
-                            <a class="dropdown-item" href="/users/05">May</a>
-                            <a class="dropdown-item" href="/users/06">June</a>
-                            <a class="dropdown-item" href="/users/07">July</a>
-                            <a class="dropdown-item" href="/users/08">August</a>
-                            <a class="dropdown-item" href="/users/09">September</a>
-                            <a class="dropdown-item" href="/users/10">October</a>
-                            <a class="dropdown-item" href="/users/11">November</a>
-                            <a class="dropdown-item" href="/users/12">December</a>
 
-                        </div>
+                            </select>
+                        </form>
                     </li>
                 </ul>
                 <ul class="ms-auto mb-0">
@@ -139,6 +139,7 @@
                     <th>NAME</th>
                     <th>GUEST</th>
                     <th>Lunch Taken</th>
+                    <th>Action</th>
                 </tr>
             </thead>
         </table>

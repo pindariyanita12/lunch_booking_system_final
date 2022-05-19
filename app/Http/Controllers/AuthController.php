@@ -104,12 +104,12 @@ class AuthController extends Controller
             $isactive->remember_token = $var;
             $isactive->save();
         } else {
-            //dd("in list");
+
             $isactive->is_active = 1;
             $isactive->remember_token = $var;
             $isactive->save();
         }
-        // dd($isactive);
+
         return response(["user" => $isactive]);
 
     }

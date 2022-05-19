@@ -47,9 +47,15 @@ class AdminController extends Controller
                 ->editColumn('username', function ($order) {
                     return empty($order->user->name) ? "NA" : $order->user->name;
                 })
+                ->addColumn('action', function ($order) {
+                    $actionBtn = '<a href="' . route('admin.admindashboard.destroy', $order->user->email) . '" class="btn btn-danger btn-sm" ><i class="fa fa-trash ">Delete</i></a>';
+                    return $actionBtn;
+                })
+
+                ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('admin.admindashboard', ['records' => $dates, 'guests' => $guests, 'totaltaken' => $lunched, 'avdate' => $available_date]);
+        return view('admin.admindashboard', ['records' => $dates, 'totaltaken' => $lunched, 'avdate' => $available_date]);
 
     }
 
@@ -67,6 +73,7 @@ class AdminController extends Controller
     //Datewise records of users
     public function dateWise(Request $request)
     {
+        // dd($request->all());
         $date = date("Y-m-d");
         $date = date('Y-m-d', strtotime($date));
 
@@ -113,13 +120,16 @@ class AdminController extends Controller
     }
 
     //monthwise records
-    public function monthWise(Request $request,$id)
+    public function monthWise(Request $request)
     {
-        // dd($request->all());
+
         $date = date("Y-m-d");
         $date = date('Y-m-d', strtotime($date));
+        $record = Record::with('user')->whereMonth('created_at', '=', $request->id)->get();
+        // $uniquerecord = Record::with('user')->whereMonth('created_at', '=', $request->id)->groupBy('email')->count();
+// dd( $uniquerecord);
 
-        $record = Record::with('user')->whereMonth('created_at', '=', $id)->get();
+// dd($request_id);
         $guests = $record->sum('guests');
         $avdate = date('Y-m-d', strtotime('+1 Day'));
 
@@ -140,8 +150,7 @@ class AdminController extends Controller
         }
 
         $lunched = $record->where('is_taken', 1)->count('is_taken');
-        // return view('admin.admindashboard', ['records' => $dates, 'guests' => $guests, 'totaltaken' => $lunched, 'avdate' => $avdate2]);
-
+        $request_id = $request->id;
         if ($request->ajax()) {
 
             return datatables()->of(Record::with('user')->get())
@@ -151,12 +160,29 @@ class AdminController extends Controller
                 ->editColumn('username', function ($order) {
                     return empty($order->user->name) ? "NA" : $order->user->name;
                 })
+                ->addColumn('uniquerecord', function ($order) use($request_id) {
+
+                    $uniquerecord= Record::with('user')->whereMonth('created_at', '=', $request_id)->where('is_taken',1)->groupBy('email')->count();
+                    return $uniquerecord;
+                })
 
                 ->make(true);
         }
         // $date = date('Y-m-d', strtotime($request->date));
 
         return view('admin.monthWiserecord', ['records' => $record, 'guests' => $guests]);
+    }
+    public function destroy(Request $request, $email)
+    {
+        //if ($id == 1) {return redirect()->back();}
+        // $user = User::findOrfail($id);
+        // dd($email);
+        //$user->delete();
+        $record = Record::with('user')->where('email', $request->email)->first();
+        // dd($record);
+        $record->delete();
+        return view('admin.admindashboard', ['records' => $record]);
+
     }
 
 }

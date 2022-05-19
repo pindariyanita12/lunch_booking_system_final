@@ -20,19 +20,15 @@ integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxV
 
 <script type="text/javascript">
     $(document).ready(function() {
+
         $('.data-table').DataTable({
+
             processing: true,
             serverSide: true,
             ajax: "{{ route('admin.monthWiserecord.monthWise') }}",
 
-            columns: [{
-                    data: 'id',
-                    name: 'id'
-                },
-                {
-                    data: 'lunch_dates',
-                    name: 'lunch_dates'
-                },
+            columns: [
+
                 {
                     data: 'userempid',
                     name: 'Emp Id'
@@ -41,13 +37,10 @@ integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxV
                     data: 'username',
                     name: 'Name'
                 },
+
                 {
-                    data: 'guests',
-                    name: 'guests'
-                },
-                {
-                    data: 'lunched',
-                    name: '$lunched'
+                    data: 'uniquerecord',
+                    name: 'uniquerecord'
                 },
             ]
         });
@@ -92,26 +85,25 @@ integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxV
                         </div>
                     </li>
                     <li class="nav-item dropdown">
-                        <a id="navbarDropdown" class="nav-link dropdown-toggle text-white" href="#" role="button"
-                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                            Select Month
-                        </a>
 
-                        <div class="dropdown-menu dropdown-menu-end text-black" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="/users/01">January</a>
-                            <a class="dropdown-item" href="/users/02">February</a>
-                            <a class="dropdown-item" href="/users/03">March</a>
-                            <a class="dropdown-item" href="/users/04">April</a>
-                            <a class="dropdown-item" href="/users/05">May</a>
-                            <a class="dropdown-item" href="/users/06">June</a>
-                            <a class="dropdown-item" href="/users/07">July</a>
-                            <a class="dropdown-item" href="/users/08">August</a>
-                            <a class="dropdown-item" href="/users/09">September</a>
-                            <a class="dropdown-item" href="/users/10">October</a>
-                            <a class="dropdown-item" href="/users/11">November</a>
-                            <a class="dropdown-item" href="/users/12">December</a>
+                        <form action='/month-wise' method="get">
+                            <select name="id" id="id" onchange="this.form.submit()">
+                                <option value="01">Jan</option>
+                                <option value="02">Feb</option>
+                                <option value="03">March</option>
+                                <option value="04">April</option>
+                                <option value="05">May</option>
+                                <option value="06">June</option>
+                                <option value="07">July</option>
+                                <option value="08">August</option>
+                                <option value="09">Sept</option>
+                                <option value="10">Oct</option>
+                                <option value="11">Nov</option>
+                                <option value="12">Dec</option>
 
-                        </div>
+
+                            </select>
+                        </form>
 
                     </li>
                 </ul>
@@ -144,13 +136,13 @@ integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxV
             <table class="table table-bordered data-table" id="dataTable">
                 <thead>
                     <tr>
-                        <th>ID</th>
 
-                        <th>Date</th>
+
+
                         <th>Emp Id</th>
                         <th>NAME</th>
-                        <th>GUEST</th>
-                        <th>Lunch Taken</th>
+
+                        <th>uniquerecord</th>
                     </tr>
                 </thead>
             </table>
