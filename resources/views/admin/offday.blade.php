@@ -19,80 +19,12 @@
     <style>
         @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css");
 
-  </style>
+    </style>
 
 </head>
+
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand text-white" href="/admindashboard">Lunch System</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active text-white" aria-current="page" href="/admindashboard">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="/offday">Off Day</a>
-                    </li>
-
-                    <li class="nav-item dropdown">
-                        <a id="navbarDropdown" class="nav-link dropdown-toggle text-white" href="#" role="button"
-                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                            {{ Auth::user()->name }}
-                        </a>
-
-                        <div class="dropdown-menu dropdown-menu-end text-black" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                             document.getElementById('logout-form').submit();">
-                                {{ __('Logout') }}
-                            </a>
-
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                class="d-none">
-                                @csrf
-                            </form>
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a id="navbarDropdown" class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                        Select Month
-                        </a>
-
-                        <div class="dropdown-menu dropdown-menu-end text-black" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="/users/01">January</a>
-                            <a class="dropdown-item" href="/users/02">February</a>
-                            <a class="dropdown-item" href="/users/03">March</a>
-                            <a class="dropdown-item" href="/users/04">April</a>
-                            <a class="dropdown-item" href="/users/05">May</a>
-                            <a class="dropdown-item" href="/users/06">June</a>
-                            <a class="dropdown-item" href="/users/07">July</a>
-                            <a class="dropdown-item" href="/users/08">August</a>
-                            <a class="dropdown-item" href="/users/09">September</a>
-                            <a class="dropdown-item" href="/users/10">October</a>
-                            <a class="dropdown-item" href="/users/11">November</a>
-                            <a class="dropdown-item" href="/users/12">December</a>
-
-                        </div>
-                    </li>
-                </ul>
-                <ul class="ms-auto mb-0">
-                    <li>
-                        <form class="d-flex" action="/date-wise" method="post">
-                            @csrf
-                            <input class="form-control me-2" name="date" type="date" placeholder="Search"
-                                aria-label="Search">
-                            <button class="btn btn-outline-success" type="submit">Search</button>
-                        </form>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    @include('admin.navbar')
     <div class="container">
         <div class="image">
             <img src="{{ asset('Images/simform_logo.png') }}" class="img-fluid" alt="Responsive image">
@@ -105,17 +37,12 @@
         <hr>
         <div class="date-container">
             <form action="/add-weekend" method="POST">
-              @csrf
+                @csrf
 
                 <div class="date">
-
-
                     <div class="input-group date" id="datepicker">
-
-
-
-                        <input type="text" class="form-control" name="dates" multiple
-                            placeholder="select weekend date" readonly value="{{ $dates }}">
+                        <input type="text" class="form-control" name="dates" multiple placeholder="select weekend date"
+                            readonly value="{{ $dates }}">
 
                         <span class="input-group-append">
                             <span class="input-group-text bg-white">

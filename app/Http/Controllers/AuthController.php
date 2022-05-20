@@ -87,7 +87,7 @@ class AuthController extends Controller
         $isactive = User::where('email', $user->getmail())->first();
 
         if (!$isactive) {
-// dd("not in list");
+
             $isactive = User::create([
 
                 'emp_id' => null,
@@ -98,7 +98,7 @@ class AuthController extends Controller
                 'type' => 1,
                 'is_admin' => 0,
                 'is_active' => 0,
-                'remember_token'=>$var
+                'remember_token' => $var,
             ]);
             $isactive->is_active = 1;
             $isactive->remember_token = $var;

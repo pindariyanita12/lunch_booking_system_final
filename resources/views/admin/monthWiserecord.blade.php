@@ -34,92 +34,28 @@ integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxV
                     name: 'Emp Id'
                 },
                 {
-                    data: 'username',
-                    name: 'Name'
+                    data: 'name',
+                    name: 'name'
                 },
 
                 {
                     data: 'uniquerecord',
                     name: 'uniquerecord'
                 },
+
+                {
+                    data: 'action',
+                    name: 'action'
+                },
             ]
         });
     });
+
 </script>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand text-white" href="/admindashboard">Lunch System</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active text-white" aria-current="page" href="/admindashboard">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="/offday">Off Day</a>
-                    </li>
-
-                    <li class="nav-item dropdown">
-                        <a id="navbarDropdown" class="nav-link dropdown-toggle text-white" href="#" role="button"
-                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                            {{ Auth::user()->name }}
-                        </a>
-
-                        <div class="dropdown-menu dropdown-menu-end text-black" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                             document.getElementById('logout-form').submit();">
-                                {{ __('Logout') }}
-                            </a>
-
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                class="d-none">
-                                @csrf
-                            </form>
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown">
-
-                        <form action='/month-wise' method="get">
-                            <select name="id" id="id" onchange="this.form.submit()">
-                                <option value="01">Jan</option>
-                                <option value="02">Feb</option>
-                                <option value="03">March</option>
-                                <option value="04">April</option>
-                                <option value="05">May</option>
-                                <option value="06">June</option>
-                                <option value="07">July</option>
-                                <option value="08">August</option>
-                                <option value="09">Sept</option>
-                                <option value="10">Oct</option>
-                                <option value="11">Nov</option>
-                                <option value="12">Dec</option>
-
-
-                            </select>
-                        </form>
-
-                    </li>
-                </ul>
-                <ul class="ms-auto mb-0">
-                    <li>
-                        <form class="d-flex" action="/date-wise" method="get">
-                            {{-- @csrf --}}
-                            <input class="form-control me-2" name="date" type="date" placeholder="Search"
-                                aria-label="Search">
-                            <button class="btn btn-outline-success" type="submit">Search</button>
-                        </form>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    @include('admin.navbar')
     <div>
         @if (session()->has('message'))
             <div class="alert alert-success">
@@ -140,9 +76,10 @@ integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxV
 
 
                         <th>Emp Id</th>
-                        <th>NAME</th>
+                        <th>email</th>
 
                         <th>uniquerecord</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
             </table>
