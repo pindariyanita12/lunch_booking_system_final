@@ -40,8 +40,6 @@ class LunchDateController extends Controller
     public function showWeekend(Request $req)
     {
         $user = User::where('email', $req->mail)->get();
-        $lunchdates = LunchDate::select('weekend')->get();
-        // dd($lunchdates);
         if ($user) {
 
             $offDay = LunchDate::all();

@@ -10,53 +10,29 @@ use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
+
     //admin dashboard
     public function show(Request $request)
     {
-        $date = date("Y-m-d");
-        $date = date('Y-m-d', strtotime($date));
-
-        $dates = Record::with('user')->whereDate('created_at', '=', $date)->get();
-        $guests = $dates->sum('guests');
-        $avdate = date('Y-m-d', strtotime('+1 Day'));
-
-        $available_date = $avdate;
-        $lunchdates = LunchDate::select('weekend')->pluck('weekend');
-
-        $i = 0;
-
-        while ($i < sizeof($lunchdates)) {
-
-            if ($lunchdates[$i] == $available_date) {
-
-                $available_date = date('Y-m-d', strtotime($lunchdates[$i] . ' +1 day'));
-
-            }
-            $i++;
-
-        }
-
-        $lunched = $dates->where('is_taken', 1)->count('is_taken');
-        // return view('admin.admindashboard', ['records' => $dates, 'guests' => $guests, 'totaltaken' => $lunched, 'avdate' => $avdate2]);
-
         if ($request->ajax()) {
-
-            return datatables()->of(Record::with('user')->get())
-                ->editColumn('userempid', function ($order) {
-                    return empty($order->user->emp_id) ? "NA" : $order->user->emp_id;
+            $date = date("Y-m-d");
+            $record = Record::with('user')->whereDate('created_at', '=', $date)->get();
+            return datatables()->of($record)
+                ->editColumn('userempid', function ($userdata) {
+                    return empty($userdata->user->emp_id) ? "NA" : $userdata->user->emp_id;
                 })
-                ->editColumn('username', function ($order) {
-                    return empty($order->user->name) ? "NA" : $order->user->name;
+                ->editColumn('username', function ($userdata) {
+                    return empty($userdata->user->name) ? "NA" : $userdata->user->name;
                 })
-                ->addColumn('action', function ($order) {
-                    $actionBtn = '<a href="' . route('admin.admindashboard.destroy', $order->user->email) . '" class="btn btn-danger btn-sm" ><i class="fa fa-trash ">Delete</i></a>';
+                ->addColumn('action', function ($userdata) {
+                    $actionBtn = '<a href="' . route('admin.admindashboard.destroy', $userdata->user->id) . '" class="btn btn-danger btn-sm" ><i class="fa fa-trash ">Delete</i></a>';
                     return $actionBtn;
                 })
 
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('admin.admindashboard', ['records' => $dates, 'totaltaken' => $lunched, 'avdate' => $available_date]);
+        return view('admin.admindashboard');
 
     }
 
@@ -74,97 +50,37 @@ class AdminController extends Controller
     //Datewise records of users
     public function dateWise(Request $request)
     {
-        // dd($request->all());
-        $date = date("Y-m-d");
-        $date = date('Y-m-d', strtotime($date));
-
-        $dates = Record::with('user')->whereDate('created_at', '=', $date)->get();
-        $guests = $dates->sum('guests');
-        $avdate = date('Y-m-d', strtotime('+1 Day'));
-
-        $available_date = $avdate;
-        $lunchdates = LunchDate::select('weekend')->pluck('weekend');
-
-        $i = 0;
-
-        while ($i < sizeof($lunchdates)) {
-
-            if ($lunchdates[$i] == $available_date) {
-
-                $available_date = date('Y-m-d', strtotime($lunchdates[$i] . ' +1 day'));
-
-            }
-            $i++;
-
-        }
-
-        $lunched = $dates->where('is_taken', 1)->count('is_taken');
-        // return view('admin.admindashboard', ['records' => $dates, 'guests' => $guests, 'totaltaken' => $lunched, 'avdate' => $avdate2]);
-
         if ($request->ajax()) {
-
-            return datatables()->of(Record::with('user')->get())
-                ->editColumn('userempid', function ($order) {
-                    return empty($order->user->emp_id) ? "NA" : $order->user->emp_id;
+            $record = Record::with('user')->whereDate('created_at', '=', $request->date)->get();
+            return datatables()->of($record)
+                ->editColumn('userempid', function ($userdata) {
+                    return empty($userdata->user->emp_id) ? "NA" : $userdata->user->emp_id;
                 })
-                ->editColumn('username', function ($order) {
-                    return empty($order->user->name) ? "NA" : $order->user->name;
+                ->editColumn('username', function ($userdata) {
+                    return empty($userdata->user->name) ? "NA" : $userdata->user->name;
                 })
-                ->addColumn('action', function ($order) {
-                    $actionBtn = '<a href="' . route('admin.admindashboard.destroy', $order->user->email) . '" class="btn btn-danger btn-sm" ><i class="fa fa-trash ">Delete</i></a>';
+                ->addColumn('action', function ($userdata) {
+                    $actionBtn = '<a href="' . route('admin.admindashboard.destroy', $userdata->user->id) . '" class="btn btn-danger btn-sm" ><i class="fa fa-trash ">Delete</i></a>';
                     return $actionBtn;
                 })
                 ->make(true);
         }
-        $date = date('Y-m-d', strtotime($request->date));
-        $record = Record::with('user')->whereDate('created_at', '=', $date)->get();
-        $guests = $record->sum('guests');
-        return view('admin.dateWiserecord', ['records' => $record, 'guests' => $guests, 'lunched' => $lunched]);
+        return view('admin.dateWiserecord');
 
     }
 
     //monthwise records
     public function monthWise(Request $request)
     {
-        $request_id = $request->id;
-        $date = date("Y-m-d");
-        $date = date('Y-m-d', strtotime($date));
-        $record = Record::with('user')->whereMonth('created_at', '=', $request->id)->get();
 
-        $uniquerecord = DB::table('records')->whereMonth('created_at', '=', $request_id)->select(DB::raw('DISTINCT email, COUNT(is_taken) AS uniquerecord'))
-            ->groupBy('email')->get();
-        // return response()->json([$uniquerecord]);
         // dd($uniquerecord);
-        // dd($uniquerecord[0]);
-        // dd($request_id);
-        // $guests = $record->sum('guests');
-        // $avdate = date('Y-m-d', strtotime('+1 Day'));
-
-        // $available_date = $avdate;
-        // $lunchdates = LunchDate::select('weekend')->pluck('weekend');
-
-        // $i = 0;
-
-        // while ($i < sizeof($lunchdates)) {
-
-        //     if ($lunchdates[$i] == $available_date) {
-
-        //         $available_date = date('Y-m-d', strtotime($lunchdates[$i] . ' +1 day'));
-
-        //     }
-        //     $i++;
-
-        // }
-
-        $lunched = $record->where('is_taken', 1)->count('is_taken');
-        // dd($lunched);
         if ($request->ajax()) {
 
-            return datatables()->of(DB::table('records')->join('users', 'users.email', '=', 'records.email')->select(DB::raw('DISTINCT users.email, users.name,COUNT(is_taken) AS uniquerecord'))
-            ->groupBy('email')->get())
+            $uniquerecord = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereYear('records.created_at', '=', date('Y'))->whereMonth('records.created_at', '=', $request->idis)->select(DB::raw('DISTINCT users.id,users.emp_id,users.email, users.name,COUNT(is_taken) AS uniquerecord'))->groupBy('users.email')->get();
+
+            return datatables()->of($uniquerecord)
 
                 ->editColumn('userempid', function ($userdata) {
-
                     return empty($userdata->user->emp_id) ? "NA" : $userdata->user->emp_id;
                 })
                 ->editColumn('username', function ($userdata) {
@@ -172,29 +88,32 @@ class AdminController extends Controller
                 })
                 ->editColumn('uniquerecord', function ($userdata) {
                     return $userdata->uniquerecord;
-
                 })
-                ->addColumn('action', function ($order) {
-                    $actionBtn = '<a href="' . route('admin.admindashboard.destroy', $order->email) . '" class="btn btn-danger btn-sm" ><i class="fa fa-trash ">Delete</i></a>';
+                ->addColumn('action', function ($userdata) {
+                    $actionBtn = '<a href="' . route('admin.admindashboard.destroy', $userdata->id) . '" class="btn btn-danger btn-sm" ><i class="fa fa-trash ">Delete</i></a>';
                     return $actionBtn;
                 })
                 ->make(true);
         }
-        // $date = date('Y-m-d', strtotime($request->date));
 
-        return view('admin.monthWiserecord', ['records' => $record]);
+        return view('admin.monthWiserecord');
     }
+
     public function destroy(Request $request)
     {
-        //if ($id == 1) {return redirect()->back();}
-        // $user = User::findOrfail($id);
-        // dd($email);
-        //$user->delete();
-        $record = Record::with('user')->where('email', $request->email)->first();
-        // dd($record);
-        $record->delete();
-        return redirect('/admindashboard');
+
+
+        $record = Record::with('user')->where('user_id', $request->id)->get();
+        if (count($record) > 1) {
+            $record->each->delete();
+            return redirect('/admindashboard');
+
+        } else {
+            $record = Record::with('user')->where('user_id', $request->id)->first();
+            $record->delete();
+            return redirect('/admindashboard');
+
+        }
 
     }
-
 }

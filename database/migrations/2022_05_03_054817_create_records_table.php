@@ -15,10 +15,10 @@ class CreateRecordsTable extends Migration
     {
         Schema::create('records', function (Blueprint $table) {
             $table->id();
-            $table->string('email');
-            $table->foreign('email')->references('email')->on('users')->onUpdate('cascade')->onDelete('cascade');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->boolean('is_taken')->default(0);
-            $table->integer('guests')->default(0);
+            $table->timestamp('lunch_dates')->useCurrent();
             $table->timestamps();
         });
     }

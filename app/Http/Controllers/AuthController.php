@@ -66,26 +66,20 @@ class AuthController extends Controller
                     "tenant" => $request->tenant,
                     "client_id" => $request->client_id,
                     "client_secret" => $request->client_secret,
-                    "redirect_uri" => "http://localhost:5500/index.html",
+                    "redirect_uri" => "http://localhost/lunch_booking_system/index.html",
                 ],
 
             ]);
 
         $response = json_decode($httpRequest->getBody()->getContents());
-
-        $var = $response->access_token;
-
-        //dd($var);
-
+        $remember_token = $response->access_token;
         $graph = new Graph();
-        $graph->setAccessToken($var);
+        $graph->setAccessToken($remember_token);
 
         $user = $graph->createRequest("GET", "/me")
             ->setReturnType(Model\User::class)
             ->execute();
-
         $isactive = User::where('email', $user->getmail())->first();
-
         if (!$isactive) {
 
             $isactive = User::create([
@@ -98,18 +92,18 @@ class AuthController extends Controller
                 'type' => 1,
                 'is_admin' => 0,
                 'is_active' => 0,
-                'remember_token' => $var,
+                'remember_token' => $remember_token,
             ]);
             $isactive->is_active = 1;
-            $isactive->remember_token = $var;
+            $isactive->remember_token = $remember_token;
             $isactive->save();
         } else {
 
             $isactive->is_active = 1;
-            $isactive->remember_token = $var;
+            $isactive->remember_token = $remember_token;
             $isactive->save();
         }
-
+// dd($isactive);
         return response(["user" => $isactive]);
 
     }
