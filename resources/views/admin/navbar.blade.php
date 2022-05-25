@@ -14,10 +14,14 @@
                     <a class="nav-link text-white" href="/offday">Off Day</a>
                 </li>
 
-                <li class="nav-item dropdown mt-2 ms-2">
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/daily-dishes">Daily Dishes</a>
+                </li>
+
+                <li class="nav-item dropdown ms-1">
                     <form action='/month-wise' method="get">
-                        <select name="id" id="id" onchange="this.form.submit()">
-                            <option value="" selected disabled>Choose</option>
+                        <select name="id" style="cursor: Pointer;" class="form-select form-select-sm-1  text-black border-0"  id="id" onchange="this.form.submit()">
+                            <option value="" selected disabled>Month</option>
                             <option value="1" {{ Request::get('id') == '1' ? 'selected' : '' }}>Jan</option>
                             <option value="2" {{ Request::get('id') == '2' ? 'selected' : '' }}>Feb</option>
                             <option value="3" {{ Request::get('id') == '3' ? 'selected' : '' }}>March</option>
@@ -33,37 +37,38 @@
                         </select>
                     </form>
                 </li>
-            </ul>
-            <ul class="navbar-nav ms-auto mb-0">
 
-                <li>
-                    <form class="d-flex" action="/date-wise" method="get">
+        </div>
+        </ul>
+        <ul class="navbar-nav ms-auto mb-0">
 
-                        <input class="form-control me-2" value="{{ Request::get('date') }}" id="" name="date"
-                            type="date" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success" onclick="myFunction()">Search</button>
-                    </form>
-                </li>
+            <li>
+                <form class="d-flex" action="/date-wise" method="get">
 
+                    <input class="form-control me-2" value="{{ Request::get('date') }}" id="showdate" name="date"
+                        type="date" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" onclick="myFunction()">Search</button>
+                </form>
+            </li>
 
-                <li class="nav-item dropdown">
-                    <a id="navbarDropdown" class="nav-link dropdown-toggle text-white" href="#" role="button"
-                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                        {{ Auth::user()->name }}
+            <li class="nav-item dropdown">
+                <a id="navbarDropdown" class="nav-link dropdown-toggle text-white" href="#" role="button"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                    {{ Auth::user()->name }}
+                </a>
+
+                <div class="dropdown-menu dropdown-menu-end text-black" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
+                                     document.getElementById('logout-form').submit();">
+                        {{ __('Logout') }}
                     </a>
 
-                    <div class="dropdown-menu dropdown-menu-end text-black" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                     document.getElementById('logout-form').submit();">
-                            {{ __('Logout') }}
-                        </a>
-
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                            @csrf
-                        </form>
-                    </div>
-                </li>
-            </ul>
-        </div>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                        @csrf
+                    </form>
+                </div>
+            </li>
+        </ul>
+    </div>
     </div>
 </nav>

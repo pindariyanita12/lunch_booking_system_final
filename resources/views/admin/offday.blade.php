@@ -23,7 +23,9 @@
 
 <body>
     @include('admin.navbar')
-    <div class="container">
+    <br>
+    <h3 class="text-center">उन दिनों को चुनें जब आपकी खाद्य सेवाएं अनुपलब्ध हों</h3>
+    <div class="container mt-5">
         <div class="image">
             <img src="{{ asset('Images/simform_logo.png') }}" class="img-fluid" alt="Responsive image">
         </div>

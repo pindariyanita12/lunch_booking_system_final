@@ -24,21 +24,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user;
 });
 Route::post('/signin', [AuthController::class, 'signin']);
-// Route::post('/addlunch', [RecordController::class, 'addLunch'])->middleware('auth:sanctum');
-
-Route::get('/callback', [AuthController::class, 'callback']);
-
-Route::post('/signout', [AuthController::class, 'signout']);
 Route::post('/getdata', [AuthController::class, 'get_data']);
-Route::post('/logout',[UserController::class,'logout']);
  Route::group(['middleware' =>'isActive'], function () {
 
-    Route::post('/add-request',[RecordController::class,'addRequest']);
-    Route::post('/add-guests',[RecordController::class,'addGuests']);
-    Route::post('/delete-request',[RecordController::class,'deleteRequest']);
     Route::post('/off-day',[LunchDateController::class,'showWeekend']);
     Route::post('/lunch-taken',[RecordController::class,'lunchTaken']);
-    Route::post('/check',[AdminController::class,'check']);
+    Route::post('/signout', [AuthController::class, 'signout']);
 
 });
 

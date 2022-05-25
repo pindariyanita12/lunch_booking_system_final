@@ -29,17 +29,14 @@
                     }
                 },
                 columns: [{
-                        data: 'id',
-                        name: 'id'
+                        data: 'userempid',
+                        name: 'Emp Id'
                     },
                     {
                         data: 'lunch_dates',
                         name: 'lunch_dates'
                     },
-                    {
-                        data: 'userempid',
-                        name: 'Emp Id'
-                    },
+
                     {
                         data: 'username',
                         name: 'Name'
@@ -53,8 +50,12 @@
         });
 
         function myFunction() {
-            var x = document.getElementById("datepicker").value;
-            document.getElementById("datepicker").inner = x;
+
+            var x = document.getElementById("showdate").value;
+            if(!x){
+                alert("Please select date");
+            }
+            document.getElementById("showdate").inner = x;
         }
     </script>
 </head>
@@ -69,6 +70,8 @@
             </div>
         @endif
     </div>
+<br>
+<h3 class="text-center">उपयोगकर्ता के दिनांकवार रिकॉर्ड</h3>
 
 
     <div class="container">
@@ -76,11 +79,9 @@
         <table class="table table-bordered data-table" id="dataTable">
             <thead>
                 <tr>
-                    <th>ID</th>
-
-                    <th>Date</th>
                     <th>Emp Id</th>
-                    <th>NAME</th>
+                    <th>Date</th>
+                    <th>Name</th>
                     <th>Action</th>
                 </tr>
             </thead>

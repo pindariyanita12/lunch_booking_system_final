@@ -17,19 +17,26 @@
     </script>
     <script type="text/javascript">
         $(document).ready(function() {
+            const params = new URLSearchParams(window.location.search);
             $('.data-table').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('admin.admindashboard.show') }}",
+                ajax: {
+                    url: "{{ route('admin.admindashboard.show') }}",
+                    data: {
+                        date: params.get('date')
+                    }
+                },
                 columns: [
-                    {
-                        data: 'lunch_dates',
-                        name: 'lunch_dates'
-                    },
                     {
                         data: 'userempid',
                         name: 'Emp Id'
                     },
+                    {
+                        data: 'lunch_dates',
+                        name: 'lunch_dates'
+                    },
+
                     {
                         data: 'username',
                         name: 'Name'
@@ -55,14 +62,17 @@
             </div>
         @endif
     </div>
+    <br>
+    <h3 class="text-center">आज के रिकॉर्ड
+    </h3>
+
     <div class="container">
         <br>
         <table class="table table-bordered data-table" id="dataTable">
             <thead>
                 <tr>
-
-                    <th>Date</th>
                     <th>Emp Id</th>
+                    <th>Date</th>
                     <th>NAME</th>
                     <th>Action</th>
                 </tr>

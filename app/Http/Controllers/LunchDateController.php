@@ -39,17 +39,14 @@ class LunchDateController extends Controller
     //shows all off days
     public function showWeekend(Request $req)
     {
-        $user = User::where('email', $req->mail)->get();
+        $user = User::where('id', $req->user_id)->get();
         if ($user) {
 
             $offDay = LunchDate::all();
-
             return response($offDay, 200);
 
         } else {
-
             return response(["message" => "something went wrong"], 404);
-
         }
     }
 }

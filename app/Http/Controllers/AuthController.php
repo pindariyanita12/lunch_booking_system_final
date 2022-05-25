@@ -30,25 +30,22 @@ class AuthController extends Controller
 
         // Save client state so we can validate in callback
         session(['oauthState' => $oauthClient->getState()]);
-
-        // Redirect to AAD signin page
-        //return redirect()->away($authUrl);
-
         return response()->json(["link" => $authUrl]);
     }
 
     public function signout(Request $request)
     {
-
         $tokenCache = new TokenCache();
         $tokenCache->clearTokens();
-        $isactive = User::where('email', $request->mail)->first();
+        $isactive = User::where('id', $request->user_id)->first();
+        if ($isactive) {
+            $isactive->is_active = 0;
+            $isactive->save();
+            return response(["message" => "Success"], 200);
+        } else {
+            return response(["Unauthorized"], 401);
+        }
 
-        $isactive->is_active = 0;
-
-        $isactive->save();
-
-        return response(["message" => "Success"], 200);
     }
 
     //get user data api
@@ -103,7 +100,6 @@ class AuthController extends Controller
             $isactive->remember_token = $remember_token;
             $isactive->save();
         }
-// dd($isactive);
         return response(["user" => $isactive]);
 
     }

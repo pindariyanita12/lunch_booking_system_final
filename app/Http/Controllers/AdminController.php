@@ -6,7 +6,9 @@ use App\Models\LunchDate;
 use App\Models\Record;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\Html\Button;
 
 class AdminController extends Controller
 {
@@ -15,6 +17,7 @@ class AdminController extends Controller
     public function show(Request $request)
     {
         if ($request->ajax()) {
+
             $date = date("Y-m-d");
             $record = Record::with('user')->whereDate('created_at', '=', $date)->get();
             return datatables()->of($record)
@@ -24,8 +27,8 @@ class AdminController extends Controller
                 ->editColumn('username', function ($userdata) {
                     return empty($userdata->user->name) ? "NA" : $userdata->user->name;
                 })
-                ->addColumn('action', function ($userdata) {
-                    $actionBtn = '<a href="' . route('admin.admindashboard.destroy', $userdata->user->id) . '" class="btn btn-danger btn-sm" ><i class="fa fa-trash ">Delete</i></a>';
+                ->addColumn('action', function ($userdata){
+                    $actionBtn = '<a href="' . route('admin.admindashboard.destroy', [$userdata->user->id, $userdata->id]) . '" class="btn btn-danger btn-sm" ><i class="fa fa-trash ">Delete</i></a>';
                     return $actionBtn;
                 })
 
@@ -51,6 +54,7 @@ class AdminController extends Controller
     public function dateWise(Request $request)
     {
         if ($request->ajax()) {
+            $idis = $request->date;
             $record = Record::with('user')->whereDate('created_at', '=', $request->date)->get();
             return datatables()->of($record)
                 ->editColumn('userempid', function ($userdata) {
@@ -59,8 +63,8 @@ class AdminController extends Controller
                 ->editColumn('username', function ($userdata) {
                     return empty($userdata->user->name) ? "NA" : $userdata->user->name;
                 })
-                ->addColumn('action', function ($userdata) {
-                    $actionBtn = '<a href="' . route('admin.admindashboard.destroy', $userdata->user->id) . '" class="btn btn-danger btn-sm" ><i class="fa fa-trash ">Delete</i></a>';
+                ->addColumn('action', function ($userdata) use ($idis) {
+                    $actionBtn = '<a href="' . route('admin.admindashboard.destroy', [$userdata->user->id, $idis]) . '" class="btn btn-danger btn-sm" ><i class="fa fa-trash ">Delete</i></a>';
                     return $actionBtn;
                 })
                 ->make(true);
@@ -73,14 +77,15 @@ class AdminController extends Controller
     public function monthWise(Request $request)
     {
 
-        // dd($uniquerecord);
         if ($request->ajax()) {
 
+            $idis = $request->idis;
             $uniquerecord = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereYear('records.created_at', '=', date('Y'))->whereMonth('records.created_at', '=', $request->idis)->select(DB::raw('DISTINCT users.id,users.emp_id,users.email, users.name,COUNT(is_taken) AS uniquerecord'))->groupBy('users.email')->get();
 
-            return datatables()->of($uniquerecord)
+            return datatables()->of($uniquerecord, $idis)
 
                 ->editColumn('userempid', function ($userdata) {
+
                     return empty($userdata->user->emp_id) ? "NA" : $userdata->user->emp_id;
                 })
                 ->editColumn('username', function ($userdata) {
@@ -89,8 +94,8 @@ class AdminController extends Controller
                 ->editColumn('uniquerecord', function ($userdata) {
                     return $userdata->uniquerecord;
                 })
-                ->addColumn('action', function ($userdata) {
-                    $actionBtn = '<a href="' . route('admin.admindashboard.destroy', $userdata->id) . '" class="btn btn-danger btn-sm" ><i class="fa fa-trash ">Delete</i></a>';
+                ->addColumn('action', function ($userdata) use ($idis) {
+                    $actionBtn = '<a href="' . route('admin.admindashboard.destroy', [$userdata->id, $idis]) . '" class="btn btn-danger btn-sm" ><i class="fa fa-trash ">Delete</i></a>';
                     return $actionBtn;
                 })
                 ->make(true);
@@ -101,9 +106,7 @@ class AdminController extends Controller
 
     public function destroy(Request $request)
     {
-
-
-        $record = Record::with('user')->where('user_id', $request->id)->get();
+        $record = Record::with('user')->where('user_id', $request->id)->whereYear('created_at', '=', date('Y'))->whereMonth('created_at', '=', $request->idis)->get();
         if (count($record) > 1) {
             $record->each->delete();
             return redirect('/admindashboard');
@@ -116,4 +119,37 @@ class AdminController extends Controller
         }
 
     }
+    public function dailyDishes(Request $request)
+    {
+        $uniquerecord = DB::table('records')->select(DB::raw('lunch_dates,COUNT(is_taken) AS totaldishes'))->whereYear('created_at', '=', date('Y'))->whereMonth('created_at', date('m'))->groupBy('lunch_dates')->get();
+        $totaldishes=$uniquerecord->sum('totaldishes');
+        if ($request->ajax()) {
+            $uniquerecord = DB::table('records')->select(DB::raw('lunch_dates,COUNT(is_taken) AS totaldishes'))->whereYear('created_at', '=', date('Y'))->whereMonth('created_at', date('m'))->groupBy('lunch_dates')->get();
+            return datatables()->of($uniquerecord)
+                ->editColumn('date', function ($userdata) {$formatedDate = Carbon::createFromFormat('Y-m-d H:i:s', $userdata->lunch_dates)->format('d-m-Y');return $formatedDate;})
+                ->editColumn('total', function ($userdata) {
+                    return empty($userdata->totaldishes) ? "NA" : $userdata->totaldishes;
+                })
+
+                ->make(true);
+        }
+        return view('admin.dailydishes',['totaldishes'=>$totaldishes]);
+    }
+
+    public function html()
+    {
+        return $this->builder()
+            ->setTableId('dataTable')
+            ->minifiedAjax()
+            ->dom('Bfrtip')
+            ->orderBy(1)
+            ->buttons(
+                Button::make('csv'),
+                // Button::make('export'),
+                // Button::make('print'),
+                // Button::make('reset'),
+                // Button::make('reload')
+            );
+    }
+
 }

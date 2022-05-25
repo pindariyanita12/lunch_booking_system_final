@@ -11,7 +11,6 @@ class RecordController extends Controller
     //checks whether lunch taken or not
     public function lunchTaken(Request $request)
     {
-        // dd($request->all());
         $date = date("Y-m-d");
         $date = date('Y-m-d', strtotime($date));
         $check = Record::where('user_id', $request->user_id)->where('is_taken', 1)->whereDate('created_at', '=', $date)->orderby('created_At', 'DESC')->first();
