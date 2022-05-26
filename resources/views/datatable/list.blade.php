@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <title>Laravel Datatable using Yajra Tutorial Example</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    {{-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"> --}}
-    {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> --}}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
@@ -16,28 +15,8 @@
         @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css");
 
     </style>
-    <link  href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
-    {{-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script> --}}
-    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-    <script>
-        $(function() {
-            $('#dataTable').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: '{{ url('get') }}',
-                columns: [
-                    { data: 'id', name: 'id' },
-                    // { data: 'avdate', name: 'avdate' },
-                    // { data: 'empid', name: 'empid' },
-                    { data: 'name', name: 'users.name' },
-                    { data: 'guests', name: 'guests' },
-                    { data: 'is_taken', name: 'is_taken' },
-
-                ]
-            });
-        });
-    </script>
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-dark">
         <div class="container-fluid">
@@ -125,21 +104,78 @@
             </div>
         @endif
     </div>
-<div class="container">
-    <br>
-    <table class="table table-bordered" id="dataTable">
-        <thead>
-        <tr>
-            <th >ID</th>
 
-                    {{-- <th >Date</th> --}}
-                    {{-- <th >EMP ID</th> --}}
-                    <th >NAME</th>
-                    <th >GUEST</th>
-                    <th >Lunch Taken</th>
-        </tr>
-        </thead>
-    </table>
-</div>
+
+    <div class="container">
+        <table class="table table-hover mt-3 ml-3 border border-dark">
+            <thead class="bg-dark text-white">
+                <tr>
+                    <th scope="col">ID</th>
+                    {{-- <th scope="col">EMPLOYEE ID</th> --}}
+                    <th scope="col">Date</th>
+                    <th scope="col">EMP ID</th>
+                    <th scope="col">NAME</th>
+                    <th scope="col">GUEST</th>
+                    <th scope="col">Lunch Taken</th>
+
+
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $i = 1;
+                ?>
+                @foreach ($records as $record)
+                    <tr>
+                        <th scope="row"><?php echo $i;
+                        $i++; ?></th>
+                        <td>{{ $avdate }}</td>
+                        {{-- <td>{{ date('d-m-Y', strtotime($record->created_at . ' +1 day')) }}</td> --}}
+                        @if ($record->user->emp_id)
+                            <td>{{ $record->user->emp_id }}</td>
+                        @else
+                            <td>NULL</td>
+                        @endif
+                        <td>{{ $record->user->name }}</td>
+                        <td>{{ $record->guests }}</td>
+                        @if ($record->is_taken == 1)
+                            <td class="text-success">Yes</td>
+                        @else
+                            <td class="text-danger">No</td>
+                        @endif
+
+
+                    </tr>
+                @endforeach
+                <tr style="background-color: #3ff198">
+                    <td>Total Person : {{ sizeof($records) }}</td>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
+                    <td>Total Guests : {{ $guests }}</td>
+                    {{-- <td>Total Person with guests : {{ $guests + sizeof($records) }}</td> --}}
+                    {{-- <td></td> --}}
+
+                    <td>Total Lunch Taken: {{ $totaltaken }}</td>
+                </tr>
+
+
+            </tbody>
+        </table>
+        <table class="border border-dark">
+            <tr style="background-color: #3ff198; text-align:center">
+                <td>Total Person with guests : {{ $guests + sizeof($records) }}</td>
+            </tr>
+        </table>
+    </div>
 </body>
+
 </html>
+
+
+
+
+
+
+
+

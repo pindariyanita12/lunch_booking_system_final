@@ -8,6 +8,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\RecordController;
+use App\Http\Controllers\DataTableController;
 use App\Http\Controllers\LunchDateController;
 
 /*
@@ -42,3 +43,5 @@ Route::post('/date-wise',[AdminController::class,'dateWise']);
 Route::post('/month-wise',[AdminController::class,'monthWise']);
 Route::get('/users/{name}',[AdminController::class,'monthWise']);
 Route::post('/add-weekend',[LunchDateController::class,'addWeekend'])->middleware('auth','can:isAdmin');
+Route::get('datatable', [DataTableController::class,'index']);
+Route::get('get', [DataTableController::class,'get']);
