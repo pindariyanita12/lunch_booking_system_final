@@ -8,30 +8,32 @@ class TokenCache
     {
         session([
             'accessToken' => $accessToken->getToken(),
-            'refreshToken' => $accessToken->getRefreshToken(),
-            'tokenExpires' => $accessToken->getExpires(),
+            // 'refreshToken' => $accessToken->getRefreshToken(),
+            // 'tokenExpires' => $accessToken->getExpires(),
             'userName' => $user->getDisplayName(),
             'userEmail' => null !== $user->getMail() ? $user->getMail() : $user->getUserPrincipalName(),
-            'userTimeZone' => $user->getMailboxSettings()->getTimeZone(),
+            // 'userTimeZone' => $user->getMailboxSettings()->getTimeZone(),
         ]);
     }
 
     public function clearTokens()
     {
         session()->forget('accessToken');
-        session()->forget('refreshToken');
-        session()->forget('tokenExpires');
-        session()->forget('userName');
-        session()->forget('userEmail');
-        session()->forget('userTimeZone');
+        // session()->forget('refreshToken');
+        // session()->forget('tokenExpires');
+        // session()->forget('userName');
+        // session()->forget('userEmail');
+        // session()->forget('userTimeZone');
     }
 
     public function getAccessToken()
     {
         // Check if tokens exist
-        if (empty(session('accessToken')) ||
-            empty(session('refreshToken')) ||
-            empty(session('tokenExpires'))) {
+        if (empty(session('accessToken'))
+        // ||
+            // empty(session('refreshToken')) ||
+            // empty(session('tokenExpires'))
+            ) {
             return '';
         }
 

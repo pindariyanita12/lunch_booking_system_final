@@ -9,12 +9,13 @@ class Record extends Model
 {
     use HasFactory;
     protected $fillable = [
-       'email',
-       'guests',
-       'is_taken'
-        ];
-        public function user(){
-            return $this->belongsTo(User::class,'email','email');
-        }
+        'user_id',
+        'is_taken',
+        'lunch_dates'
+    ];
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
 }

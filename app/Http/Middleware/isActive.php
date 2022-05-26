@@ -5,7 +5,6 @@ namespace App\Http\Middleware;
 use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class isActive
 {
@@ -19,11 +18,7 @@ class isActive
     public function handle(Request $request, Closure $next)
     {
 
-
-
-        $record = User::where('email', $request->mail)->where('is_active',1)->where('remember_token',$request->token)->get();
-
-
+        $record = User::where('id', $request->user_id)->where('is_active', 1)->where('remember_token', $request->token)->get();
 
         if ($record->count()) {
 
