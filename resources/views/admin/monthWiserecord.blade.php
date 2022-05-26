@@ -90,7 +90,7 @@
         @endif
     </div>
     <br>
-    <h3 class="text-center">उपयोगकर्ता के मासिक रिकॉर्ड
+    <h3 class="text-center">{{__('home.monthwisetitle')}}
     </h3>
     <div class="container">
 

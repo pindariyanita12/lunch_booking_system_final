@@ -74,7 +74,7 @@
         @endif
     </div>
     <br>
-    <h3 class="text-center">इस महीने के दैनिक व्यंजन
+    <h3 class="text-center">{{__('home.dailydishestitle')}}
     </h3>
 
     <div class="container">
@@ -91,7 +91,7 @@
         </table>
     </div>
     <div class="">
-        <h3 class="text-center">इस महीने के कुल व्यंजन
+        <h3 class="text-center">{{__('home.dailydishestotal')}}
             : {{ $totaldishes }}</h3>
     </div>
 </body>

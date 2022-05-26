@@ -35,3 +35,4 @@ Route::post('/add-weekend',[LunchDateController::class,'addWeekend'])->middlewar
 Route::get('/destroy/{id}/{idis}', [AdminController::class,'destroy'])->name('admin.admindashboard.destroy');
 Route::get('/print', [AdminController::class,'index'])->name('print');
 Route::get('/daily-dishes',[AdminController::class,'dailyDishes'])->name('admin.dailydishes.dailyDishes');
+

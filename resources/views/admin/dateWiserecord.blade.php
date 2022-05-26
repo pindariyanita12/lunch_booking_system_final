@@ -71,7 +71,7 @@
         @endif
     </div>
 <br>
-<h3 class="text-center">उपयोगकर्ता के दिनांकवार रिकॉर्ड</h3>
+<h3 class="text-center">{{__('home.datewisetitle')}}</h3>
 
 
     <div class="container">

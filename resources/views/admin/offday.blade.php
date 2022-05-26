@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <title>Offdays</title>
     <meta charset="UTF-8">
@@ -24,7 +23,7 @@
 <body>
     @include('admin.navbar')
     <br>
-    <h3 class="text-center">उन दिनों को चुनें जब आपकी खाद्य सेवाएं अनुपलब्ध हों</h3>
+    <h3 class="text-center">{{__('home.offdaytitle')}}</h3>
     <div class="container mt-5">
         <div class="image">
             <img src="{{ asset('Images/simform_logo.png') }}" class="img-fluid" alt="Responsive image">

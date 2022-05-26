@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\LunchDate;
-use App\Models\Record;
 use App\Models\User;
+use App\Models\Record;
+use App\Models\LunchDate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Html\Button;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\App;
 
 class AdminController extends Controller
 {
@@ -16,6 +17,7 @@ class AdminController extends Controller
     //admin dashboard
     public function show(Request $request)
     {
+        App::setLocale('hi');
         if ($request->ajax()) {
 
             $date = date("Y-m-d");
@@ -42,6 +44,7 @@ class AdminController extends Controller
     //off days for admin
     public function offday()
     {
+        App::setLocale('hi');
         $dates = LunchDate::all();
         $d = "";
         foreach ($dates as $date) {
@@ -53,6 +56,7 @@ class AdminController extends Controller
     //Datewise records of users
     public function dateWise(Request $request)
     {
+        App::setLocale('hi');
         if ($request->ajax()) {
             $idis = $request->date;
             $record = Record::with('user')->whereDate('created_at', '=', $request->date)->get();
@@ -76,7 +80,7 @@ class AdminController extends Controller
     //monthwise records
     public function monthWise(Request $request)
     {
-
+        App::setLocale('hi');
         if ($request->ajax()) {
 
             $idis = $request->idis;
@@ -121,6 +125,7 @@ class AdminController extends Controller
     }
     public function dailyDishes(Request $request)
     {
+        App::setLocale('hi');
         $uniquerecord = DB::table('records')->select(DB::raw('lunch_dates,COUNT(is_taken) AS totaldishes'))->whereYear('created_at', '=', date('Y'))->whereMonth('created_at', date('m'))->groupBy('lunch_dates')->get();
         $totaldishes=$uniquerecord->sum('totaldishes');
         if ($request->ajax()) {
@@ -145,10 +150,6 @@ class AdminController extends Controller
             ->orderBy(1)
             ->buttons(
                 Button::make('csv'),
-                // Button::make('export'),
-                // Button::make('print'),
-                // Button::make('reset'),
-                // Button::make('reload')
             );
     }
 

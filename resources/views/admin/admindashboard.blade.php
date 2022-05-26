@@ -63,7 +63,7 @@
         @endif
     </div>
     <br>
-    <h3 class="text-center">आज के रिकॉर्ड
+    <h3 class="text-center">{{__('home.admindashboardtitle')}}
     </h3>
 
     <div class="container">
