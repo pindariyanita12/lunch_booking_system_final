@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\Record;
 use App\Models\LunchDate;
+use App\Models\Record;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
-use Yajra\DataTables\Html\Button;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\Html\Button;
 
 class AdminController extends Controller
 {
@@ -29,7 +28,7 @@ class AdminController extends Controller
                 ->editColumn('username', function ($userdata) {
                     return empty($userdata->user->name) ? "NA" : $userdata->user->name;
                 })
-                ->addColumn('action', function ($userdata){
+                ->addColumn('action', function ($userdata) {
                     $actionBtn = '<a href="' . route('admin.admindashboard.destroy', [$userdata->user->id, $userdata->id]) . '" class="btn btn-danger btn-sm" ><i class="fa fa-trash ">Delete</i></a>';
                     return $actionBtn;
                 })
@@ -126,19 +125,22 @@ class AdminController extends Controller
     public function dailyDishes(Request $request)
     {
         App::setLocale('hi');
-        $uniquerecord = DB::table('records')->select(DB::raw('lunch_dates,COUNT(is_taken) AS totaldishes'))->whereYear('created_at', '=', date('Y'))->whereMonth('created_at', date('m'))->groupBy('lunch_dates')->get();
-        $totaldishes=$uniquerecord->sum('totaldishes');
+
+        $uniquerecord = DB::table('records')->select(DB::raw('DISTINCT Date(created_at) as lunchdate,count(is_taken) as totaldishes'))->whereYear('created_at', '=', date('Y'))->whereMonth('created_at', date('m'))->groupBy('lunchdate')->get();
+        $totaldishes = $uniquerecord->sum('totaldishes');
         if ($request->ajax()) {
-            $uniquerecord = DB::table('records')->select(DB::raw('lunch_dates,COUNT(is_taken) AS totaldishes'))->whereYear('created_at', '=', date('Y'))->whereMonth('created_at', date('m'))->groupBy('lunch_dates')->get();
+            $uniquerecord = DB::table('records')->select(DB::raw('DISTINCT Date(created_at) as lunchdate,count(is_taken) as totaldishes'))->whereYear('created_at', '=', date('Y'))->whereMonth('created_at', date('m'))->groupBy('lunchdate')->get();
             return datatables()->of($uniquerecord)
-                ->editColumn('date', function ($userdata) {$formatedDate = Carbon::createFromFormat('Y-m-d H:i:s', $userdata->lunch_dates)->format('d-m-Y');return $formatedDate;})
+                ->editColumn('date', function ($userdata) {
+                    return empty($userdata->lunchdate) ? "NA" : $userdata->lunchdate;
+                })
                 ->editColumn('total', function ($userdata) {
                     return empty($userdata->totaldishes) ? "NA" : $userdata->totaldishes;
                 })
 
                 ->make(true);
         }
-        return view('admin.dailydishes',['totaldishes'=>$totaldishes]);
+        return view('admin.dailydishes', ['totaldishes' => $totaldishes]);
     }
 
     public function html()
