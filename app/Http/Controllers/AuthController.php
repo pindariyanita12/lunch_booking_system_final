@@ -98,17 +98,18 @@ class AuthController extends Controller
                 'type' => 1,
                 'is_admin' => 0,
                 'is_active' => 0,
+                'remember_token'=>$var
             ]);
             $isactive->is_active = 1;
             $isactive->remember_token = $var;
             $isactive->save();
         } else {
-            //dd("in list");
+
             $isactive->is_active = 1;
             $isactive->remember_token = $var;
             $isactive->save();
         }
-        //dd($isactive);
+
         return response(["user" => $isactive]);
 
     }

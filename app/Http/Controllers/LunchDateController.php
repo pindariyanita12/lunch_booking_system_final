@@ -46,7 +46,7 @@ class LunchDateController extends Controller
 
             $offDay = LunchDate::all();
 
-            return response([$offDay], 200);
+            return response($offDay, 200);
 
         } else {
 

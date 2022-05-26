@@ -84,16 +84,16 @@ class DataTableController extends Controller
     {
         //
     }
-    public function get(Request $request)
+    public function get()
     {
-        $orders = Record::with('users');
 
-        return datatables()->of(Record::with('users')->get())
-            ->editColumn('users', function ($order) {
-                return $order->name;
-            })
 
-            ->make(true);
-        // return datatables()->of(Record::query())->with('users')->make(true);
+        // return datatables()->of(Record::with('users')->get())
+        //     ->editColumn('users', function ($order) {
+        //         return $order->name;
+        //     })
+
+        //     ->make(true);
+        return datatables()->of(Record::query())->make(true);
     }
 }

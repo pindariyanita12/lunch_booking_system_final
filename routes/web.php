@@ -35,13 +35,16 @@ Route::post('/addlunch', [RecordController::class, 'addLunch']);
 Route::get('/weekend',function(){
     return view('admin.weekend');
 });
-Route::get('/admindashboard',[AdminController::class,'show'])->middleware('auth','can:isAdmin');
+Route::get('/admindashboard',[AdminController::class,'show'])->name('admin.admindashboard.show')->middleware('auth','can:isAdmin');
 Route::get('/offday',[AdminController::class,'offday']);
 Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::post('/date-wise',[AdminController::class,'dateWise']);
-Route::post('/month-wise',[AdminController::class,'monthWise']);
-Route::get('/users/{name}',[AdminController::class,'monthWise']);
+Route::get('/date-wise',[AdminController::class,'dateWise'])->name('admin.dateWiserecord.dateWise');
+Route::get('/month-wise',[AdminController::class,'monthWise'])->name('admin.monthWiserecord.monthWise');
+Route::get('/users/{id}',[AdminController::class,'monthWise']);
 Route::post('/add-weekend',[LunchDateController::class,'addWeekend'])->middleware('auth','can:isAdmin');
-Route::get('datatable', [DataTableController::class,'index']);
-Route::get('get', [DataTableController::class,'get']);
+Route::get('/destroy/{email}', [AdminController::class,'destroy'])->name('admin.admindashboard.destroy');
+Route::get('/get-articles', [AdminController::class,'show'])->name('admin.admindashboard.show');
+
+// Route::get('datatable', [DataTableController::class,'index']);
+// Route::get('get', [DataTableController::class,'get']);
