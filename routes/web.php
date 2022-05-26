@@ -22,16 +22,10 @@ use App\Http\Controllers\LunchDateController;
 |
  */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+Route::get('/', function () {
+    return view('auth.login');
+});
 Route::post('/addlunch', [RecordController::class, 'addLunch']);
-
-// Route::get('/', [HomeController::class, 'welcome']);
-// Route::get('signin', [AuthController::class, 'signin']);
-// Route::get('/callback', [AuthController::class, 'callback']);
-// Route::get('/signout', [AuthController::class, 'signout']);
-
 Route::get('/weekend',function(){
     return view('admin.weekend');
 });
@@ -46,5 +40,3 @@ Route::post('/add-weekend',[LunchDateController::class,'addWeekend'])->middlewar
 Route::get('/destroy/{email}', [AdminController::class,'destroy'])->name('admin.admindashboard.destroy');
 Route::get('/get-articles', [AdminController::class,'show'])->name('admin.admindashboard.show');
 
-// Route::get('datatable', [DataTableController::class,'index']);
-// Route::get('get', [DataTableController::class,'get']);
