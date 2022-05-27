@@ -126,10 +126,10 @@ class AdminController extends Controller
     {
         App::setLocale('hi');
 
-        $uniquerecord = DB::table('records')->select(DB::raw('DISTINCT Date(created_at) as lunchdate,count(is_taken) as totaldishes'))->whereYear('created_at', '=', date('Y'))->whereMonth('created_at', date('m'))->groupBy('lunchdate')->get();
+        $uniquerecord = Record::select(DB::raw('DISTINCT Date(created_at) as lunchdate,count(is_taken) as totaldishes'))->whereYear('created_at', '=', date('Y'))->whereMonth('created_at', date('m'))->groupBy('lunchdate')->get();
         $totaldishes = $uniquerecord->sum('totaldishes');
         if ($request->ajax()) {
-            $uniquerecord = DB::table('records')->select(DB::raw('DISTINCT Date(created_at) as lunchdate,count(is_taken) as totaldishes'))->whereYear('created_at', '=', date('Y'))->whereMonth('created_at', date('m'))->groupBy('lunchdate')->get();
+            $uniquerecord = Record::select(DB::raw('DISTINCT Date(created_at) as lunchdate,count(is_taken) as totaldishes'))->whereYear('created_at', '=', date('Y'))->whereMonth('created_at', date('m'))->groupBy('lunchdate')->get();
             return datatables()->of($uniquerecord)
                 ->editColumn('date', function ($userdata) {
                     return empty($userdata->lunchdate) ? "NA" : $userdata->lunchdate;
