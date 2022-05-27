@@ -23,13 +23,13 @@ use App\Http\Controllers\LunchDateController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user;
 });
-Route::post('/signin', [AuthController::class, 'signin']);
-Route::post('/getdata', [AuthController::class, 'get_data']);
- Route::group(['middleware' =>'isActive'], function () {
+Route::post('/signin', [AuthController::class, 'signin'])->name('signin');
+Route::post('/getdata', [AuthController::class, 'get_data'])->name('getdata');
+Route::group(['middleware' =>'isActive'], function () {
 
-    Route::post('/off-day',[LunchDateController::class,'showWeekend']);
-    Route::post('/lunch-taken',[RecordController::class,'lunchTaken']);
-    Route::post('/signout', [AuthController::class, 'signout']);
+    Route::post('/off-day',[LunchDateController::class,'showWeekend'])->name('userOffday');
+    Route::post('/lunch-taken',[RecordController::class,'lunchTaken'])->name('lunchTaken');
+    Route::post('/signout', [AuthController::class, 'signout'])->name('signout');
 
 });
 
