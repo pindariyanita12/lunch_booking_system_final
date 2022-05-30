@@ -51,7 +51,3 @@ Route::get('/print', [AdminController::class,'index'])->name('print');
 Route::get('/daily-dishes',[AdminController::class,'dailyDishes'])->name('admin.dailydishes.dailyDishes');
 
 
-//User routes
-Route::get('/user/login',function(){
-    return view('user.login');
-});
