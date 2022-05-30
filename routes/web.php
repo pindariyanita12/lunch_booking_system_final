@@ -21,10 +21,24 @@ use App\Http\Controllers\LunchDateController;
 | contains the "web" middleware group. Now create something great!
 |
  */
-
+//user route
 Route::get('/', function () {
-    return view('auth.login');
+    return view('user.login');
 });
+Route::get('/index',function(){
+    return view('user.index');
+});
+Route::get('/user/welcome',function(){
+    return view('user.welcome');
+});
+Route::get('/user/offday',function(){
+    return view('user.offday');
+});
+
+
+
+
+
 Route::get('/admindashboard',[AdminController::class,'show'])->name('admin.admindashboard.show')->middleware('auth','can:isAdmin');
 Route::get('/offday',[AdminController::class,'offday']);
 Auth::routes();
@@ -36,3 +50,8 @@ Route::get('/destroy/{id}/{idis}', [AdminController::class,'destroy'])->name('ad
 Route::get('/print', [AdminController::class,'index'])->name('print');
 Route::get('/daily-dishes',[AdminController::class,'dailyDishes'])->name('admin.dailydishes.dailyDishes');
 
+
+//User routes
+Route::get('/user/login',function(){
+    return view('user.login');
+});

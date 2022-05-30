@@ -55,18 +55,16 @@ class AuthController extends Controller
         $httpClient = new \GuzzleHttp\Client();
 
         $httpRequest =
-        $httpClient
-            ->post('https://login.microsoftonline.com/f4814d23-3835-4d87-a7dc-57a19c04684a/oauth2/v2.0/token', [
+        $httpClient->post('https://login.microsoftonline.com/f4814d23-3835-4d87-a7dc-57a19c04684a/oauth2/v2.0/token', [
                 'form_params' => [
                     "code" => $request->code,
                     "grant_type" => "authorization_code",
-                    "tenant" => $request->tenant,
-                    "client_id" => $request->client_id,
-                    "client_secret" => $request->client_secret,
-                    "redirect_uri" => "http://localhost/lunch_booking_system/index.html",
+                    "tenant" => ENV('OAUTH_TENANT_ID'),
+                    "client_id" => ENV('OAUTH_APP_ID'),
+                    "client_secret" => ENV('OAUTH_APP_SECRET'),
+                    "redirect_uri" => ENV('OAUTH_REDIRECT_URI'),
                 ],
-
-            ]);
+        ]);
 
         $response = json_decode($httpRequest->getBody()->getContents());
         $remember_token = $response->access_token;
