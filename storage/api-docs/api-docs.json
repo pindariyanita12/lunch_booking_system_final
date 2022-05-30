@@ -4,13 +4,182 @@
         "title": "Your super  ApplicationAPI",
         "version": "1.0.0"
     },
+    "servers": [
+        {
+            "url": "https://lunch-api.dev.simform.solutions/"
+        }
+    ],
     "paths": {
+        "/api/signin": {
+            "post": {
+                "tags": [
+                    "AuthController"
+                ],
+                "summary": "sign in",
+                "operationId": "signin",
+                "responses": {
+                    "200": {
+                        "description": "Link generated",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "not found"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/api/signout": {
+            "post": {
+                "tags": [
+                    "AuthController"
+                ],
+                "summary": "signouts user",
+                "operationId": "signout",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer"
+                                    },
+                                    "token": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Logged out",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "not found"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/api/getdata": {
+            "post": {
+                "tags": [
+                    "AuthController"
+                ],
+                "summary": "user info",
+                "operationId": "user info",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "code": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "not found"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/api/off-days": {
+            "post": {
+                "tags": [
+                    "LunchDateController"
+                ],
+                "summary": "shows weekend to user",
+                "operationId": "off_days",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer"
+                                    },
+                                    "token": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully Taken Lunch",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "409": {
+                        "description": "You already taken lunch"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "not found"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
         "/api/lunch-taken": {
             "post": {
                 "tags": [
-                    "Lunch taken"
+                    "RecordController"
                 ],
-                "summary": "lunch taker or not",
+                "summary": "lunch taken or not",
                 "operationId": "lunch_taken",
                 "requestBody": {
                     "content": {

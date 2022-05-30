@@ -9,8 +9,8 @@ class RecordController extends Controller
     /**
      * @OA\Post(
      ** path="/api/lunch-taken",
-     *   tags={"Lunch taken"},
-     *   summary="lunch taker or not",
+     *   tags={"RecordController"},
+     *   summary="lunch taken or not",
      *   operationId="lunch_taken",
      *
      *  @OA\RequestBody(

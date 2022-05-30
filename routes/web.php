@@ -22,7 +22,7 @@ use App\Http\Controllers\LunchDateController;
 |
  */
 
-Route::get('/', function () {
+Route::get(ENV('WEB_DOMAIN'), function () {
     return view('auth.login');
 });
 Route::get('/admindashboard',[AdminController::class,'show'])->name('admin.admindashboard.show')->middleware('auth','can:isAdmin');
@@ -35,4 +35,3 @@ Route::post('/add-weekend',[LunchDateController::class,'addWeekend'])->middlewar
 Route::get('/destroy/{id}/{idis}', [AdminController::class,'destroy'])->name('admin.admindashboard.destroy');
 Route::get('/print', [AdminController::class,'index'])->name('print');
 Route::get('/daily-dishes',[AdminController::class,'dailyDishes'])->name('admin.dailydishes.dailyDishes');
-
