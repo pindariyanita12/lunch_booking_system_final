@@ -22,9 +22,23 @@ use App\Http\Controllers\LunchDateController;
 |
  */
 
-Route::get(ENV('WEB_DOMAIN'), function () {
+Route::get(ENV('ADMIN_DOMAIN'), function () {
     return view('auth.login');
 });
+//user route
+Route::get(ENV('WEB_DOMAIN'), function () {
+    return view('user.login');
+});
+Route::get('/index',function(){
+    return view('user.index');
+});
+Route::get('/user/welcome',function(){
+    return view('user.welcome');
+});
+Route::get('/user/offday',function(){
+    return view('user.offday');
+});
+
 Route::get('/admindashboard',[AdminController::class,'show'])->name('admin.admindashboard.show')->middleware('auth','can:isAdmin');
 Route::get('/offday',[AdminController::class,'offday']);
 Auth::routes();
