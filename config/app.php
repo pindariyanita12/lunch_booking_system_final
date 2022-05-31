@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://lunch-api.dev.simform.solutions/'),
+    'url' => env('APP_URL', ''),
 
     'asset_url' => env('ASSET_URL', null),
 
@@ -163,6 +163,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Yajra\Datatables\DatatablesServiceProvider::class,
         Yajra\DataTables\ButtonsServiceProvider::class,
+        L5Swagger\L5SwaggerServiceProvider::class,
 
 
         /*

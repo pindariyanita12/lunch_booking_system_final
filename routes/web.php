@@ -1,15 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\RecordController;
-use App\Http\Controllers\DataTableController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LunchDateController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,30 +17,38 @@ use App\Http\Controllers\LunchDateController;
 |
  */
 
-Route::get(ENV('ADMIN_DOMAIN'), function () {
-    return view('auth.login');
-});
 //user route
-Route::get(ENV('WEB_DOMAIN'), function () {
-    return view('user.login');
-});
-Route::get('/index',function(){
-    return view('user.index');
-});
-Route::get('/user/welcome',function(){
-    return view('user.welcome');
-});
-Route::get('/user/offday',function(){
-    return view('user.offday');
+Route::domain('https://lunch-app.dev.local')->group(function () {
+    Route::get('/', function () {
+        return view('user.login');
+    });
+    Route::get('/handler', function () {
+        return view('user.handler');
+    });
+    Route::get('/user/welcome', function () {
+        return view('user.welcome');
+    });
+    Route::get('/user/offday', function () {
+        return view('user.offday');
+    });
+    Route::get('/handler', function () {
+        return view('user.handler');
+    });
+
 });
 
-Route::get('/admindashboard',[AdminController::class,'show'])->name('admin.admindashboard.show')->middleware('auth','can:isAdmin');
-Route::get('/offday',[AdminController::class,'offday']);
-Auth::routes();
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/date-wise',[AdminController::class,'dateWise'])->name('admin.dateWiserecord.dateWise');
-Route::get('/month-wise',[AdminController::class,'monthWise'])->name('admin.monthWiserecord.monthWise');
-Route::post('/add-weekend',[LunchDateController::class,'addWeekend'])->middleware('auth','can:isAdmin');
-Route::get('/destroy/{id}/{idis}', [AdminController::class,'destroy'])->name('admin.admindashboard.destroy');
-Route::get('/print', [AdminController::class,'index'])->name('print');
-Route::get('/daily-dishes',[AdminController::class,'dailyDishes'])->name('admin.dailydishes.dailyDishes');
+//admin route
+Route::domain('https://lunch-admin.dev.local')->group(function () {
+    Route::get('/', function () {
+        return view('auth.login');
+    });
+    Route::get('/admindashboard', [AdminController::class, 'show'])->name('admin.admindashboard.show')->middleware('auth', 'can:isAdmin');
+    Route::get('/offday', [AdminController::class, 'offday']);
+    Auth::routes();
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('/date-wise', [AdminController::class, 'dateWise'])->name('admin.dateWiserecord.dateWise');
+    Route::get('/month-wise', [AdminController::class, 'monthWise'])->name('admin.monthWiserecord.monthWise');
+    Route::post('/add-weekend', [LunchDateController::class, 'addWeekend'])->middleware('auth', 'can:isAdmin');
+    Route::get('/destroy/{id}/{idis}', [AdminController::class, 'destroy'])->name('admin.admindashboard.destroy');
+    Route::get('/daily-dishes', [AdminController::class, 'dailyDishes'])->name('admin.dailydishes.dailyDishes');
+});

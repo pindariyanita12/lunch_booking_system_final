@@ -10,38 +10,43 @@
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset('css/style2.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
-        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
-        crossorigin="anonymous"></script>
+        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous">
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
-        integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
-        crossorigin="anonymous"></script>
+        integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous">
+    </script>
     <title>Login</title>
 </head>
 <script>
+    baseUrl = 'https://lunch-api.dev.local';
     sessionStorage.removeItem('user_id')
     sessionStorage.removeItem('name')
     sessionStorage.removeItem('token')
     sessionStorage.removeItem('date')
     sessionStorage.removeItem('code')
     sessionStorage.removeItem('mail')
+
     function checkLogin() {
 
-        fetch("http://localhost:8000/api/signin", {
+        fetch(baseUrl + "/signin", {
 
-            method: "POST",
-            headers: {
-                "Content-type": "application/json; charset=UTF-8"
-            }
-        })
+                method: "POST",
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+
+            })
             .then(response => response.json())
-            .then(function (data) {
+            .then(function(data) {
 
-                if (window.sessionStorage.getItem('code') !== null && window.sessionStorage.getItem('code') !== '' && window.sessionStorage.getItem('code') !== undefined) {
-                    window.location.href = "http://localhost/lunch_booking_system/welcome.html";
+                if (window.sessionStorage.getItem('code') !== null && window.sessionStorage.getItem('code') !==
+                    '' && window.sessionStorage.getItem('code') !== undefined) {
+                    window.location.href = "https://lunch-app.dev.local/user/welcome";
                 } else {
+
                     window.location.href = data.link;
                 }
             });
@@ -59,7 +64,7 @@
         <form>
             <div class="login-button">
                 <button type="button" onclick="checkLogin()" id="login-btn" class="btn btn-primary"><img
-                        src="{{  url('/Images/microsoft (1).png') }}" alt="outlook" style="float: left;" width="25px"
+                        src="{{ url('/Images/microsoft (1).png') }}" alt="outlook" style="float: left;" width="25px"
                         height="22px">Login Using Outlook</button>
             </div>
         </form>

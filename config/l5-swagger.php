@@ -12,7 +12,7 @@ return [
                 /*
                  * Route for accessing api documentation interface
                 */
-                'api' => ENV('API_DOMAIN'),
+                'api' => '/api',
             ],
             'paths' => [
                 /*
