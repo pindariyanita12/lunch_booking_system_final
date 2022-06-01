@@ -87,7 +87,7 @@ return [
             /*
              * Edit to set the api's base path
             */
-            'base' => env('L5_SWAGGER_BASE_PATH', 'https://lunch-app.dev.local'),
+            'base' => env('L5_SWAGGER_BASE_PATH', 'https://lunch-api.dev.local'),
 
             /*
              * Edit to set path where swagger ui assets should be stored

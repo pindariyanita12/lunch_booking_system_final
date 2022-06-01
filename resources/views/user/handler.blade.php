@@ -22,7 +22,7 @@
     <title>Loading</title>
 </head>
 <script>
-    baseUrl = 'https://lunch-app.dev.local';
+
     window.onload = function() {
 
         let paramString = (window.location.href).substring(
@@ -31,7 +31,7 @@
         );
         let queryString = new URLSearchParams(paramString);
         sessionStorage.setItem("code", queryString);
-        url = baseUrl + '/getdata';
+        url = 'https://lunch-api.dev.local/getdata';
         data = {
             "code": sessionStorage.getItem("code").substring(5),
         };
@@ -42,6 +42,7 @@
             headers: {
                 'Content-type': 'application/json',
                 'Access-Control-Allow-Origin': '*'
+
             },
             body: JSON.stringify(data)
         };

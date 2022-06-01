@@ -23,12 +23,12 @@
     <title></title>
 </head>
 <script>
-    baseUrl = 'https://lunch-app.dev.local';
+
     window.onload = function() {
         document.title = 'Welcome, ' + sessionStorage.getItem('name');
         var user_id = window.sessionStorage.getItem("user_id");
         var token = window.sessionStorage.getItem("token");
-        url = baseUrl + '/off-day';
+        url = 'https://lunch-api.dev.local/off-day';
         data = {
             "user_id": user_id,
             "token": token

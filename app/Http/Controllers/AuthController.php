@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\TokenStore\TokenCache;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Microsoft\Graph\Graph;
@@ -11,35 +12,7 @@ use Microsoft\Graph\Model;
 
 class AuthController extends Controller
 {
-    /**
-     * @OA\Post(
-     ** path="/signin",
-     *   tags={"AuthController"},
-     *   summary="sign in",
-     *   operationId="signin",
-     *
-     *   @OA\Response(
-     *      response=200,
-     *       description="Link generated",
-     *      @OA\MediaType(
-     *           mediaType="application/json",
-     *      )
-     *   ),
-     *   @OA\Response(
-     *      response=400,
-     *      description="Bad Request"
-     *   ),
-     *   @OA\Response(
-     *      response=404,
-     *      description="not found"
-     *   ),
-     *      @OA\Response(
-     *          response=403,
-     *          description="Forbidden"
-     *      ),
-     *
-     *)
-     **/
+
     //
     public function signin()
     {
@@ -118,7 +91,7 @@ class AuthController extends Controller
         }
 
     }
-     /**
+    /**
      * @OA\Post(
      ** path="/getdata",
      *   tags={"AuthController"},
@@ -166,8 +139,9 @@ class AuthController extends Controller
 
         $httpClient = new \GuzzleHttp\Client();
 
-        $httpRequest =
-        $httpClient->post('https://login.microsoftonline.com/f4814d23-3835-4d87-a7dc-57a19c04684a/oauth2/v2.0/token', [
+            $httpRequest =
+
+            $httpClient->post('https://login.microsoftonline.com/f4814d23-3835-4d87-a7dc-57a19c04684a/oauth2/v2.0/token', [
                 'form_params' => [
                     "code" => $request->code,
                     "grant_type" => "authorization_code",

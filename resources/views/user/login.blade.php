@@ -21,7 +21,7 @@
     <title>Login</title>
 </head>
 <script>
-    baseUrl = 'https://lunch-app.dev.local';
+
     sessionStorage.removeItem('user_id')
     sessionStorage.removeItem('name')
     sessionStorage.removeItem('token')
@@ -31,7 +31,7 @@
 
     function checkLogin() {
 
-        fetch(baseUrl + "/signin", {
+        fetch("https://lunch-api.dev.local/signin", {
 
                 method: "POST",
                 headers: {

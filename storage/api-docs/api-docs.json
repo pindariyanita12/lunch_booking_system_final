@@ -1,12 +1,24 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "Your super  ApplicationAPI",
+        "title": "Laravel OpenApi Demo Documentation",
+        "description": "L5 Swagger OpenApi description",
+        "contact": {
+            "email": "admin@admin.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
         "version": "1.0.0"
     },
     "servers": [
         {
-            "url": "https://lunch-app.dev.local"
+            "url": "http://my-default-host.com",
+            "description": "Demo API Server"
+        },
+        {
+            "url": "https://lunch-api.dev.local"
         }
     ],
     "paths": {
@@ -174,5 +186,32 @@
                 }
             }
         }
-    }
+    },
+    "components": {
+        "schemas": {
+            "LunchDate": {
+                "title": "Project",
+                "description": "Project model",
+                "properties": {
+                    "id": {
+                        "title": "ID",
+                        "description": "ID",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Project"
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Projects",
+            "description": "API Endpoints of Projects"
+        }
+    ]
 }

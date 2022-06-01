@@ -1,35 +1,17 @@
 <?php
 /**
      * @OA\Post(
-     ** path="/off-days",
-     *   tags={"LunchDateController"},
-     *   summary="shows weekend to user",
-     *   operationId="off_days",
+     * path="/signin",
+     *   tags={"AuthController"},
+     *   summary="sign in",
+     *   operationId="signin",
      *
-     *  @OA\RequestBody(
-     *  @OA\JsonContent(
-     *
-     *  @OA\Property(property="user_id", type="integer"),
-     *  @OA\Property(property="token", type="string"),
-     *
-     *
-     *  )),
-
-
      *   @OA\Response(
      *      response=200,
-     *       description="Successfully Taken Lunch",
+     *       description="Link generated",
      *      @OA\MediaType(
      *           mediaType="application/json",
      *      )
-     *   ),
-     * @OA\Response(
-     *          response=409,
-     *          description="You already taken lunch"
-     *      ),
-     *   @OA\Response(
-     *      response=401,
-     *       description="Unauthenticated"
      *   ),
      *   @OA\Response(
      *      response=400,
@@ -46,3 +28,63 @@
      *
      *)
      **/
+
+    /**
+ * @OA\Post(
+ *      path="/signin",
+ *      operationId="deleteChild",
+ *      tags={"ChildController"},
+ *      description="delete child",
+ *      summary="deleteChild",
+ *      @OA\Parameter(
+ *          name="child_id",
+ *          description="Child id",
+ *          required=true,
+ *          in="path",
+ *          @OA\Schema(
+ *              type="integer"
+ *      )),
+ *      @OA\Parameter(
+ *          name="parent_id",
+ *          description="parent id",
+ *          required=true,
+ *          in="path",
+ *          @OA\Schema(
+ *              type="integer"
+ *      )),
+ *      @OA\Response(
+ *        response= 200,
+ *        description= "Success",
+ *        @OA\MediaType(
+ *        mediaType="application/json",
+ *        example={
+ *             "status" : "Success",
+ *             "message": "Deleted successfully.",
+ *         }
+ *        )
+ *      ),
+ *      @OA\Response(
+ *             response=401,
+ *             description="Unauthorized"
+ *      ),
+ *      @OA\Response(
+ *             response=403,
+ *             description="Forbidden"
+ *      ),
+ *      @OA\Response(
+ *             response=404,
+ *             description="Not Found"
+ *      ),
+ *      @OA\Response(
+ *             response=500,
+ *             description="Internal Server Error"
+ *      ),
+ *      security={
+ *          { "apiAuth": {} }
+ *      }
+ * )
+ *
+ * Returns list of all users
+ */
+
+
