@@ -23,7 +23,7 @@
     <title></title>
 </head>
 <script>
-    baseUrl = 'https://lunch-api.dev.local';
+    baseUrl = 'https://lunch-app.dev.local';
     window.onload = function() {
         document.title = 'Welcome, ' + sessionStorage.getItem('name');
         var user_id = window.sessionStorage.getItem("user_id");

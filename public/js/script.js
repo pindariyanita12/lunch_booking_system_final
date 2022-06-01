@@ -1,7 +1,7 @@
 function logout() {
     var user_id = sessionStorage.getItem("user_id");
     var token = sessionStorage.getItem("token");
-    url = "https://lunch-api.dev.local/signout";
+    url = "https://lunch-app.dev.local/signout";
     data = { user_id: user_id, token: token };
 
     params = {
@@ -22,7 +22,6 @@ function logout() {
             sessionStorage.removeItem("code");
             sessionStorage.removeItem("mail");
 
-            alert("You are Successfully Logout");
             window.location.href = "https://lunch-app.dev.local/";
         } else if (response.status == 401) {
             alert("You are Unauthorized");
@@ -36,7 +35,7 @@ function logout() {
 function offDay() {
     var user_id = sessionStorage.getItem("user_id");
     var token = sessionStorage.getItem("token");
-    url = "https://lunch-api.dev.local/off-day";
+    url = "https://lunch-app.dev.local/off-day";
     data = { user_id: user_id, token: token };
     params = {
         method: "post",
@@ -69,7 +68,7 @@ function arriveLunch() {
     var user_id = sessionStorage.getItem("user_id");
     var token = window.sessionStorage.getItem("token");
 
-    url = "https://lunch-api.dev.local/lunch-taken";
+    url = "https://lunch-app.dev.local/lunch-taken";
     data = { user_id: user_id, token: token };
     params = {
         method: "post",

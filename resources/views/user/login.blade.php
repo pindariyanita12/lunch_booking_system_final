@@ -21,7 +21,7 @@
     <title>Login</title>
 </head>
 <script>
-    baseUrl = 'https://lunch-api.dev.local';
+    baseUrl = 'https://lunch-app.dev.local';
     sessionStorage.removeItem('user_id')
     sessionStorage.removeItem('name')
     sessionStorage.removeItem('token')

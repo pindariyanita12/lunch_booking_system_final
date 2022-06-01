@@ -4,6 +4,11 @@
         "title": "Your super  ApplicationAPI",
         "version": "1.0.0"
     },
+    "servers": [
+        {
+            "url": "https://lunch-app.dev.local"
+        }
+    ],
     "paths": {
         "/signin": {
             "post": {

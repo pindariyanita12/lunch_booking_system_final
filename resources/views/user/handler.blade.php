@@ -22,7 +22,7 @@
     <title>Loading</title>
 </head>
 <script>
-    baseUrl = 'https://lunch-api.dev.local';
+    baseUrl = 'https://lunch-app.dev.local';
     window.onload = function() {
 
         let paramString = (window.location.href).substring(
