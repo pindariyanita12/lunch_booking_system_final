@@ -10,52 +10,6 @@
         }
     ],
     "paths": {
-        "/signout": {
-            "post": {
-                "tags": [
-                    "AuthController"
-                ],
-                "summary": "signouts user",
-                "operationId": "signout",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "user_id": {
-                                        "type": "integer"
-                                    },
-                                    "token": {
-                                        "type": "string"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Logged out",
-                        "content": {
-                            "application/json": {}
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
-                    "400": {
-                        "description": "Bad Request"
-                    },
-                    "404": {
-                        "description": "not found"
-                    },
-                    "403": {
-                        "description": "Forbidden"
-                    }
-                }
-            }
-        },
         "/getdata": {
             "post": {
                 "tags": [
@@ -135,6 +89,32 @@
                     },
                     "401": {
                         "description": "Unauthenticated"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "not found"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/signin": {
+            "post": {
+                "tags": [
+                    "AuthController"
+                ],
+                "summary": "sign in",
+                "operationId": "signin",
+                "responses": {
+                    "200": {
+                        "description": "Link generated",
+                        "content": {
+                            "application/json": {}
+                        }
                     },
                     "400": {
                         "description": "Bad Request"

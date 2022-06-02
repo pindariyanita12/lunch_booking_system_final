@@ -7,17 +7,17 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 
+class Controller extends BaseController
+{
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 /**
  * @OA\Info(
  *
  *    title="Your super  ApplicationAPI",
  *    version="1.0.0",
  * )
- */
-class Controller extends BaseController
-{
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+ */
     public function loadViewData()
     {
         $viewData = [];
