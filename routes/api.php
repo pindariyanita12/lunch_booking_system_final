@@ -1,13 +1,10 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-
+use App\Http\Controllers\LunchDateController;
+use App\Http\Controllers\RecordController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\RecordController;
-use App\Http\Controllers\LunchDateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,17 +17,12 @@ use App\Http\Controllers\LunchDateController;
 |
  */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user;
+Route::domain('https://lunch-api.dev.local')->group(function () {
+    Route::post('/getdata', [AuthController::class, 'get_data'])->name('getdata');
+    Route::post('/signin', [AuthController::class, 'signin'])->name('signin');
+    Route::group(['middleware' => 'isActive'], function () {
+        Route::post('/off-day', [LunchDateController::class, 'showWeekend'])->name('userOffday');
+        Route::post('/lunch-taken', [RecordController::class, 'lunchTaken'])->name('lunchTaken');
+        Route::post('/signout', [AuthController::class, 'signout'])->name('signout');
+    });
 });
-Route::post('/signin', [AuthController::class, 'signin']);
-Route::post('/getdata', [AuthController::class, 'get_data']);
- Route::group(['middleware' =>'isActive'], function () {
-
-    Route::post('/off-day',[LunchDateController::class,'showWeekend']);
-    Route::post('/lunch-taken',[RecordController::class,'lunchTaken']);
-    Route::post('/signout', [AuthController::class, 'signout']);
-
-});
-
-

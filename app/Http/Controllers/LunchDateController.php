@@ -1,13 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Models\LunchDate;
 use App\Models\User;
 use Illuminate\Http\Request;
 
 class LunchDateController extends Controller
 {
+
     //update offdays
     public function addWeekend(Request $request)
     {
