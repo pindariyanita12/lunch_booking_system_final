@@ -27,16 +27,10 @@
                         date: params.get('date')
                     }
                 },
-                columns: [
-                    {
+                columns: [{
                         data: 'userempid',
                         name: 'Emp Id'
                     },
-                    {
-                        data: 'lunch_dates',
-                        name: 'lunch_dates'
-                    },
-
                     {
                         data: 'username',
                         name: 'Name'
@@ -54,6 +48,45 @@
 
 <body>
     @include('admin.navbar')
+    <br>
+
+    <div class="container">
+
+        <div class="row">
+            <div class="col-sm-3">
+              <div class="card">
+                <div class="card-body" style="background-color: yellow">
+                  <h5 class="card-title">Total Dishes</h5>
+                  <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="card">
+                  <div class="card-body" style="background-color: rgba(255, 0, 0, 0.541)">
+                    <h5 class="card-title">Total Trainees</h5>
+                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                  </div>
+                </div>
+              </div>
+            <div class="col-sm-3">
+              <div class="card">
+                <div class="card-body" style="background-color: green">
+                  <h5 class="card-title">Total Monthly dishes</h5>
+                  <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="card">
+                  <div class="card-body" style="background-color: lightblue">
+                    <h5 class="card-title">Total Simformers</h5>
+                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                  </div>
+                </div>
+              </div>
+          </div>
+    </div>
     <div>
         @if (session()->has('message'))
             <div class="alert alert-success">
@@ -63,16 +96,23 @@
         @endif
     </div>
     <br>
-    <h3 class="text-center">{{__('home.admindashboardtitle')}}
+    <h3 class="text-center">{{ __('home.admindashboardtitle') }}
     </h3>
 
     <div class="container">
+
+        <form class="d-flex" action="/admindashboard" method="get">
+
+            <input class="form-control me-2" value="{{ Request::get('date') }}" id="showdate" name="date" type="date"
+                placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success" onclick="myFunction()">Search</button>
+        </form>
+
         <br>
         <table class="table table-bordered data-table" id="dataTable">
             <thead>
                 <tr>
                     <th>Emp Id</th>
-                    <th>Date</th>
                     <th>NAME</th>
                     <th>Action</th>
                 </tr>

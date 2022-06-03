@@ -22,13 +22,11 @@
 
 <body>
     @include('admin.navbar')
+
     <br>
     <h3 class="text-center">{{__('home.offdaytitle')}}</h3>
     <div class="container mt-5">
-        <div class="image">
-            <img src="{{ asset('Images/simform_logo.png') }}" class="img-fluid" alt="Responsive image">
-        </div>
-        <br>
+
         <div class="heading">
 
             <h2>Select Off Days</h2>
