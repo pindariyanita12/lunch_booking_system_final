@@ -49,48 +49,7 @@ class AuthController extends Controller
         }
 
     }
-    /**
-     * @OA\Post(
-     ** path="/getdata",
-     *   tags={"AuthController"},
-     *   summary="user info",
-     *   operationId="user info",
-     *
-     *  @OA\RequestBody(
-     *  @OA\JsonContent(
-     *
-     *  @OA\Property(property="code", type="string"),
-     *
-     *
-     *  )),
 
-
-     *   @OA\Response(
-     *      response=200,
-     *       description="Success",
-     *      @OA\MediaType(
-     *           mediaType="application/json",
-     *      )
-     *   ),
-     *   @OA\Response(
-     *      response=401,
-     *       description="Unauthenticated"
-     *   ),
-     *   @OA\Response(
-     *      response=400,
-     *      description="Bad Request"
-     *   ),
-     *   @OA\Response(
-     *      response=404,
-     *      description="not found"
-     *   ),
-     *      @OA\Response(
-     *          response=403,
-     *          description="Forbidden"
-     *      ),
-     *
-     *)
-     **/
     //get user data api
     public function get_data(Request $request)
     {

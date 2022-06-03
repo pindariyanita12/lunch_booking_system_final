@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -18,7 +17,6 @@
     <script src="{{asset('/js/script.js') }}"></script>
     <title>Off Days</title>
 </head>
-
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-white">
         <div class="container-fluid">
@@ -50,7 +48,6 @@
     </nav>
     <div id='calendar'></div>
 </body>
-
 <script>
     window.onload = offDay();
 
@@ -71,8 +68,6 @@
 
         calendar.render();
     }
-
 </script>
 </body>
-
 </html>

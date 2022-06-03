@@ -52,7 +52,6 @@
             });
     }
 </script>
-
 <body>
     <div class="login-container mx-auto">
         <div class="image">
@@ -70,5 +69,4 @@
         </form>
     </div>
 </body>
-
 </html>

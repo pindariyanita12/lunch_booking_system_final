@@ -78,7 +78,6 @@
         });
     </script>
 </head>
-
 <body>
     @include('admin.navbar')
     <div>
@@ -107,8 +106,5 @@
             </thead>
         </table>
     </div>
-
-
 </body>
-
 </html>

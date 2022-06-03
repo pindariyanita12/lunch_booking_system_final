@@ -12,7 +12,7 @@ $swagger_config = [
                 /*
                  * Route for accessing api documentation interface
                 */
-                // 'api' => '/swaggerdocs',
+                'api' => '/swaggerdocs',
             ],
             'paths' => [
                 /*

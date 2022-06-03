@@ -72,8 +72,6 @@
     </div>
 <br>
 <h3 class="text-center">{{__('home.datewisetitle')}}</h3>
-
-
     <div class="container">
         <br>
         <table class="table table-bordered data-table" id="dataTable">
@@ -90,5 +88,4 @@
 
     </div>
 </body>
-
 </html>
