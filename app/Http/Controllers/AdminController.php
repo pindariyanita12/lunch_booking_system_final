@@ -43,7 +43,7 @@ class AdminController extends Controller
                 })
                 ->addColumn('action', function ($userdata) {
                     $actionBtn = '<a href="' . route('admin.admindashboard.destroy', [$userdata->user->id, $userdata->id]) . '" class="btn btn-danger btn-sm" ><i class="bi bi-trash"></i></a>';
-                    $actionBtn = $actionBtn .'<a href="' . route('admin.admindashboard.edit', [$userdata->user->id, $userdata->id]) . '" class="btn btn-primary btn-sm" ><i class="bi bi-pencil"></i></a>';
+                    $actionBtn = $actionBtn .'<button id="edit-item" type="button" name="edit-item" data-target-id="'.$userdata->id.'" class="edit btn btn-primary btn-sm ms-2" data-toggle="modal" data-target="edit-modal"><i class="bi bi-pencil"></i></button>';
                     return $actionBtn;
                 })
                 ->rawColumns(['action'])
