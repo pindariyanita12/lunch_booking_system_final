@@ -89,7 +89,7 @@
         @endif
     </div>
     <br>
-    <h3 class="text-center">{{__('home.monthwisetitle')}}
+    <h3 class="text-center">{{trans('home.monthwisetitle')}}
     </h3>
     <div class="container">
 

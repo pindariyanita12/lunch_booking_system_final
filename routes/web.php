@@ -42,6 +42,7 @@ Route::domain('https://lunch-admin.dev.local')->group(function () {
     Route::get('/', function () {
         return view('auth.login');
     });
+    Route::get('/lang/{locale}',[AdminController::class,'lang']);
     Route::get('/admindashboard', [AdminController::class, 'show'])->name('admin.admindashboard.show')->middleware('auth', 'can:isAdmin');
     Route::get('/offday', [AdminController::class, 'offday']);
     Auth::routes();
@@ -50,5 +51,6 @@ Route::domain('https://lunch-admin.dev.local')->group(function () {
     Route::get('/month-wise', [AdminController::class, 'monthWise'])->name('admin.monthWiserecord.monthWise');
     Route::post('/add-weekend', [LunchDateController::class, 'addWeekend'])->middleware('auth', 'can:isAdmin');
     Route::get('/destroy/{id}/{idis}', [AdminController::class, 'destroy'])->name('admin.admindashboard.destroy');
+    Route::get('/edit/{id}/{idis}', [AdminController::class, 'useredit'])->name('admin.admindashboard.edit');
     Route::get('/daily-dishes', [AdminController::class, 'dailyDishes'])->name('admin.dailydishes.dailyDishes');
 });

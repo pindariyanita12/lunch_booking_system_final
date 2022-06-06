@@ -9,14 +9,27 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Html\Button;
-
+use Illuminate\Support\Facades\Config;
+use Session;
 class AdminController extends Controller
 {
+    
+    public function lang($lang){
+        // dd($lang);
+        // $lang = Config::get('app.languages');
+        // dd($lang);
+       if(array_key_exists($lang,Config::get('app.languages'))){
+           Session::put('locale',$lang);
+       }
+       return redirect()->back();
+    }
 
     //admin dashboard
     public function show(Request $request)
     {
-        App::setLocale('hi');
+        // // global $lang;
+        // print_r($this->lang);
+        // App::setLocale($this->lang);
         if ($request->ajax()) {
 
             $date = date("Y-m-d");
@@ -29,10 +42,10 @@ class AdminController extends Controller
                     return empty($userdata->user->name) ? "NA" : $userdata->user->name;
                 })
                 ->addColumn('action', function ($userdata) {
-                    $actionBtn = '<a href="' . route('admin.admindashboard.destroy', [$userdata->user->id, $userdata->id]) . '" class="btn btn-danger btn-sm" ><i class="fa fa-trash ">Delete</i></a>';
+                    $actionBtn = '<a href="' . route('admin.admindashboard.destroy', [$userdata->user->id, $userdata->id]) . '" class="btn btn-danger btn-sm" ><i class="bi bi-trash"></i></a>';
+                    $actionBtn = $actionBtn .'<a href="' . route('admin.admindashboard.edit', [$userdata->user->id, $userdata->id]) . '" class="btn btn-primary btn-sm" ><i class="bi bi-pencil"></i></a>';
                     return $actionBtn;
                 })
-
                 ->rawColumns(['action'])
                 ->make(true);
         }
@@ -43,7 +56,7 @@ class AdminController extends Controller
     //off days for admin
     public function offday()
     {
-        App::setLocale('hi');
+        // App::setLocale($this->lang);
         $dates = LunchDate::all();
         $d = "";
         foreach ($dates as $date) {
@@ -55,7 +68,7 @@ class AdminController extends Controller
     //Datewise records of users
     public function dateWise(Request $request)
     {
-        App::setLocale('hi');
+        // App::setLocale($this->lang);
         if ($request->ajax()) {
             $idis = $request->date;
             $record = Record::with('user')->whereDate('created_at', '=', $request->date)->get();
@@ -67,8 +80,7 @@ class AdminController extends Controller
                     return empty($userdata->user->name) ? "NA" : $userdata->user->name;
                 })
                 ->addColumn('action', function ($userdata) use ($idis) {
-                    $actionBtn = '<a href="' . route('admin.admindashboard.destroy', [$userdata->user->id, $idis]) . '" class="btn btn-danger btn-sm" ><i class="fa fa-trash ">Delete</i></a>';
-                    return $actionBtn;
+                    $actionBtn = '<a href="' . route('admin.admindashboard.destroy', [$userdata->user->id, $idis]) . '" class="btn btn-danger btn-sm" ><i class="fa fa-trash ">Delete</i></a>';  
                 })
                 ->make(true);
         }
@@ -79,7 +91,7 @@ class AdminController extends Controller
     //monthwise records
     public function monthWise(Request $request)
     {
-        App::setLocale('hi');
+        // App::setLocale($this->lang);
         if ($request->ajax()) {
 
             $idis = $request->idis;
@@ -101,6 +113,7 @@ class AdminController extends Controller
                     $actionBtn = '<a href="' . route('admin.admindashboard.destroy', [$userdata->id, $idis]) . '" class="btn btn-danger btn-sm" ><i class="fa fa-trash ">Delete</i></a>';
                     return $actionBtn;
                 })
+                ->rawColumns(['action'])
                 ->make(true);
         }
 
@@ -122,9 +135,14 @@ class AdminController extends Controller
         }
 
     }
+
+    public function useredit(Request $request){
+        dd($request->id);
+    }
+    
     public function dailyDishes(Request $request)
     {
-        App::setLocale('hi');
+        //  App::setLocale($this->lang);
 
         $uniquerecord = Record::select(DB::raw('DISTINCT Date(created_at) as lunchdate,count(is_taken) as totaldishes'))->whereYear('created_at', '=', date('Y'))->whereMonth('created_at', date('m'))->groupBy('lunchdate')->get();
         $totaldishes = $uniquerecord->sum('totaldishes');

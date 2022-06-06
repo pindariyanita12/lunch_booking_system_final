@@ -74,7 +74,7 @@
         @endif
     </div>
     <br>
-    <h3 class="text-center">{{__('home.dailydishestitle')}}
+    <h3 class="text-center">{{trans('home.dailydishestitle')}}
     </h3>
 
     <div class="container">

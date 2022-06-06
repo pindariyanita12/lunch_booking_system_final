@@ -1,6 +1,6 @@
 <?php
 
-$swagger_config = [
+return [
     'default' => 'default',
     'documentations' => [
         'default' => [
@@ -285,7 +285,4 @@ $swagger_config = [
         ],
     ],
 ];
-if(request()->getHost()=='lunch-api.dev.local') {
-    $swagger_config['documentations']['default']['routes']['api'] = '/swaggerdocs';
-}
-return $swagger_config;
+
