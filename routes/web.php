@@ -39,7 +39,7 @@ Route::domain(env('APP_URL'))->group(function () {
 });
 
 //admin route
-Route::domain(env('ADMIN_URL'))->group(function () {
+// Route::domain(env('ADMIN_URL'))->group(function () {
     Route::get('/', function () {
         return view('auth.login');
     });
@@ -52,4 +52,4 @@ Route::domain(env('ADMIN_URL'))->group(function () {
     Route::post('/add-weekend', [LunchDateController::class, 'addWeekend'])->middleware('auth', 'can:isAdmin');
     Route::get('/destroy/{id}/{idis}', [AdminController::class, 'destroy'])->name('admin.admindashboard.destroy');
     Route::get('/daily-dishes', [AdminController::class, 'dailyDishes'])->name('admin.dailydishes.dailyDishes');
-});
+// });
