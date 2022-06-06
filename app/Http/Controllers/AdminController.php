@@ -16,12 +16,26 @@ class AdminController extends Controller
     //admin dashboard
     public function show(Request $request)
     {
+        if ($request->all() == null) {
+            $dateis = date('Y-m-d');
+        } else {
+            $dateis = $request->date;
+        }
 
         App::setLocale('hi');
-        if ($request->ajax()) {
+        $uniquerecord = Record::select(DB::raw('DISTINCT Date(created_at) as lunchdate,count(is_taken) as totaldishes'))->whereYear('created_at', '=', date('Y'))->whereMonth('created_at', date('m'))->groupBy('lunchdate')->get();
 
-            $date = date("Y-m-d");
-            $record = Record::with('user')->whereDate('created_at', '=', $date)->get();
+        $totalmonthlydishes = $uniquerecord->sum('totaldishes');
+
+        $totaltrainees = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereDate('records.created_at', '=', $dateis)->where('users.type', '0')->select(DB::raw('COUNT(is_taken) AS uniquerecord'))->first();
+
+        $totalemployees = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereDate('records.created_at', '=', $dateis)->where('users.type', '1')->select(DB::raw('COUNT(is_taken) AS uniquerecord'))->first();
+
+        if ($request->ajax()) {
+            if($dateis==null){
+                $dateis=date('Y-m-d');
+            }
+            $record = Record::with('user')->whereDate('created_at','=', $dateis)->get();
 
             return datatables()->of($record)
                 ->editColumn('userempid', function ($userdata) {
@@ -31,7 +45,6 @@ class AdminController extends Controller
                 ->editColumn('username', function ($userdata) {
                     return empty($userdata->user->name) ? "NA" : $userdata->user->name;
                 })
-
                 ->addColumn('action', function ($userdata) {
                     $actionBtn = '<a href="' . route('admin.admindashboard.destroy', [$userdata->user->id, $userdata->id]) . '" class="btn btn-danger btn-sm" ><i class="fa fa-trash ">Delete</i></a>';
                     return $actionBtn;
@@ -40,7 +53,7 @@ class AdminController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('admin.admindashboard');
+        return view('admin.admindashboard', ['totaldishes' => $totalmonthlydishes, 'totaltrainees' => $totaltrainees->uniquerecord, 'totalemployees' => $totalemployees->uniquerecord]);
 
     }
 
@@ -126,8 +139,25 @@ class AdminController extends Controller
         }
 
     }
+    public function destroymonthwise(Request $request)
+    {
+        $record = Record::with('user')->where('user_id', $request->id)->whereYear('created_at', '=', date('Y'))->whereMonth('created_at', '=', $request->idis)->get();
+        if (count($record) > 1) {
+            $record->each->delete();
+            return redirect('/daily-dishes');
+
+        } else {
+            $record = Record::with('user')->where('user_id', $request->id)->first();
+            $record->delete();
+            return redirect('/daily-dishes');
+
+        }
+
+    }
+
     public function dailyDishes(Request $request)
     {
+
         App::setLocale('hi');
         $trainees = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereYear('records.created_at', '=', date('Y'))->where('users.type', '0')->select(DB::raw('DISTINCT users.id,users.emp_id,users.email, users.name,COUNT(is_taken) AS uniquerecord'))->groupBy('users.email')->get();
 
@@ -145,18 +175,19 @@ class AdminController extends Controller
                     return empty($userdata->totaldishes) ? "NA" : $userdata->totaldishes;
                 })
                 ->addColumn('traineename', function ($userdata1) use ($trainees) {
-                    // dd($trainees[0]->name);
                     return empty($trainees->name) ? "NA" : $trainees->name;
                 })
+
                 ->make(true);
         }
         return view('admin.dailydishes', ['totaldishes' => $totaldishes]);
     }
+
     public function trainees(Request $request)
     {
-        $trainees = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereYear('records.created_at', '=', date('Y'))->whereMonth('records.created_at', '=', date('m'))->where('users.type','0')->select(DB::raw('DISTINCT users.id,users.emp_id,users.email, users.name,COUNT(is_taken) AS uniquerecord'))->groupBy('users.email')->get();
+        $trainees = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereYear('records.created_at', '=', date('Y'))->whereMonth('records.created_at', '=', $request->idis)->where('users.type', '0')->select(DB::raw('DISTINCT users.id,users.emp_id,users.email, users.name,COUNT(is_taken) AS uniquerecord'))->groupBy('users.email')->get();
         if ($request->ajax()) {
-            $trainees = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereYear('records.created_at', '=', date('Y'))->whereMonth('records.created_at', '=', date('m'))->where('users.type','0')->select(DB::raw('DISTINCT users.id,users.emp_id,users.email, users.name,COUNT(is_taken) AS uniquerecord'))->groupBy('users.email')->get();
+            $idis=$request->idis;
             return datatables()->of($trainees)
                 ->editColumn('trainee_id', function ($userdata) {
                     return empty($userdata->emp_id) ? "NA" : $userdata->emp_id;
@@ -164,18 +195,22 @@ class AdminController extends Controller
                 ->addColumn('traineename', function ($userdata) {
                     return empty($userdata->name) ? "NA" : $userdata->name;
                 })
-                ->addColumn('uniquerecord', function ($userdata)  {
+                ->addColumn('uniquerecord', function ($userdata) {
                     return empty($userdata->uniquerecord) ? "NA" : $userdata->uniquerecord;
+                })
+                ->addColumn('action', function ($userdata) use ($idis) {
+                    $actionBtn = '<a href="' . route('admin.admindashboard.destroymonthwise', [$userdata->id, $idis]) . '" class="btn btn-danger btn-sm" ><i class="fa fa-trash ">Delete</i></a>';
+                    return $actionBtn;
                 })
                 ->make(true);
         }
-        return view('admin.dailydishes.trainees');
+        return redirect('admin.dailydishes.trainees');
     }
     public function employees(Request $request)
     {
         if ($request->ajax()) {
-
-            $uniquerecord = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereYear('records.created_at', '=', date('Y'))->whereMonth('records.created_at', '=', date('m'))->where('users.type','1')->select(DB::raw('DISTINCT users.id,users.emp_id,users.email, users.name,COUNT(is_taken) AS uniquerecord'))->groupBy('users.email')->get();
+            $idis=$request->idis;
+            $uniquerecord = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereYear('records.created_at', '=', date('Y'))->whereMonth('records.created_at', '=', $request->idis)->where('users.type', '1')->select(DB::raw('DISTINCT users.id,users.emp_id,users.email, users.name,COUNT(is_taken) AS uniquerecord'))->groupBy('users.email')->get();
             return datatables()->of($uniquerecord)
                 ->editColumn('emp_id', function ($userdata) {
 
@@ -184,12 +219,16 @@ class AdminController extends Controller
                 ->addColumn('employeename', function ($userdata) {
                     return empty($userdata->name) ? "NA" : $userdata->name;
                 })
-                ->addColumn('uniquerecord', function ($userdata)  {
+                ->addColumn('uniquerecord', function ($userdata) {
                     return empty($userdata->uniquerecord) ? "NA" : $userdata->uniquerecord;
+                })
+                ->addColumn('action', function ($userdata) use ($idis) {
+                    $actionBtn = '<a href="' . route('admin.admindashboard.destroymonthwise', [$userdata->id, $idis]) . '" class="btn btn-danger btn-sm" ><i class="fa fa-trash ">Delete</i></a>';
+                    return $actionBtn;
                 })
                 ->make(true);
         }
-        return view('admin.dailydishes.employees');
+        return redirect('admin.dailydishes.employees');
     }
 
     public function html()

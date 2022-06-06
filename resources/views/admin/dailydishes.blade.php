@@ -14,6 +14,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="crossorigin="anonymous"></script>
+
     <script src=" https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>
     <script src=" https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
@@ -32,7 +34,9 @@
     </style>
     <script type="text/javascript">
         $(document).ready(function() {
+            const params = new URLSearchParams(window.location.search);
             $('table.display').dataTable();
+
             var $table1 = $('#dataTable').DataTable({
                 processing: true,
                 serverSide: false,
@@ -51,7 +55,15 @@
                 ],
                 ajax: {
                     url: "{{ route('admin.dailydishes.dailyDishes') }}",
-                    dataSrc: "data"
+                    dataSrc: "data",
+                    data: {
+                        idis: params.get('id')
+                    },
+                    complete: function (data) {
+                        $('#tab3').removeClass('active');
+                        $('#tab2').removeClass('active');
+                        $('#tab1').addClass('active');
+                    }
 
                 },
                 columns: [{
@@ -65,6 +77,7 @@
 
                 ]
             });
+
             var $table2 = $('#showemployee').DataTable({
                 processing: true,
                 serverSide: false,
@@ -83,6 +96,14 @@
                 ],
                 ajax: {
                     url: "{{ route('admin.dailydishes.employees') }}",
+                    data: {
+                        idis: params.get('id')
+                    },
+                    complete: function (data) {
+                        $('#tab3').removeClass('active');
+                        $('#tab1').removeClass('active');
+                        $('#tab2').addClass('active');
+                    }
 
                 },
                 columns: [{
@@ -96,11 +117,17 @@
                     {
                         data: 'uniquerecord',
                         name: 'uniquerecord'
-                    }
+                    },
+                    {
+                        data: 'action',
+                        name: 'action'
+                    },
 
                 ]
             });
+
             var $table3 = $('#showtrainee').DataTable({
+
                 processing: true,
                 serverSide: false,
                 dom: 'lrBfrtip',
@@ -118,8 +145,17 @@
                 ],
                 ajax: {
                     url: "{{ route('admin.dailydishes.trainees') }}",
+                    data: {
+                        idis: params.get('id')
+                    },
+                    complete: function (data) {
+                        $('#tab1').removeClass('active');
+                        $('#tab2').removeClass('active');
+                        $('#tab3').addClass('active');
+                    }
 
                 },
+
                 columns: [{
                         data: 'trainee_id',
                         name: 'trainee_id'
@@ -131,7 +167,11 @@
                     {
                         data: 'uniquerecord',
                         name: 'uniquerecord'
-                    }
+                    },
+                    {
+                        data: 'action',
+                        name: 'action'
+                    },
 
                 ]
             });
@@ -142,7 +182,6 @@
 
 <body>
     @include('admin.navbar')
-
 
     <div>
         @if (session()->has('message'))
@@ -163,7 +202,7 @@
                 <a class="nav-link active" data-toggle="tab" aria-expanded="true" href="#tab1">Daily Dishes</a>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                <a class="nav-link dropdown-toggle " data-bs-toggle="dropdown" href="#" role="button"
                     aria-expanded="false">Employee Monthwise</a>
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" data-toggle="tab" aria-expanded="false" href="#tab2">Employee</a></li>
@@ -192,9 +231,9 @@
                 </div>
             </div>
 
-            <div class="tab-pane " id="tab2">
+            <div class="tab-pane active" id="tab2">
 
-                <form action='' method="get">
+                <form action='#tab2' method="get">
                     <select name="id" style="cursor: Pointer;" class="form-select form-select-sm-1  text-black border-0"
                         id="idis" onchange="this.form.submit()">
                         <option value="" selected disabled>Select Month</option>
@@ -221,12 +260,33 @@
                             <th>Emp id</th>
                             <th>Employee Name</th>
                             <th>Total</th>
+                            <th>Action</th>
 
                         </tr>
                     </thead>
                 </table>
             </div>
-            <div class="tab-pane " id="tab3">
+            <div class="tab-pane active" id="tab3">
+                <form action='#tab3' method="get">
+                    <select name="id" style="cursor: Pointer;" class="form-select form-select-sm-1  text-black border-0"
+                        id="idis" onchange="this.form.submit()">
+                        <option value="" selected disabled>Select Month</option>
+                        <option value="1" {{ Request::get('id') == '1' ? 'selected' : '' }}>Jan</option>
+                        <option value="2" {{ Request::get('id') == '2' ? 'selected' : '' }}>Feb</option>
+                        <option value="3" {{ Request::get('id') == '3' ? 'selected' : '' }}>March</option>
+                        <option value="4" {{ Request::get('id') == '4' ? 'selected' : '' }}>April</option>
+                        <option value="5" {{ Request::get('id') == '5' ? 'selected' : '' }}>May</option>
+                        <option value="6" {{ Request::get('id') == '6' ? 'selected' : '' }}>June</option>
+                        <option value="7" {{ Request::get('id') == '7' ? 'selected' : '' }}>July</option>
+                        <option value="8" {{ Request::get('id') == '8' ? 'selected' : '' }}>August</option>
+                        <option value="9" {{ Request::get('id') == '9' ? 'selected' : '' }}>Sept</option>
+                        <option value="10" {{ Request::get('id') == '10' ? 'selected' : '' }}>Oct</option>
+                        <option value="11" {{ Request::get('id') == '11' ? 'selected' : '' }}>Nov</option>
+                        <option value="12" {{ Request::get('id') == '12' ? 'selected' : '' }}>Dec</option>
+                    </select>
+                </form>
+                <hr>
+                <br>
                 <table class="table table-bordered data-table" id="showtrainee">
 
                     <thead>
@@ -234,6 +294,8 @@
                             <th>Emp id</th>
                             <th>Nonemployee Name</th>
                             <th>Total</th>
+                            <th>Action</th>
+
 
                         </tr>
                     </thead>
