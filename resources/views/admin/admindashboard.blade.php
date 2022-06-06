@@ -18,7 +18,7 @@
     <script type="text/javascript">
         $(document).ready(function() {
             const params = new URLSearchParams(window.location.search);
-            $('.data-table').DataTable({
+                $('.data-table').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: {
@@ -27,16 +27,10 @@
                         date: params.get('date')
                     }
                 },
-                columns: [
-                    {
+                columns: [{
                         data: 'userempid',
                         name: 'Emp Id'
                     },
-                    {
-                        data: 'lunch_dates',
-                        name: 'lunch_dates'
-                    },
-
                     {
                         data: 'username',
                         name: 'Name'
@@ -54,6 +48,46 @@
 
 <body>
     @include('admin.navbar')
+    <br>
+
+    <div class="container">
+
+        <div class="row">
+
+            <div class="col-sm-3">
+                <div class="card">
+                    <div class="card-body" style="background-color: rgba(255, 0, 0, 0.359)">
+                        <h5 class="card-title">Total Trainees</h5>
+                        <p class="card-text">{{ $totaltrainees }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="card">
+                    <div class="card-body" style="background-color: rgba(73, 225, 73, 0.575)">
+                        <h5 class="card-title">Total Employees</h5>
+                        <p class="card-text">{{ $totalemployees }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="card">
+                    <div class="card-body" style="background-color: lightblue">
+                        <h5 class="card-title">Total Today Dishes</h5>
+                        <p class="card-text">{{ $totaltrainees + $totalemployees }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="card">
+                    <div class="card-body" style="background-color: rgba(255, 255, 0, 0.665)">
+                        <h5 class="card-title">Total Monthly Dishes</h5>
+                        <p class="card-text">{{ $totaldishes }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div>
         @if (session()->has('message'))
             <div class="alert alert-success">
@@ -63,16 +97,23 @@
         @endif
     </div>
     <br>
-    <h3 class="text-center">{{__('home.admindashboardtitle')}}
+    <h3 class="text-center">{{ __('home.admindashboardtitle') }} <?php echo ' ' . '(' . date('Y-m-d') . ')'; ?>
     </h3>
 
     <div class="container">
+
+        <form class="d-flex" action="/admindashboard" method="get">
+
+            <input class="form-control me-2" value="{{ Request::get('date') }}" id="showdate" name="date"
+                type="date" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success" onclick="myFunction()">Search</button>
+        </form>
+
         <br>
         <table class="table table-bordered data-table" id="dataTable">
             <thead>
                 <tr>
                     <th>Emp Id</th>
-                    <th>Date</th>
                     <th>NAME</th>
                     <th>Action</th>
                 </tr>
