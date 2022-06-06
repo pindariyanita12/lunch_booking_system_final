@@ -3,7 +3,7 @@ namespace App\Swagger;
 
 /**
  * @OA\Post(
- ** path="/lunch-taken",
+ ** path="/off-day",
  *   tags={"LunchDateController"},
  *   summary="shows offdays to user",
  *   operationId="off-day",

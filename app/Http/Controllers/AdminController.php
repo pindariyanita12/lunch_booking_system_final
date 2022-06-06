@@ -27,20 +27,23 @@ class AdminController extends Controller
     //admin dashboard
     public function show(Request $request)
     {
-        // // global $lang;
+        // global $lang;
         // print_r($this->lang);
         // App::setLocale($this->lang);
         if ($request->ajax()) {
 
             $date = date("Y-m-d");
             $record = Record::with('user')->whereDate('created_at', '=', $date)->get();
+
             return datatables()->of($record)
                 ->editColumn('userempid', function ($userdata) {
+
                     return empty($userdata->user->emp_id) ? "NA" : $userdata->user->emp_id;
                 })
                 ->editColumn('username', function ($userdata) {
                     return empty($userdata->user->name) ? "NA" : $userdata->user->name;
                 })
+
                 ->addColumn('action', function ($userdata) {
                     $actionBtn = '<a href="' . route('admin.admindashboard.destroy', [$userdata->user->id, $userdata->id]) . '" class="btn btn-danger btn-sm" ><i class="bi bi-trash"></i></a>';
                     $actionBtn = $actionBtn .'<button id="edit-item" type="button" name="edit-item" data-target-id="'.$userdata->id.'" class="edit btn btn-primary btn-sm ms-2" data-toggle="modal" data-target="edit-modal"><i class="bi bi-pencil"></i></button>';
@@ -81,7 +84,9 @@ class AdminController extends Controller
                 })
                 ->addColumn('action', function ($userdata) use ($idis) {
                     $actionBtn = '<a href="' . route('admin.admindashboard.destroy', [$userdata->user->id, $idis]) . '" class="btn btn-danger btn-sm" ><i class="fa fa-trash ">Delete</i></a>';  
+                    return $actionBtn;
                 })
+                ->rawColumns(['action'])
                 ->make(true);
         }
         return view('admin.dateWiserecord');
@@ -142,23 +147,70 @@ class AdminController extends Controller
     
     public function dailyDishes(Request $request)
     {
-        //  App::setLocale($this->lang);
+        
+        // App::setLocale('hi');
+        $trainees = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereYear('records.created_at', '=', date('Y'))->where('users.type', '0')->select(DB::raw('DISTINCT users.id,users.emp_id,users.email, users.name,COUNT(is_taken) AS uniquerecord'))->groupBy('users.email')->get();
 
         $uniquerecord = Record::select(DB::raw('DISTINCT Date(created_at) as lunchdate,count(is_taken) as totaldishes'))->whereYear('created_at', '=', date('Y'))->whereMonth('created_at', date('m'))->groupBy('lunchdate')->get();
+
         $totaldishes = $uniquerecord->sum('totaldishes');
+
         if ($request->ajax()) {
             $uniquerecord = Record::select(DB::raw('DISTINCT Date(created_at) as lunchdate,count(is_taken) as totaldishes'))->whereYear('created_at', '=', date('Y'))->whereMonth('created_at', date('m'))->groupBy('lunchdate')->get();
-            return datatables()->of($uniquerecord)
+            return datatables()->of($uniquerecord, $trainees)
                 ->editColumn('date', function ($userdata) {
                     return empty($userdata->lunchdate) ? "NA" : $userdata->lunchdate;
                 })
                 ->editColumn('total', function ($userdata) {
                     return empty($userdata->totaldishes) ? "NA" : $userdata->totaldishes;
                 })
-
+                ->addColumn('action', function ($userdata) use ($idis) {
+                    $actionBtn = '<a href="' . route('admin.admindashboard.destroymonthwise', [$userdata->id, $idis]) . '" class="btn btn-danger btn-sm" ><i class="fa fa-trash ">Delete</i></a>';
+                    return $actionBtn;
+                })
                 ->make(true);
         }
         return view('admin.dailydishes', ['totaldishes' => $totaldishes]);
+    }
+    public function trainees(Request $request)
+    {
+        $trainees = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereYear('records.created_at', '=', date('Y'))->whereMonth('records.created_at', '=', date('m'))->where('users.type','0')->select(DB::raw('DISTINCT users.id,users.emp_id,users.email, users.name,COUNT(is_taken) AS uniquerecord'))->groupBy('users.email')->get();
+        if ($request->ajax()) {
+            $trainees = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereYear('records.created_at', '=', date('Y'))->whereMonth('records.created_at', '=', date('m'))->where('users.type','0')->select(DB::raw('DISTINCT users.id,users.emp_id,users.email, users.name,COUNT(is_taken) AS uniquerecord'))->groupBy('users.email')->get();
+            return datatables()->of($trainees)
+                ->editColumn('trainee_id', function ($userdata) {
+                    return empty($userdata->emp_id) ? "NA" : $userdata->emp_id;
+                })
+                ->addColumn('traineename', function ($userdata) {
+                    return empty($userdata->name) ? "NA" : $userdata->name;
+                })
+                ->addColumn('uniquerecord', function ($userdata)  {
+                    return empty($userdata->uniquerecord) ? "NA" : $userdata->uniquerecord;
+                })
+                ->make(true);
+        }
+        return view('admin.dailydishes.trainees');
+    }
+    public function employees(Request $request)
+    {
+        if ($request->ajax()) {
+
+            $uniquerecord = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereYear('records.created_at', '=', date('Y'))->whereMonth('records.created_at', '=', date('m'))->where('users.type','1')->select(DB::raw('DISTINCT users.id,users.emp_id,users.email, users.name,COUNT(is_taken) AS uniquerecord'))->groupBy('users.email')->get();
+            return datatables()->of($uniquerecord)
+                ->editColumn('emp_id', function ($userdata) {
+
+                    return empty($userdata->emp_id) ? "NA" : $userdata->emp_id;
+                })
+                ->addColumn('employeename', function ($userdata) {
+                    return empty($userdata->name) ? "NA" : $userdata->name;
+                })
+                ->addColumn('uniquerecord', function ($userdata)  {
+                    return empty($userdata->uniquerecord) ? "NA" : $userdata->uniquerecord;
+                    
+                })
+                ->make(true);
+        }
+        return view('admin.dailydishes.employees');
     }
 
     public function html()

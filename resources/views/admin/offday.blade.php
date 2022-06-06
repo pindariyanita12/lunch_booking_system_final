@@ -20,6 +20,7 @@
 </head>
 <body>
     @include('admin.navbar')
+
     <br>
     <h3 class="text-center">{{trans('home.offdaytitle')}}</h3>
     <div class="container mt-5" style="height:300px">

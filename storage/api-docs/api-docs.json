@@ -102,7 +102,11 @@
                 }
             }
         },
+<<<<<<< HEAD
         "/signin": {
+=======
+        "/off-day": {
+>>>>>>> 2f158ecc85443057cea45db0b68a2cfb98b9715d
             "post": {
                 "tags": [
 <<<<<<< HEAD
@@ -149,6 +153,55 @@
                         "description": "Unauthenticated"
                     },
 >>>>>>> 71449c3e1dd3fbae86ec351b658ba6997dba7dff
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "not found"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/lunch-taken": {
+            "post": {
+                "tags": [
+                    "RecordController"
+                ],
+                "summary": "lunch taken or not",
+                "operationId": "lunchTaken",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer"
+                                    },
+                                    "token": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully Taken Lunch",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "409": {
+                        "description": "You already taken lunch"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
                     "400": {
                         "description": "Bad Request"
                     },

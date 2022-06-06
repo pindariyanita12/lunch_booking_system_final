@@ -2,18 +2,22 @@ This is a lunch booking system.
 This system helps user to make entry by clicking one button instead of making entry in book, it will also help Admin to count filter records.
 
 Rerquirements:-
-composer-version >= 2.2.7
-php-version >= 7.4.3,
-Laravel-version >=8.0.0,
-Microsoft-graph >=1.64,
-Yajra/Laravel-datatables-buttons = 4.13,
-Yajra/Laravel-datatables-oracle = 9.20,
-Darkaonline/l5-Swagger = 8.3,
-Fruitcake/laravel-cors = 2.0,
-Guzzlehttp/guzzle = 7.4,
-Laravel/sanctum = 2.11,
-Laravel/tinker = 2.5,
-Laravel/ui = 3.4
+<<<<<<< HEAD
+=======
+
+> > > > > > > 2f158ecc85443057cea45db0b68a2cfb98b9715d
+> > > > > > > composer-version >= 2.2.7
+> > > > > > > php-version >= 7.4.3,
+> > > > > > > Laravel-version >=8.0.0,
+> > > > > > > Microsoft-graph >=1.64,
+> > > > > > > Yajra/Laravel-datatables-buttons = 4.13,
+> > > > > > > Yajra/Laravel-datatables-oracle = 9.20,
+> > > > > > > Darkaonline/l5-Swagger = 8.3,
+> > > > > > > Fruitcake/laravel-cors = 2.0,
+> > > > > > > Guzzlehttp/guzzle = 7.4,
+> > > > > > > Laravel/sanctum = 2.11,
+> > > > > > > Laravel/tinker = 2.5,
+> > > > > > > Laravel/ui = 3.4
 
 Installation:-
 

@@ -11,11 +11,11 @@
                     <a class="nav-link active text-white" aria-current="page" href="/admindashboard">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="/offday">Off Day</a>
+                    <a class="nav-link text-white" href="/offday">Off Days</a>
                 </li>
 
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="/daily-dishes">Daily Dishes</a>
+                </li>
+                    <a class="nav-link text-white" href="/daily-dishes">Reports</a>
                 </li>
         </div>
         </ul>
@@ -31,7 +31,14 @@
                 
                     <li><a class="dropdown-item" href="/lang/hi">Hindi</a></li>
                 </ul>
-            </li>
+           
+
+        </div>
+        </ul>
+        <ul class="navbar-nav ms-auto mb-0">
+
+
+
             <li class="nav-item dropdown">
                 <a id="navbarDropdown" class="nav-link dropdown-toggle text-white" href="#" role="button"
                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>Datewise Records</title>
     <meta charset="utf-8">
@@ -28,24 +29,26 @@
 </style>
     <script type="text/javascript">
         $(document).ready(function() {
-            $('.data-table').DataTable({
+            $('table.display').dataTable();
+            var $table1 = $('#dataTable').DataTable({
                 processing: true,
                 serverSide: false,
                 dom: 'lrBfrtip',
                 buttons: [
 
-            {
-                extend: 'csv',
-                text: 'Export CSV',
-                className: 'btn-space',
-                exportOptions: {
-                    orthogonal: null
-                }
-            }
+                    {
+                        extend: 'csv',
+                        text: 'Export CSV',
+                        className: 'btn-space',
+                        exportOptions: {
+                            orthogonal: null
+                        }
+                    }
 
-        ],
+                ],
                 ajax: {
                     url: "{{ route('admin.dailydishes.dailyDishes') }}",
+                    dataSrc: "data"
 
                 },
                 columns: [{
@@ -55,10 +58,89 @@
                     {
                         data: 'total',
                         name: 'total'
+                    }
+
+                ]
+            });
+            var $table2 = $('#showemployee').DataTable({
+                processing: true,
+                serverSide: false,
+                dom: 'lrBfrtip',
+                buttons: [
+
+                    {
+                        extend: 'csv',
+                        text: 'Export CSV',
+                        className: 'btn-space',
+                        exportOptions: {
+                            orthogonal: null
+                        }
+                    }
+
+                ],
+                ajax: {
+                    url: "{{ route('admin.dailydishes.employees') }}",
+
+                },
+                columns: [{
+                        data: 'emp_id',
+                        name: 'emp_id'
+                    },
+                    {
+                        data: 'employeename',
+                        name: 'employeename'
+                    },
+                    {
+                        data: 'uniquerecord',
+                        name: 'uniquerecord'
+                    },
+                    {
+                        data: 'action',
+                        name: 'action'
                     },
 
                 ]
             });
+            var $table3 = $('#showtrainee').DataTable({
+                processing: true,
+                serverSide: false,
+                dom: 'lrBfrtip',
+                buttons: [
+
+                    {
+                        extend: 'csv',
+                        text: 'Export CSV',
+                        className: 'btn-space',
+                        exportOptions: {
+                            orthogonal: null
+                        }
+                    }
+
+                ],
+                ajax: {
+                    url: "{{ route('admin.dailydishes.trainees') }}",
+
+                },
+                columns: [{
+                        data: 'trainee_id',
+                        name: 'trainee_id'
+                    },
+                    {
+                        data: 'traineename',
+                        name: 'traineename'
+                    },
+                    {
+                        data: 'uniquerecord',
+                        name: 'uniquerecord'
+                    },
+                     {
+                        data: 'action',
+                        name: 'action'
+                    },
+
+                ]
+            });
+
         });
     </script>
 </head>
@@ -78,21 +160,91 @@
     </h3>
 
     <div class="container">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" aria-expanded="true" href="#tab1">Daily Dishes</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                    aria-expanded="false">Employee Monthwise</a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" data-toggle="tab" aria-expanded="false" href="#tab2">Employee</a></li>
+                    <li><a class="dropdown-item" data-toggle="tab" aria-expanded="false" href="#tab3">Non-Employee</a>
+                    </li>
+
+                </ul>
+            </li>
+        </ul>
         <br>
-        <table class="table table-bordered data-table" id="dataTable">
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab1">
+                <table class="table table-bordered data-table" id="dataTable">
 
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
 
-        </table>
+                </table>
+                <div class="">
+                    <h3 class="text-center">{{trans('home.dailydishestotal') }}
+                        : {{ $totaldishes }}</h3>
+                </div>
+            </div>
+
+            <div class="tab-pane " id="tab2">
+
+                <form action='' method="get">
+                    <select name="id" style="cursor: Pointer;" class="form-select form-select-sm-1  text-black border-0"
+                        id="idis" onchange="this.form.submit()">
+                        <option value="" selected disabled>Select Month</option>
+                        <option value="1" {{ Request::get('id') == '1' ? 'selected' : '' }}>Jan</option>
+                        <option value="2" {{ Request::get('id') == '2' ? 'selected' : '' }}>Feb</option>
+                        <option value="3" {{ Request::get('id') == '3' ? 'selected' : '' }}>March</option>
+                        <option value="4" {{ Request::get('id') == '4' ? 'selected' : '' }}>April</option>
+                        <option value="5" {{ Request::get('id') == '5' ? 'selected' : '' }}>May</option>
+                        <option value="6" {{ Request::get('id') == '6' ? 'selected' : '' }}>June</option>
+                        <option value="7" {{ Request::get('id') == '7' ? 'selected' : '' }}>July</option>
+                        <option value="8" {{ Request::get('id') == '8' ? 'selected' : '' }}>August</option>
+                        <option value="9" {{ Request::get('id') == '9' ? 'selected' : '' }}>Sept</option>
+                        <option value="10" {{ Request::get('id') == '10' ? 'selected' : '' }}>Oct</option>
+                        <option value="11" {{ Request::get('id') == '11' ? 'selected' : '' }}>Nov</option>
+                        <option value="12" {{ Request::get('id') == '12' ? 'selected' : '' }}>Dec</option>
+                    </select>
+                </form>
+                <hr>
+                <br>
+                <table class="table table-bordered showemployee" id="showemployee">
+
+                    <thead>
+                        <tr>
+                            <th>Emp id</th>
+                            <th>Employee Name</th>
+                            <th>Total</th>
+                            <th>Action</th>
+
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="tab-pane " id="tab3">
+                <table class="table table-bordered data-table" id="showtrainee">
+
+                    <thead>
+                        <tr>
+                            <th>Emp id</th>
+                            <th>Nonemployee Name</th>
+                            <th>Total</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                </table>
+            </div>
+        </div>
     </div>
-    <div class="">
-        <h3 class="text-center">{{__('home.dailydishestotal')}}
-            : {{ $totaldishes }}</h3>
-    </div>
+
 </body>
 </html>
