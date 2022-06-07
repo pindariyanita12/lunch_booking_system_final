@@ -16,6 +16,7 @@ class AdminController extends Controller
     //admin dashboard
     public function show(Request $request)
     {
+
         if ($request->all() == null) {
             $dateis = date('Y-m-d');
         } else {
@@ -157,6 +158,7 @@ class AdminController extends Controller
 
     public function dailyDishes(Request $request)
     {
+        //  dd($request->all());
 
         App::setLocale('hi');
         $trainees = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereYear('records.created_at', '=', date('Y'))->where('users.type', '0')->select(DB::raw('DISTINCT users.id,users.emp_id,users.email, users.name,COUNT(is_taken) AS uniquerecord'))->groupBy('users.email')->get();
@@ -185,9 +187,15 @@ class AdminController extends Controller
 
     public function trainees(Request $request)
     {
-        $trainees = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereYear('records.created_at', '=', date('Y'))->whereMonth('records.created_at', '=', $request->idis)->where('users.type', '0')->select(DB::raw('DISTINCT users.id,users.emp_id,users.email, users.name,COUNT(is_taken) AS uniquerecord'))->groupBy('users.email')->get();
+        // dd(date("m"));
+        if ($request->all() == null) {
+            $idis = date('Y-m-d');
+        } else {
+            $idis = $request->idis2;
+        }
+        $trainees = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereYear('records.created_at', '=', date('Y'))->whereMonth('records.created_at', '=', $request->idis2)->where('users.type', '0')->select(DB::raw('DISTINCT users.id,users.emp_id,users.email, users.name,COUNT(is_taken) AS uniquerecord'))->groupBy('users.email')->get();
         if ($request->ajax()) {
-            $idis=$request->idis;
+            $idis=$request->idis2;
             return datatables()->of($trainees)
                 ->editColumn('trainee_id', function ($userdata) {
                     return empty($userdata->emp_id) ? "NA" : $userdata->emp_id;
@@ -208,6 +216,15 @@ class AdminController extends Controller
     }
     public function employees(Request $request)
     {
+        // dd($request->all());
+        $idis=date('m');
+        if ($request->idis == null) {
+            dd("inside if");
+            $idis = date('m');
+        } else {
+
+            $idis = $request->idis;
+        }
         if ($request->ajax()) {
             $idis=$request->idis;
             $uniquerecord = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereYear('records.created_at', '=', date('Y'))->whereMonth('records.created_at', '=', $request->idis)->where('users.type', '1')->select(DB::raw('DISTINCT users.id,users.emp_id,users.email, users.name,COUNT(is_taken) AS uniquerecord'))->groupBy('users.email')->get();
