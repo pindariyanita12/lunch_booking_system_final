@@ -14,8 +14,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="crossorigin="anonymous"></script>
-
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"
+        integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
     <script src=" https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>
     <script src=" https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
@@ -23,12 +23,20 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
     </script>
-<style>
-    .dt-button, .buttons-csv ,.buttons-html5{
-        margin-left: 10px;
-        margin-bottom: 20px;
-    }
-</style>
+    <style>
+        .dt-button,
+        .buttons-csv,
+        .buttons-html5 {
+            margin-left: 10px;
+            margin-bottom: 20px;
+        }
+        #idis{
+            width:250px;
+        }
+        #idis2{
+            width:250px;
+        }
+    </style>
     <script type="text/javascript">
         $(document).ready(function() {
             const params = new URLSearchParams(window.location.search);
@@ -54,12 +62,15 @@
                     url: "{{ route('admin.dailydishes.dailyDishes') }}",
                     dataSrc: "data",
                     data: {
-                        idis: params.get('id')
+                        idis: $('#idis').val()
                     },
-                    complete: function (data) {
-                        $('#tab3').removeClass('active');
-                        $('#tab2').removeClass('active');
-                        $('#tab1').addClass('active');
+                    complete: function(data) {
+                        if ($('#idis').val() == null) {
+                            const d = new Date();
+                            let month = d.getMonth();
+                            // alert(month+1);
+                            data['idis'] = month+1;
+                        }
                     }
 
                 },
@@ -74,86 +85,104 @@
 
                 ]
             });
+            $('#idis').change(function() {
+                var $table2 = $('#showemployee').DataTable({
+                    processing: true,
+                    destroy: true,
+                    serverSide: false,
+                    dom: 'lrBfrtip',
+                    buttons: [
 
-            var $table2 = $('#showemployee').DataTable({
-                processing: true,
-                serverSide: false,
-                dom: 'lrBfrtip',
-                buttons: [
-
-                    {
-                        extend: 'csv',
-                        text: 'Export CSV',
-                        className: 'btn-space',
-                        exportOptions: {
-                            orthogonal: null
+                        {
+                            extend: 'csv',
+                            text: 'Export CSV',
+                            className: 'btn-space',
+                            exportOptions: {
+                                orthogonal: null,
+                                columns: [0,1,2] 
+                            }
                         }
-                    }
 
-                ],
-                ajax: {
-                    url: "{{ route('admin.dailydishes.employees') }}",
-                    data: {
-                        idis: params.get('id')
+                    ],
+                    ajax: {
+                        url: "{{ route('admin.dailydishes.employees') }}",
+                        data: {
+                            idis: $('#idis').val()
+                        },
                     },
-                    complete: function (data) {
-                        $('#tab3').removeClass('active');
-                        $('#tab1').removeClass('active');
-                        $('#tab2').addClass('active');
-                    }
+                    columns: [{
+                            data: 'emp_id',
+                            name: 'emp_id'
+                        },
+                        {
+                            data: 'employeename',
+                            name: 'employeename'
+                        },
+                        {
+                            data: 'uniquerecord',
+                            name: 'uniquerecord'
+                        },
+                        {
+                            data: 'actions',
+                            name: 'actions'
+                        },
 
-                },
-                columns: [{
-                        data: 'emp_id',
-                        name: 'emp_id'
-                    },
-                    {
-                        data: 'employeename',
-                        name: 'employeename'
-                    },
-                    {
-                        data: 'uniquerecord',
-                        name: 'uniquerecord'
-                    },
-                    {
-                        data: 'action',
-                        name: 'action'
-                    },
-
-                ]
+                    ]
+                });
             });
+            $('#idis2').change(function() {
+                var $table3 = $('#showtrainee').DataTable({
+                    destroy: true,
+                    processing: true,
+                    serverSide: false,
+                    dom: 'lrBfrtip',
+                    buttons: [
 
-            var $table3 = $('#showtrainee').DataTable({
+                        {
+                            extend: 'csv',
+                            text: 'Export CSV',
+                            className: 'btn-space',
+                            exportOptions: {
+                                orthogonal: null,
+                                columns: [0,1,2] 
+                            }
+                        }
 
-                processing: true,
-                serverSide: false,
-                dom: 'lrBfrtip',
-                buttons: [
+                    ],
+                    ajax: {
+                        url: "{{ route('admin.dailydishes.trainees') }}",
+                        data: {
+                            idis2: $('#idis2').val()
+                        },
 
-                    {
                         extend: 'csv',
                         text: 'Export CSV',
                         className: 'btn-space',
                         exportOptions: {
                             orthogonal: null,
-                            columns: [0,1,2]
+                            columns: [0,1,2] 
                         }
-                        
-                    }
+                        },
 
-                ],
-                ajax: {
-                    url: "{{ route('admin.dailydishes.trainees') }}",
-                    data: {
-                        idis: params.get('id')
-                    },
-                    complete: function (data) {
-                        $('#tab1').removeClass('active');
-                        $('#tab2').removeClass('active');
-                        $('#tab3').addClass('active');
-                    }
+                    columns: [{
+                            data: 'trainee_id',
+                            name: 'trainee_id'
+                        },
+                        {
+                            data: 'traineename',
+                            name: 'traineename'
+                        },
+                        {
+                            data: 'uniquerecord',
+                            name: 'uniquerecord'
+                        },
+                        {
+                            data: 'actions',
+                            name: 'actions'
+                        },
 
-                },
+                    ]
+                });
 
                 columns: [{
                         data: 'trainee_id',
@@ -175,7 +204,6 @@
                     
                 ]
             });
-
         });
     </script>
     <script>
@@ -239,28 +267,20 @@
                 </table>
                 <div class="">
                     <h3 class="text-center">{{trans('home.dailydishestotal') }}
-                        : {{ $totaldishes }}</h3>
+                        : {{ $totaldishes }}</h3>Previous1Next
                 </div>
             </div>
 
-            <div class="tab-pane active" id="tab2">
+            <div class="tab-pane" id="tab2">
 
-                <form action='#tab2' method="get">
+                <form action='' method="get">
                     <select name="id" style="cursor: Pointer;" class="form-select form-select-sm-1  text-black border-0"
-                        id="idis" onchange="this.form.submit()">
+                        id="idis">
                         <option value="" selected disabled>Select Month</option>
-                        <option value="1" {{ Request::get('id') == '1' ? 'selected' : '' }}>Jan</option>
-                        <option value="2" {{ Request::get('id') == '2' ? 'selected' : '' }}>Feb</option>
-                        <option value="3" {{ Request::get('id') == '3' ? 'selected' : '' }}>March</option>
-                        <option value="4" {{ Request::get('id') == '4' ? 'selected' : '' }}>April</option>
-                        <option value="5" {{ Request::get('id') == '5' ? 'selected' : '' }}>May</option>
-                        <option value="6" {{ Request::get('id') == '6' ? 'selected' : '' }}>June</option>
-                        <option value="7" {{ Request::get('id') == '7' ? 'selected' : '' }}>July</option>
-                        <option value="8" {{ Request::get('id') == '8' ? 'selected' : '' }}>August</option>
-                        <option value="9" {{ Request::get('id') == '9' ? 'selected' : '' }}>Sept</option>
-                        <option value="10" {{ Request::get('id') == '10' ? 'selected' : '' }}>Oct</option>
-                        <option value="11" {{ Request::get('id') == '11' ? 'selected' : '' }}>Nov</option>
-                        <option value="12" {{ Request::get('id') == '12' ? 'selected' : '' }}>Dec</option>
+                        @for ($m = 1; $m <= 12; $m++)
+                            <option value="{{ $m }}">{{ date('F', mktime(0, 0, 0, $m, 1, date('Y'))) }}
+                            </option>
+                        @endfor
                     </select>
                 </form>
                 <hr>
@@ -278,23 +298,15 @@
                     </thead>
                 </table>
             </div>
-            <div class="tab-pane active" id="tab3">
-                <form action='#tab3' method="get">
-                    <select name="id" style="cursor: Pointer;" class="form-select form-select-sm-1  text-black border-0"
-                        id="idis" onchange="this.form.submit()">
+            <div class="tab-pane" id="tab3">
+                <form action='' method="get">
+                    <select  name="id" style="cursor: Pointer;" class="form-select form-select-sm-1  text-black border-0"
+                        id="idis2">
                         <option value="" selected disabled>Select Month</option>
-                        <option value="1" {{ Request::get('id') == '1' ? 'selected' : '' }}>Jan</option>
-                        <option value="2" {{ Request::get('id') == '2' ? 'selected' : '' }}>Feb</option>
-                        <option value="3" {{ Request::get('id') == '3' ? 'selected' : '' }}>March</option>
-                        <option value="4" {{ Request::get('id') == '4' ? 'selected' : '' }}>April</option>
-                        <option value="5" {{ Request::get('id') == '5' ? 'selected' : '' }}>May</option>
-                        <option value="6" {{ Request::get('id') == '6' ? 'selected' : '' }}>June</option>
-                        <option value="7" {{ Request::get('id') == '7' ? 'selected' : '' }}>July</option>
-                        <option value="8" {{ Request::get('id') == '8' ? 'selected' : '' }}>August</option>
-                        <option value="9" {{ Request::get('id') == '9' ? 'selected' : '' }}>Sept</option>
-                        <option value="10" {{ Request::get('id') == '10' ? 'selected' : '' }}>Oct</option>
-                        <option value="11" {{ Request::get('id') == '11' ? 'selected' : '' }}>Nov</option>
-                        <option value="12" {{ Request::get('id') == '12' ? 'selected' : '' }}>Dec</option>
+                        @for ($m = 1; $m <= 12; $m++)
+                            <option value="{{ $m }}">{{ date('F', mktime(0, 0, 0, $m, 1, date('Y'))) }}
+                            </option>
+                        @endfor
                     </select>
                 </form>
                 <hr>

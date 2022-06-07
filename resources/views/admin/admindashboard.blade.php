@@ -15,6 +15,12 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
     </script>
+    <style>
+        .datepicker{
+            width:250px;
+           margin-left:77%;
+        }
+    </style>
     
     <script type="text/javascript">
         $(document).ready(function() {
@@ -104,11 +110,11 @@
     <div class="container">
 
         <form class="d-flex" action="/admindashboard" method="get">
-
-            <input class="form-control me-2" value="{{ Request::get('date') }}" id="showdate" name="date"
-                type="date" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success" onclick="myFunction()">Search</button>
-        </form>
+           <div class="datepicker">
+            <input id="datepicker" class="form-control me-2" value="{{ Request::get('date') }}" id="showdate" name="date"
+                type="date" placeholder="Search" aria-label="Search" />
+            </div>
+            </form>
 
         <br>
         <table class="table table-bordered data-table" id="dataTable">
