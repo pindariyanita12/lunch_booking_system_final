@@ -35,6 +35,13 @@
     <script type="text/javascript">
         $(document).ready(function() {
             const params = new URLSearchParams(window.location.search);
+            if ($('#idis').val() == null) {
+                const d = new Date();
+                let month = d.getMonth();
+                // alert(month+1);
+                idis = month + 1;
+                alert(idis);
+            }
             $('table.display').dataTable();
 
             var $table1 = $('#dataTable').DataTable({
@@ -60,12 +67,12 @@
                         idis: $('#idis').val()
                     },
                     complete: function(data) {
-                        if ($('#idis').val() == null) {
-                            const d = new Date();
-                            let month = d.getMonth();
-                            // alert(month+1);
-                            data['idis'] = month+1;
-                        }
+                        // if ($('#idis').val() == null) {
+                        //     const d = new Date();
+                        //     let month = d.getMonth();
+                        //     // alert(month+1);
+                        //     data['idis'] = month+1;
+                        // }
                     }
 
                 },

@@ -18,28 +18,39 @@
     <script type="text/javascript">
         $(document).ready(function() {
             const params = new URLSearchParams(window.location.search);
+            if ($('#showdate').val() == null) {
+                const d = new Date();
+                let month = d.getMonth();
+                // alert(month+1);
+                idis = month + 1;
+                alert(idis);
+            }
+            $('#showdate').change(function() {
+
                 $('.data-table').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    url: "{{ route('admin.admindashboard.show') }}",
-                    data: {
-                        date: params.get('date')
-                    }
-                },
-                columns: [{
-                        data: 'userempid',
-                        name: 'Emp Id'
+                    destroy: true,
+                    processing: true,
+                    serverSide: true,
+                    ajax: {
+                        url: "{{ route('admin.admindashboard.show') }}",
+                        data: {
+                            date: $('#showdate').val()
+                        }
                     },
-                    {
-                        data: 'username',
-                        name: 'Name'
-                    },
-                    {
-                        data: 'action',
-                        name: 'action'
-                    },
-                ]
+                    columns: [{
+                            data: 'userempid',
+                            name: 'Emp Id'
+                        },
+                        {
+                            data: 'username',
+                            name: 'Name'
+                        },
+                        {
+                            data: 'action',
+                            name: 'action'
+                        },
+                    ]
+                });
             });
 
         });
@@ -102,12 +113,9 @@
 
     <div class="container">
 
-        <form class="d-flex" action="/admindashboard" method="get">
 
-            <input class="form-control me-2" value="{{ Request::get('date') }}" id="showdate" name="date"
-                type="date" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success" onclick="myFunction()">Search</button>
-        </form>
+        <input class="form-control me-2" value="{{ Request::get('date') }}" id="showdate" name="date" type="date"
+            placeholder="Search" aria-label="Search">
 
         <br>
         <table class="table table-bordered data-table" id="dataTable">
