@@ -22,10 +22,12 @@
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
     </script>
     <style>
-       .dt-button, .buttons-csv ,.buttons-html5{
-        margin-left: 10px;
-        margin-bottom: 20px;
-    }
+        .dt-button,
+        .buttons-csv,
+        .buttons-html5 {
+            margin-left: 10px;
+            margin-bottom: 20px;
+        }
 
     </style>
     <script type="text/javascript">

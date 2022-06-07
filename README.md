@@ -2,8 +2,7 @@ This is a lunch booking system.
 This system helps user to make entry by clicking one button instead of making entry in book, it will also help Admin to count filter records.
 
 Rerquirements:-
-<<<<<<< HEAD
-=======
+
 
 > > > > > > > 2f158ecc85443057cea45db0b68a2cfb98b9715d
 > > > > > > > composer-version >= 2.2.7

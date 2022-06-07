@@ -19,7 +19,7 @@
     <script type="text/javascript">
         $(document).ready(function() {
             const params = new URLSearchParams(window.location.search);
-            $('.data-table').DataTable({
+                $('.data-table').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: {
@@ -45,12 +45,6 @@
         });
     </script>
 
-    <script>
-        $(document).on("click","#edit-item",function(){
-            let modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('exampleModal')) 
-            modal.show();
-        });
-    </script>
 </head>
 
 <body>
@@ -60,39 +54,40 @@
     <div class="container">
 
         <div class="row">
+
             <div class="col-sm-3">
-              <div class="card">
-                <div class="card-body" style="background-color: yellow">
-                  <h5 class="card-title">Total Dishes</h5>
-                  <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                <div class="card">
+                    <div class="card-body" style="background-color: rgba(255, 0, 0, 0.359)">
+                        <h5 class="card-title">Total Trainees</h5>
+                        <p class="card-text">{{ $totaltrainees }}</p>
+                    </div>
                 </div>
-              </div>
             </div>
             <div class="col-sm-3">
                 <div class="card">
-                  <div class="card-body" style="background-color: rgba(255, 0, 0, 0.541)">
-                    <h5 class="card-title">Total Trainees</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                  </div>
+                    <div class="card-body" style="background-color: rgba(73, 225, 73, 0.575)">
+                        <h5 class="card-title">Total Employees</h5>
+                        <p class="card-text">{{ $totalemployees }}</p>
+                    </div>
                 </div>
-              </div>
-            <div class="col-sm-3">
-              <div class="card">
-                <div class="card-body" style="background-color: green">
-                  <h5 class="card-title">Total Monthly dishes</h5>
-                  <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                </div>
-              </div>
             </div>
             <div class="col-sm-3">
                 <div class="card">
-                  <div class="card-body" style="background-color: lightblue">
-                    <h5 class="card-title">Total Simformers</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                  </div>
+                    <div class="card-body" style="background-color: lightblue">
+                        <h5 class="card-title">Total Today Dishes</h5>
+                        <p class="card-text">{{ $totaltrainees + $totalemployees }}</p>
+                    </div>
                 </div>
-              </div>
-          </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="card">
+                    <div class="card-body" style="background-color: rgba(255, 255, 0, 0.665)">
+                        <h5 class="card-title">Total Monthly Dishes</h5>
+                        <p class="card-text">{{ $totaldishes }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div>
         @if (session()->has('message'))
@@ -110,8 +105,8 @@
 
         <form class="d-flex" action="/admindashboard" method="get">
 
-            <input class="form-control me-2" value="{{ Request::get('date') }}" id="showdate" name="date" type="date"
-                placeholder="Search" aria-label="Search">
+            <input class="form-control me-2" value="{{ Request::get('date') }}" id="showdate" name="date"
+                type="date" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-success" onclick="myFunction()">Search</button>
         </form>
 
@@ -126,24 +121,7 @@
             </thead>
         </table>
     </div>
-   <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Edit Employee Data </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-      <input id="id" name="id" type="text" readonly value="HEllo">
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
+  
 </body>
 
 </html>
