@@ -38,9 +38,7 @@
             if ($('#idis').val() == null) {
                 const d = new Date();
                 let month = d.getMonth();
-                // alert(month+1);
                 idis = month + 1;
-                alert(idis);
             }
             $('table.display').dataTable();
 
@@ -65,14 +63,6 @@
                     dataSrc: "data",
                     data: {
                         idis: $('#idis').val()
-                    },
-                    complete: function(data) {
-                        // if ($('#idis').val() == null) {
-                        //     const d = new Date();
-                        //     let month = d.getMonth();
-                        //     // alert(month+1);
-                        //     data['idis'] = month+1;
-                        // }
                     }
 
                 },
@@ -196,8 +186,7 @@
         @endif
     </div>
     <br>
-
-    <h3 class="text-center">{{ __('home.dailydishestitle') }}
+    <h3 class="text-center">{{trans('home.dailydishestitle')}}
     </h3>
 
     <div class="container">
@@ -292,5 +281,4 @@
     </div>
 
 </body>
-
 </html>

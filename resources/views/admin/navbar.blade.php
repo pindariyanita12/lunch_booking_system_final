@@ -17,13 +17,21 @@
                 <li class="nav-item">
                     <a class="nav-link text-white" href="/daily-dishes">Reports</a>
                 </li>
-
         </div>
         </ul>
-        <ul class="navbar-nav ms-auto mb-0">
 
+        <ul class="navbar-nav ms-auto mb-0 ">
+             @php $locale = session()->get('locale'); @endphp
+            <li class="nav-item dropdown bg-light me-5">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Language
+                </a>
+                <ul class="dropdown-menu" >
+                    <li><a class="dropdown-item" href="/lang/en">English</a></li>
 
-
+                    <li><a class="dropdown-item" href="/lang/hi">Hindi</a></li>
+                </ul>
+            </li>
             <li class="nav-item dropdown">
                 <a id="navbarDropdown" class="nav-link dropdown-toggle text-white" href="#" role="button"
                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
@@ -45,3 +53,5 @@
     </div>
     </div>
 </nav>
+
+

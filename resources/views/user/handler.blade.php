@@ -22,7 +22,6 @@
     <title>Loading</title>
 </head>
 <script>
-
     window.onload = function() {
 
         let paramString = (window.location.href).substring(
@@ -67,5 +66,4 @@
         });
     }
 </script>
-
 </html>

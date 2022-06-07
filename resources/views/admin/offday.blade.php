@@ -17,18 +17,22 @@
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
-
 </head>
-
 <body>
     @include('admin.navbar')
-
+<div>
+    @if (session()->has('message'))
+    <div class="alert alert-success">
+        <button type="button" class="close" data-dismiss="alert"></button>
+        {{ session()->get('message') }}
+    </div>
+@endif
+</div>
     <br>
-    <h3 class="text-center">{{__('home.offdaytitle')}}</h3>
-    <div class="container mt-5">
-
+    <h3 class="text-center">{{trans('home.offdaytitle')}}</h3>
+    <div class="container mt-5" style="height:300px">
+        <br>
         <div class="heading">
-
             <h2>Select Off Days</h2>
         </div>
         <hr>
@@ -50,13 +54,11 @@
                 </div>
 
                 <div class="date-button">
-                    <button class="btn1 btn-primary" style="width: 90%;height: 40px;">Add dates</button>
+                    <button class="btn1 btn-primary bg-dark" style="width: 90%;height: 40px;">Add dates</button>
                 </div>
             </form>
         </div>
-
     </div>
-
     <script type="text/javascript">
         $(function() {
             $('#datepicker').datepicker({
@@ -66,5 +68,4 @@
         });
     </script>
 </body>
-
 </html>

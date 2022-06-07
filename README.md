@@ -2,7 +2,10 @@ This is a lunch booking system.
 This system helps user to make entry by clicking one button instead of making entry in book, it will also help Admin to count filter records.
 
 Rerquirements:-
+<<<<<<< HEAD
 
+=======
+>>>>>>> a2699bbbd313a430145c42ee59fed8e1e620baa7
 composer-version >= 2.2.7
 php-version >= 7.4.3,
 Laravel-version >=8.0.0,

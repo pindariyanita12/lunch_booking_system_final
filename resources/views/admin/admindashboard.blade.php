@@ -15,16 +15,24 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
     </script>
+
     <script type="text/javascript">
+        if($('#showdate').val()==null){
+            today=$('#showdate').val()
+
+            alert(today);
+        }
+        var now = new Date();
+
+        var day = ("0" + now.getDate()).slice(-2);
+        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+
+        var today = now.getFullYear() + "-" + (month) + "-" + (day);
+        today = $('#showdate').val();
         $(document).ready(function() {
+
             const params = new URLSearchParams(window.location.search);
-            if ($('#showdate').val() == null) {
-                const d = new Date();
-                let month = d.getMonth();
-                // alert(month+1);
-                idis = month + 1;
-                alert(idis);
-            }
+
             $('#showdate').change(function() {
 
                 $('.data-table').DataTable({
@@ -52,7 +60,6 @@
                     ]
                 });
             });
-
         });
     </script>
 </head>
@@ -99,23 +106,16 @@
             </div>
         </div>
     </div>
-    <div>
-        @if (session()->has('message'))
-            <div class="alert alert-success">
-                <button type="button" class="close" data-dismiss="alert">x</button>
-                {{ session()->get('message') }}
-            </div>
-        @endif
-    </div>
+
     <br>
-    <h3 class="text-center">{{ __('home.admindashboardtitle') }} <?php echo ' ' . '(' . date('Y-m-d') . ')'; ?>
+    <h3 class="text-center">{{ trans('home.admindashboardtitle') }} <?php echo ' ' . '(' . date('Y-m-d') . ')'; ?>
     </h3>
 
     <div class="container">
 
 
-        <input class="form-control me-2" value="{{ Request::get('date') }}" id="showdate" name="date" type="date"
-            placeholder="Search" aria-label="Search">
+        <input class="form-control me-2" value="" id="showdate" name="date" type="date" placeholder="Search"
+            aria-label="Search">
 
         <br>
         <table class="table table-bordered data-table" id="dataTable">
@@ -128,6 +128,7 @@
             </thead>
         </table>
     </div>
+
 </body>
 
 </html>
