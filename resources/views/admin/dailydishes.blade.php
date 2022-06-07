@@ -16,7 +16,6 @@
     <script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"
         integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
-
     <script src=" https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>
     <script src=" https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
@@ -31,152 +30,21 @@
             margin-left: 10px;
             margin-bottom: 20px;
         }
+
+        #idis {
+            width: 250px;
+        }
+
+        #idis2 {
+            width: 250px;
+        }
     </style>
-    <script type="text/javascript">
-        $(document).ready(function() {
-            const params = new URLSearchParams(window.location.search);
-            if ($('#idis').val() == null) {
-                const d = new Date();
-                let month = d.getMonth();
-                idis = month + 1;
-            }
-            $('table.display').dataTable();
-
-            var $table1 = $('#dataTable').DataTable({
-                processing: true,
-                serverSide: false,
-                dom: 'lrBfrtip',
-                buttons: [
-
-                    {
-                        extend: 'csv',
-                        text: 'Export CSV',
-                        className: 'btn-space',
-                        exportOptions: {
-                            orthogonal: null
-                        }
-                    }
-
-                ],
-                ajax: {
-                    url: "{{ route('admin.dailydishes.dailyDishes') }}",
-                    dataSrc: "data",
-                    data: {
-                        idis: $('#idis').val()
-                    }
-
-                },
-                columns: [{
-                        data: 'date',
-                        name: 'date'
-                    },
-                    {
-                        data: 'total',
-                        name: 'total'
-                    },
-
-                ]
-            });
-            $('#idis').change(function() {
-                var $table2 = $('#showemployee').DataTable({
-                    processing: true,
-                    destroy: true,
-                    serverSide: false,
-                    dom: 'lrBfrtip',
-                    buttons: [
-
-                        {
-                            extend: 'csv',
-                            text: 'Export CSV',
-                            className: 'btn-space',
-                            exportOptions: {
-                                orthogonal: null
-                            }
-                        }
-
-                    ],
-                    ajax: {
-                        url: "{{ route('admin.dailydishes.employees') }}",
-                        data: {
-                            idis: $('#idis').val()
-                        },
-                    },
-                    columns: [{
-                            data: 'emp_id',
-                            name: 'emp_id'
-                        },
-                        {
-                            data: 'employeename',
-                            name: 'employeename'
-                        },
-                        {
-                            data: 'uniquerecord',
-                            name: 'uniquerecord'
-                        },
-                        {
-                            data: 'action',
-                            name: 'action'
-                        },
-
-                    ]
-                });
-            });
-            $('#idis2').change(function() {
-                var $table3 = $('#showtrainee').DataTable({
-                    destroy: true,
-                    processing: true,
-                    serverSide: false,
-                    dom: 'lrBfrtip',
-                    buttons: [
-
-                        {
-                            extend: 'csv',
-                            text: 'Export CSV',
-                            className: 'btn-space',
-                            exportOptions: {
-                                orthogonal: null
-                            }
-                        }
-
-                    ],
-                    ajax: {
-                        url: "{{ route('admin.dailydishes.trainees') }}",
-                        data: {
-                            idis2: $('#idis2').val()
-                        },
 
 
-
-                    },
-
-                    columns: [{
-                            data: 'trainee_id',
-                            name: 'trainee_id'
-                        },
-                        {
-                            data: 'traineename',
-                            name: 'traineename'
-                        },
-                        {
-                            data: 'uniquerecord',
-                            name: 'uniquerecord'
-                        },
-                        {
-                            data: 'action',
-                            name: 'action'
-                        },
-
-                    ]
-                });
-
-            });
-        });
-    </script>
 </head>
 
 <body>
     @include('admin.navbar')
-
     <div>
         @if (session()->has('message'))
             <div class="alert alert-success">
@@ -186,7 +54,7 @@
         @endif
     </div>
     <br>
-    <h3 class="text-center">{{trans('home.dailydishestitle')}}
+    <h3 class="text-center">{{ trans('home.dailydishestitle') }}
     </h3>
 
     <div class="container">
@@ -195,7 +63,7 @@
                 <a class="nav-link active" data-toggle="tab" aria-expanded="true" href="#tab1">Daily Dishes</a>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle " data-bs-toggle="dropdown" href="#" role="button"
+                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
                     aria-expanded="false">Employee Monthwise</a>
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" data-toggle="tab" aria-expanded="false" href="#tab2">Employee</a></li>
@@ -219,7 +87,7 @@
 
                 </table>
                 <div class="">
-                    <h3 class="text-center">{{ __('home.dailydishestotal') }}
+                    <h3 class="text-center">{{ trans('home.dailydishestotal') }}
                         : {{ $totaldishes }}</h3>
                 </div>
             </div>
@@ -255,7 +123,7 @@
                 <form action='' method="get">
                     <select name="id" style="cursor: Pointer;" class="form-select form-select-sm-1  text-black border-0"
                         id="idis2">
-                        <option value="" selected disabled>Select Month</option>
+
                         @for ($m = 1; $m <= 12; $m++)
                             <option value="{{ $m }}">{{ date('F', mktime(0, 0, 0, $m, 1, date('Y'))) }}
                             </option>
@@ -279,6 +147,227 @@
             </div>
         </div>
     </div>
+    <!-- edit Modal -->
+    <div class="modal" tabindex="-1" id="exampleModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>some content</p>
+                    <form action="{{ route('admin.admindashboard.edit') }}" method="POST">
+                        @csrf
+                        <input type="text" name="empId" id="empId" value="" hidden />
+                        <input type="text" name="empNo" id="empNo" value="" />
+                        <input type="text" name="empName" id="empName" value="" />
+                        <input type="text" name="empMail" id="empMail" value="" readonly />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 </body>
+<script type="text/javascript">
+    var monthis = $('#idis').find(":selected").val();
+    var monthis2 = $('#idis2').find(":selected").val();
+    var $table1, $table2, $table3;
+
+    if ($('#idis').val() == null || $('#idis').val() == undefined) {
+        var now = new Date();
+        var day = ("0" + now.getDate()).slice(-2);
+        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+        monthis = (month);
+        // alert(monthis);
+    } else {
+        // alert("id")
+        monthis = $('#idis').val()
+    }
+    if ($('#idis2').find(":selected").val() == null || $('#idis2').find(":selected").val() == undefined) {
+        var now = new Date();
+        var day = ("0" + now.getDate()).slice(-2);
+        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+        monthis2 = (month);
+    } else {
+        monthis2 = $('#idis2').val()
+    }
+
+    function initPage1() {
+        $table1 = $('#dataTable').DataTable({
+            processing: true,
+            serverSide: false,
+            dom: 'lrBfrtip',
+            buttons: [
+
+                {
+                    extend: 'csv',
+                    text: 'Export CSV',
+                    className: 'btn-space',
+                    exportOptions: {
+                        orthogonal: null
+                    }
+                }
+
+            ],
+            ajax: {
+                url: "{{ route('admin.dailydishes.dailyDishes') }}",
+                dataSrc: "data",
+                data: {
+                    idis: monthis
+                }
+
+            },
+            columns: [{
+                    data: 'date',
+                    name: 'date'
+                },
+                {
+                    data: 'total',
+                    name: 'total'
+                }
+
+            ]
+        });
+    }
+
+    function initPage2() {
+
+        $table2 = $('#showemployee').DataTable({
+            processing: true,
+            destroy: true,
+            serverSide: false,
+            dom: 'lrBfrtip',
+            buttons: [
+
+                {
+                    extend: 'csv',
+                    text: 'Export CSV',
+                    className: 'btn-space',
+                    exportOptions: {
+                        orthogonal: null,
+                        columns: [0, 1, 2]
+                    }
+                }
+
+            ],
+            ajax: {
+                url: "{{ route('admin.dailydishes.employees') }}",
+                data: {
+                    idis: monthis
+                },
+            },
+            columns: [{
+                    data: 'emp_id',
+                    name: 'emp_id'
+                },
+                {
+                    data: 'employeename',
+                    name: 'employeename'
+                },
+                {
+                    data: 'uniquerecord',
+                    name: 'uniquerecord'
+                },
+                {
+                    data: 'actions',
+                    name: 'actions'
+                },
+
+            ]
+        });
+
+    }
+
+    function initPage3() {
+
+        $table3 = $('#showtrainee').DataTable({
+            // destroy: true,
+            processing: true,
+            serverSide: false,
+            dom: 'lrBfrtip',
+            buttons: [
+
+                {
+                    extend: 'csv',
+                    text: 'Export CSV',
+                    className: 'btn-space',
+                    exportOptions: {
+                        orthogonal: null,
+                        columns: [0, 1, 2]
+                    }
+                }
+
+            ],
+            ajax: {
+                url: "{{ route('admin.dailydishes.trainees') }}",
+                data: {
+                    idis2: monthis2
+                },
+
+                extend: 'csv',
+                text: 'Export CSV',
+                className: 'btn-space',
+                exportOptions: {
+                    orthogonal: null,
+                    columns: [0, 1, 2]
+                }
+            },
+
+            columns: [{
+                    data: 'trainee_id',
+                    name: 'trainee_id'
+                },
+                {
+                    data: 'traineename',
+                    name: 'traineename'
+                },
+                {
+                    data: 'uniquerecord',
+                    name: 'uniquerecord'
+                },
+                {
+                    data: 'actions',
+                    name: 'actions'
+                },
+
+            ]
+        });
+    }
+    $(document).ready(function() {
+        initPage1();
+        initPage2();
+        initPage3();
+
+    });
+
+    $('#idis').change(function() {
+        console.log(monthis);
+        $table2.ajax.reload();
+    });
+    $('#idis2').change(function() {
+        console.log(monthis2);
+        $table3.ajax.reload();
+    });
+
+    $(document).on("click", "#edit-item", function() {
+        var myBookId = $(this).data('id');
+        var myBookNo = $(this).data('userid');
+        var myBookName = $(this).data('name');
+        var myBookemail = $(this).data('email');
+        $(".modal-body #empNo").val(myBookId);
+        $(".modal-body #empName").val(myBookName);
+        $(".modal-body #empMail").val(myBookemail);
+        $(".modal-body #empId").val(myBookNo);
+        let modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('exampleModal'))
+        modal.show();
+    });
+</script>
+
 </html>

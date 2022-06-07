@@ -27,25 +27,24 @@ class AdminController extends Controller
     //admin dashboard
     public function show(Request $request)
     {
-
         if ($request->all() == null) {
             $dateis = date('Y-m-d');
         } else {
             $dateis = $request->date;
         }
-
-        $uniquerecord = Record::select(DB::raw('DISTINCT Date(created_at) as lunchdate,count(is_taken) as totaldishes'))->whereYear('created_at', '=', date('Y'))->whereMonth('created_at', date('m'))->groupBy('lunchdate')->get();
+        $uniquerecord = Record::select(DB::raw('DISTINCT Date(lunch_dates) as lunchdate,count(is_taken) as totaldishes'))->whereYear('lunch_dates', '=', date('Y'))->whereMonth('lunch_dates', date('m'))->groupBy('lunchdate')->get();
 
         $totalmonthlydishes = $uniquerecord->sum('totaldishes');
 
-        $totaltrainees = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereDate('records.created_at', '=', $dateis)->where('users.type', '0')->select(DB::raw('COUNT(is_taken) AS uniquerecord'))->first();
+        $totaltrainees = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereDate('records.lunch_dates', '=', $dateis)->where('users.type', '0')->select(DB::raw('COUNT(is_taken) AS uniquerecord'))->first();
 
-        $totalemployees = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereDate('records.created_at', '=', $dateis)->where('users.type', '1')->select(DB::raw('COUNT(is_taken) AS uniquerecord'))->first();
+        $totalemployees = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereDate('records.lunch_dates', '=', $dateis)->where('users.type', '1')->select(DB::raw('COUNT(is_taken) AS uniquerecord'))->first();
+
         if ($request->ajax()) {
             if ($dateis == null) {
                 $dateis = date('Y-m-d');
             }
-            $record = Record::with('user')->whereDate('created_at', '=', $dateis)->get();
+            $record = Record::with('user')->whereDate('lunch_dates', '=', $dateis)->orderBy('lunch_dates', 'DESC')->get();
 
             return datatables()->of($record)
                 ->editColumn('userempid', function ($userdata) {
@@ -56,15 +55,14 @@ class AdminController extends Controller
                     return empty($userdata->user->name) ? "NA" : $userdata->user->name;
                 })
                 ->addColumn('action', function ($userdata) {
-                    $actionBtn = '<a href="' . route('admin.admindashboard.destroy', [$userdata->user->id, $userdata->id]) . '" class="btn btn-danger btn-sm" ><i class="bi bi-trash"></i></a>';
-                    $actionBtn = $actionBtn . '<a href="' . route('admin.admindashboard.edit', [$userdata->user->id, $userdata->id]) . '" class="btn btn-primary btn-sm" ><i class="bi bi-pencil"></i></a>';
+                    $actionBtn = '<a  class="btn abc btn-danger btn-sm" data-id="' . $userdata->id . '"><i class="bi bi-trash"></i></a>';
+
                     return $actionBtn;
                 })
                 ->rawColumns(['action'])
                 ->make(true);
         }
         return view('admin.admindashboard', ['totaldishes' => $totalmonthlydishes, 'totaltrainees' => $totaltrainees->uniquerecord, 'totalemployees' => $totalemployees->uniquerecord]);
-
     }
 
     //off days for admin
@@ -80,49 +78,55 @@ class AdminController extends Controller
 
     public function destroy(Request $request)
     {
-        $record = Record::with('user')->where('user_id', $request->id)->whereYear('created_at', '=', date('Y'))->whereMonth('created_at', '=', $request->idis)->get();
+        $record = Record::with('user')->where('id', $request->id)->whereYear('lunch_dates', '=', date('Y'))->get();
         if (count($record) > 1) {
             $record->each->delete();
             return redirect('/admindashboard');
 
         } else {
-            $record = Record::with('user')->where('user_id', $request->id)->first();
+            $record = Record::with('user')->where('id', $request->id)->first();
             $record->delete();
             return redirect('/admindashboard');
-
         }
     }
-
-    public function destroymonthwise(Request $request)
-    {
-        $record = Record::with('user')->where('user_id', $request->id)->whereYear('created_at', '=', date('Y'))->whereMonth('created_at', '=', $request->idis)->get();
-        if (count($record) > 1) {
-            $record->each->delete();
-            return redirect('/daily-dishes');
-
-        } else {
-            $record = Record::with('user')->where('user_id', $request->id)->first();
-            $record->delete();
-            return redirect('/daily-dishes');
-
-        }
-    }
-
     public function useredit(Request $request)
     {
-        dd($request->id);
+        $userid = $request->empId;
+        if ($request['empNo'] != null) {
+            $update = User::where('id', '=', $userid)->update(['emp_id' => $request['empNo'], 'name' => $request['empName'], 'type' => '1']);
+        } else {
+            $update = User::where('id', '=', $userid)->update(['emp_id' => $request['empNo'], 'name' => $request['empName'], 'type' => '0']);
+        }
+        if ($update == true) {
+
+            return redirect()->back()->with('alert', 'Data insert successfully');
+        } else {
+            return redirect()->back()->with('alert', 'Details are not updated');
+        }
+    }
+    public function destroymonthwise(Request $request)
+    {
+        $record = Record::with('user')->where('user_id', $request->id)->whereYear('lunch_dates', '=', date('Y'))->whereMonth('lunch_dates', '=', $request->idis)->get();
+        if (count($record) > 1) {
+            $record->each->delete();
+            return redirect('/daily-dishes');
+        } else {
+            $record = Record::with('user')->where('user_id', $request->id)->first();
+            $record->delete();
+            return redirect('/daily-dishes');
+        }
     }
 
     public function dailyDishes(Request $request)
     {
-        $trainees = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereYear('records.created_at', '=', date('Y'))->where('users.type', '0')->select(DB::raw('DISTINCT users.id,users.emp_id,users.email, users.name,COUNT(is_taken) AS uniquerecord'))->groupBy('users.email')->get();
+        $trainees = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereYear('records.lunch_dates', '=', date('Y'))->where('users.type', '0')->select(DB::raw('DISTINCT users.id,users.emp_id,users.email, users.name,COUNT(is_taken) AS uniquerecord'))->groupBy('users.email')->get();
 
-        $uniquerecord = Record::select(DB::raw('DISTINCT Date(created_at) as lunchdate,count(is_taken) as totaldishes'))->whereYear('created_at', '=', date('Y'))->whereMonth('created_at', date('m'))->groupBy('lunchdate')->get();
+        $uniquerecord = Record::select(DB::raw('DISTINCT Date(lunch_dates) as lunchdate,count(is_taken) as totaldishes'))->whereYear('lunch_dates', '=', date('Y'))->whereMonth('lunch_dates', date('m'))->groupBy('lunchdate')->get();
 
         $totaldishes = $uniquerecord->sum('totaldishes');
 
         if ($request->ajax()) {
-            $uniquerecord = Record::select(DB::raw('DISTINCT Date(created_at) as lunchdate,count(is_taken) as totaldishes'))->whereYear('created_at', '=', date('Y'))->whereMonth('created_at', date('m'))->groupBy('lunchdate')->get();
+            $uniquerecord = Record::select(DB::raw('DISTINCT Date(lunch_dates) as lunchdate,count(is_taken) as totaldishes'))->whereYear('lunch_dates', '=', date('Y'))->whereMonth('lunch_dates', date('m'))->groupBy('lunchdate')->get();
             return datatables()->of($uniquerecord, $trainees)
                 ->editColumn('date', function ($userdata) {
                     return empty($userdata->lunchdate) ? "NA" : $userdata->lunchdate;
@@ -133,7 +137,7 @@ class AdminController extends Controller
                 ->addColumn('traineename', function ($userdata1) use ($trainees) {
                     return empty($trainees->name) ? "NA" : $trainees->name;
                 })
-
+                ->rawColumns(['actions'])
                 ->make(true);
         }
         return view('admin.dailydishes', ['totaldishes' => $totaldishes]);
@@ -141,12 +145,13 @@ class AdminController extends Controller
 
     public function trainees(Request $request)
     {
+        // dd($request->all());
         if ($request->all() == null) {
             $idis = date('Y-m-d');
         } else {
             $idis = $request->idis2;
         }
-        $trainees = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereYear('records.created_at', '=', date('Y'))->whereMonth('records.created_at', '=', $request->idis2)->where('users.type', '0')->select(DB::raw('DISTINCT users.id,users.emp_id,users.email, users.name,COUNT(is_taken) AS uniquerecord'))->groupBy('users.email')->get();
+        $trainees = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereYear('records.lunch_dates', '=', date('Y'))->whereMonth('records.lunch_dates', '=', $request->idis2)->where('users.type', '0')->select(DB::raw('DISTINCT users.id,users.emp_id,users.email, users.name,COUNT(is_taken) AS uniquerecord'))->groupBy('users.email')->get();
         if ($request->ajax()) {
             $idis = $request->idis2;
             return datatables()->of($trainees)
@@ -159,10 +164,19 @@ class AdminController extends Controller
                 ->addColumn('uniquerecord', function ($userdata) {
                     return empty($userdata->uniquerecord) ? "NA" : $userdata->uniquerecord;
                 })
-                ->addColumn('action', function ($userdata) use ($idis) {
-                    $actionBtn = '<a href="' . route('admin.admindashboard.destroymonthwise', [$userdata->id, $idis]) . '" class="btn btn-danger btn-sm" ><i class="fa fa-trash ">Delete</i></a>';
+                ->addColumn('actions', function ($userdata) use ($idis) {
+                    $userid = $userdata->id;
+                    $query = User::where('id', '=', $userid)->get();
+                    $query2 = json_decode($query, true);
+                    $query1 = $query2[0]["id"];
+                    $query3 = $query2[0]["emp_id"];
+                    $query4 = $query2[0]["name"];
+                    $query5 = $query2[0]["email"];
+                    $actionBtn = '<a href="' . route('admin.admindashboard.destroymonthwise', [$userdata->id, $idis]) . '" class="btn btn-danger btn-sm" ><i class="bi bi-trash"></i></a>';
+                    $actionBtn = $actionBtn . '<button class="btn btn-primary btn-sm ms-2 " id="edit-item"data-toggle="modal" data-userid="' . $query1 . '" data-id="' . $query3 . '" data-name="' . $query4 . '" data-email="' . $query5 . '" data-target="edit-modal" ><i class="bi bi-pencil"></i></button>';
                     return $actionBtn;
                 })
+                ->rawColumns(['actions'])
                 ->make(true);
         }
         return redirect('admin.dailydishes.trainees');
@@ -172,7 +186,7 @@ class AdminController extends Controller
     {
         $idis = date('m');
         if ($request->idis == null) {
-            dd("inside if");
+
             $idis = date('m');
         } else {
 
@@ -180,7 +194,7 @@ class AdminController extends Controller
         }
         if ($request->ajax()) {
             $idis = $request->idis;
-            $uniquerecord = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereYear('records.created_at', '=', date('Y'))->whereMonth('records.created_at', '=', $request->idis)->where('users.type', '1')->select(DB::raw('DISTINCT users.id,users.emp_id,users.email, users.name,COUNT(is_taken) AS uniquerecord'))->groupBy('users.email')->get();
+            $uniquerecord = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereYear('records.lunch_dates', '=', date('Y'))->whereMonth('records.lunch_dates', '=', $request->idis)->where('users.type', '1')->select(DB::raw('DISTINCT users.id,users.emp_id,users.email, users.name,COUNT(is_taken) AS uniquerecord'))->groupBy('users.email')->get();
             return datatables()->of($uniquerecord)
                 ->editColumn('emp_id', function ($userdata) {
 
@@ -191,11 +205,21 @@ class AdminController extends Controller
                 })
                 ->addColumn('uniquerecord', function ($userdata) {
                     return empty($userdata->uniquerecord) ? "NA" : $userdata->uniquerecord;
+
                 })
-                ->addColumn('action', function ($userdata) use ($idis) {
-                    $actionBtn = '<a href="' . route('admin.admindashboard.destroymonthwise', [$userdata->id, $idis]) . '" class="btn btn-danger btn-sm" ><i class="fa fa-trash ">Delete</i></a>';
+                ->addColumn('actions', function ($userdata) use ($idis) {
+                    $userid = $userdata->id;
+                    $query = User::where('id', '=', $userid)->get();
+                    $query2 = json_decode($query, true);
+                    $query1 = $query2[0]["id"];
+                    $query3 = $query2[0]["emp_id"];
+                    $query4 = $query2[0]["name"];
+                    $query5 = $query2[0]["email"];
+                    $actionBtn = '<a href="' . route('admin.admindashboard.destroymonthwise', [$userdata->id, $idis]) . '" class="btn btn-danger btn-sm" ><i class="bi bi-trash"></i></a>';
+                    $actionBtn = $actionBtn . '<button class="btn btn-primary btn-sm ms-2 " id="edit-item"data-toggle="modal" data-userid="' . $query1 . '" data-id="' . $query3 . '" data-name="' . $query4 . '" data-email="' . $query5 . '" data-target="edit-modal" ><i class="bi bi-pencil"></i></button>';
                     return $actionBtn;
                 })
+                ->rawColumns(['actions'])
                 ->make(true);
         }
         return redirect('admin.dailydishes.employees');
@@ -212,5 +236,4 @@ class AdminController extends Controller
                 Button::make('csv'),
             );
     }
-
 }

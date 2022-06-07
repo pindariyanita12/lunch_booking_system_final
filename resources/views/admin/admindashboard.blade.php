@@ -9,59 +9,20 @@
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.js"></script>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
     </script>
-
-    <script type="text/javascript">
-        if($('#showdate').val()==null){
-            today=$('#showdate').val()
-
-            alert(today);
+    <style>
+        .datepicker {
+            width: 250px;
         }
-        var now = new Date();
-
-        var day = ("0" + now.getDate()).slice(-2);
-        var month = ("0" + (now.getMonth() + 1)).slice(-2);
-
-        var today = now.getFullYear() + "-" + (month) + "-" + (day);
-        today = $('#showdate').val();
-        $(document).ready(function() {
-
-            const params = new URLSearchParams(window.location.search);
-
-            $('#showdate').change(function() {
-
-                $('.data-table').DataTable({
-                    destroy: true,
-                    processing: true,
-                    serverSide: true,
-                    ajax: {
-                        url: "{{ route('admin.admindashboard.show') }}",
-                        data: {
-                            date: $('#showdate').val()
-                        }
-                    },
-                    columns: [{
-                            data: 'userempid',
-                            name: 'Emp Id'
-                        },
-                        {
-                            data: 'username',
-                            name: 'Name'
-                        },
-                        {
-                            data: 'action',
-                            name: 'action'
-                        },
-                    ]
-                });
-            });
-        });
-    </script>
+    </style>
 </head>
 
 <body>
@@ -113,9 +74,10 @@
 
     <div class="container">
 
-
-        <input class="form-control me-2" value="" id="showdate" name="date" type="date" placeholder="Search"
-            aria-label="Search">
+        <div class="datepicker">
+            <input class="form-control me-2" value="" id="showdate" name="date" type="date" placeholder="Search"
+                aria-label="Search">
+        </div>
 
         <br>
         <table class="table table-bordered data-table" id="dataTable">
@@ -128,7 +90,81 @@
             </thead>
         </table>
     </div>
-
 </body>
+
+<script type="text/javascript">
+    var dateis = $('#showdate').val();
+    var mydatatable;
+    if ($('#showdate').val() == null) {
+        // alert("null");
+        var now = new Date();
+        var day = ("0" + now.getDate()).slice(-2);
+        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+        dateis = now.getFullYear() + "-" + (month) + "-" + (day);
+    } else {
+        date = $('#showdate').val()
+    }
+
+    function initPage() {
+        mydatatable = $('.data-table').DataTable({
+            destroy: true,
+            processing: true,
+            serverSide: false,
+            ajax: {
+                url: "{{ route('admin.admindashboard.show') }}",
+                data: {
+                    date: dateis
+                }
+            },
+            columns: [{
+                    data: 'userempid',
+                    name: 'Emp Id'
+                },
+                {
+                    data: 'username',
+                    name: 'Name'
+                },
+                {
+                    data: 'action',
+                    name: 'action'
+                },
+            ]
+        });
+    }
+
+    $(document).ready(function() {
+        initPage();
+    });
+
+    $('#showdate').change(function() {
+        mydatatable.ajax.reload();
+    });
+
+    $(document).on('click', '.abc', function(e) {
+        e.preventDefault();
+        var idis = $(this).data('id');
+        swal({
+                title: "Are you sure!",
+                type: "error",
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Yes!",
+                showCancelButton: true,
+            }, )
+            .then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        type: "GET",
+                        url: "{{ route('admin.admindashboard.destroy') }}",
+                        data: {
+                            id: idis,
+                        },
+                        success: function(data) {
+                            location.reload()
+                        }
+                    });
+                }
+            });
+    });
+</script>
 
 </html>
