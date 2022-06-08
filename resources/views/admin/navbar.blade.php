@@ -11,46 +11,27 @@
                     <a class="nav-link active text-white" aria-current="page" href="/admindashboard">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="/offday">Off Day</a>
+                    <a class="nav-link text-white" href="/offday">Off Days</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="/daily-dishes">Daily Dishes</a>
+                    <a class="nav-link text-white" href="/daily-dishes">Reports</a>
                 </li>
-
-                <li class="nav-item dropdown ms-1">
-                    <form action='/month-wise' method="get">
-                        <select name="id" style="cursor: Pointer;" class="form-select form-select-sm-1  text-black border-0"  id="id" onchange="this.form.submit()">
-                            <option value="" selected disabled>Month</option>
-                            <option value="1" {{ Request::get('id') == '1' ? 'selected' : '' }}>Jan</option>
-                            <option value="2" {{ Request::get('id') == '2' ? 'selected' : '' }}>Feb</option>
-                            <option value="3" {{ Request::get('id') == '3' ? 'selected' : '' }}>March</option>
-                            <option value="4" {{ Request::get('id') == '4' ? 'selected' : '' }}>April</option>
-                            <option value="5" {{ Request::get('id') == '5' ? 'selected' : '' }}>May</option>
-                            <option value="6" {{ Request::get('id') == '6' ? 'selected' : '' }}>June</option>
-                            <option value="7" {{ Request::get('id') == '7' ? 'selected' : '' }}>July</option>
-                            <option value="8" {{ Request::get('id') == '8' ? 'selected' : '' }}>August</option>
-                            <option value="9" {{ Request::get('id') == '9' ? 'selected' : '' }}>Sept</option>
-                            <option value="10" {{ Request::get('id') == '10' ? 'selected' : '' }}>Oct</option>
-                            <option value="11" {{ Request::get('id') == '11' ? 'selected' : '' }}>Nov</option>
-                            <option value="12" {{ Request::get('id') == '12' ? 'selected' : '' }}>Dec</option>
-                        </select>
-                    </form>
-                </li>
-
         </div>
         </ul>
-        <ul class="navbar-nav ms-auto mb-0">
 
-            <li>
-                <form class="d-flex" action="/date-wise" method="get">
+        <ul class="navbar-nav ms-auto mb-0 ">
+             @php $locale = session()->get('locale'); @endphp
+            <li class="nav-item dropdown bg-dark">
+                <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Language
+                </a>
+                <ul class="dropdown-menu" >
+                    <li><a class="dropdown-item" href="/lang/en">English</a></li>
 
-                    <input class="form-control me-2" value="{{ Request::get('date') }}" id="showdate" name="date"
-                        type="date" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" onclick="myFunction()">Search</button>
-                </form>
+                    <li><a class="dropdown-item" href="/lang/hi">Hindi</a></li>
+                </ul>
             </li>
-
             <li class="nav-item dropdown">
                 <a id="navbarDropdown" class="nav-link dropdown-toggle text-white" href="#" role="button"
                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
@@ -72,3 +53,5 @@
     </div>
     </div>
 </nav>
+
+

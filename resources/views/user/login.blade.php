@@ -30,8 +30,7 @@
     sessionStorage.removeItem('mail')
 
     function checkLogin() {
-
-        fetch("https://lunch-api.dev.local/signin", {
+        fetch('{{ env('API_URL') }}'+'/signin', {
 
                 method: "POST",
                 headers: {
@@ -44,7 +43,7 @@
 
                 if (window.sessionStorage.getItem('code') !== null && window.sessionStorage.getItem('code') !==
                     '' && window.sessionStorage.getItem('code') !== undefined) {
-                    window.location.href = "https://lunch-app.dev.local/user/welcome";
+                    window.location.href = '{{ env('APP_URL') }}'+'/user/welcome';
                 } else {
 
                     window.location.href = data.link;
@@ -52,7 +51,6 @@
             });
     }
 </script>
-
 <body>
     <div class="login-container mx-auto">
         <div class="image">
@@ -70,5 +68,4 @@
         </form>
     </div>
 </body>
-
 </html>

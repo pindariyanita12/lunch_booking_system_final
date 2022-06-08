@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\LunchDate;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -27,12 +28,12 @@ class LunchDateController extends Controller
             }
             $check = LunchDate::all();
             if ($check) {
-                return redirect('/admindashboard')->with('message', 'Date Added Successfully');
+                return redirect('/offday')->with('message', 'Date Added Successfully');
             } else {
-                return redirect('/admindashboard')->with('message', 'Something went wrong');
+                return redirect('/offday')->with('message', 'Something went wrong');
             }
         } catch (\Exception $e) {
-            return redirect('/admindashboard')->with('message', 'Duplicate Entry');
+            return redirect('/offday')->with('message', 'Duplicate Entry');
         }
     }
 

@@ -22,7 +22,6 @@
     <title>Loading</title>
 </head>
 <script>
-
     window.onload = function() {
 
         let paramString = (window.location.href).substring(
@@ -31,7 +30,7 @@
         );
         let queryString = new URLSearchParams(paramString);
         sessionStorage.setItem("code", queryString);
-        url = 'https://lunch-api.dev.local/getdata';
+        url = '{{ env('API_URL') }}'+'/getdata';
         data = {
             "code": sessionStorage.getItem("code").substring(5),
         };
@@ -62,10 +61,9 @@
             window.sessionStorage.setItem('user_id', user_id);
             window.sessionStorage.setItem('token', token);
             window.sessionStorage.setItem('name', name);
-            window.location.href = "https://lunch-app.dev.local/user/welcome";
+            window.location.href = '{{ env('APP_URL') }}'+'/user/welcome';
 
         });
     }
 </script>
-
 </html>
