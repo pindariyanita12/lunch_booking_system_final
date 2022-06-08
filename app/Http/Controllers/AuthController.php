@@ -87,7 +87,6 @@ class AuthController extends Controller
                 'email' => $user->getmail(),
                 'department' => null,
                 'password' => '23',
-                'type' => 1,
                 'is_admin' => 0,
                 'is_active' => 0,
                 'remember_token' => $remember_token,
