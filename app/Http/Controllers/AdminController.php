@@ -30,7 +30,7 @@ class AdminController extends Controller
         if ($request->all() == null) {
             $dateis = date('Y-m-d');
         } else {
-            $dateis = $request->date;
+        $dateis = $request->date;
         }
         $uniquerecord = Record::select(DB::raw('DISTINCT Date(lunch_dates) as lunchdate,count(is_taken) as totaldishes'))->whereYear('lunch_dates', '=', date('Y'))->whereMonth('lunch_dates', date('m'))->groupBy('lunchdate')->get();
 
@@ -81,39 +81,48 @@ class AdminController extends Controller
         $record = Record::with('user')->where('id', $request->id)->whereYear('lunch_dates', '=', date('Y'))->get();
         if (count($record) > 1) {
             $record->each->delete();
-            return redirect('/admindashboard');
+            return redirect()->back()->with('alert', 'Deleted successfully');
 
         } else {
             $record = Record::with('user')->where('id', $request->id)->first();
             $record->delete();
-            return redirect('/admindashboard');
+            return redirect()->back()->with('alert', 'Deleted successfully');
         }
     }
     public function useredit(Request $request)
     {
-        $userid = $request->empId;
-        if ($request['empNo'] != null) {
-            $update = User::where('id', '=', $userid)->update(['emp_id' => $request['empNo'], 'name' => $request['empName'], 'type' => '1']);
-        } else {
-            $update = User::where('id', '=', $userid)->update(['emp_id' => $request['empNo'], 'name' => $request['empName'], 'type' => '0']);
+        $validated = $request->validate([
+            'empNo' => 'numeric|nullable',
+            'empName' => 'string',
+        ]);
+        if ($validated == true) {
+            $userid = $request->empId;
+            if ($request['empNo'] != null) {
+                $update = User::where('id', '=', $userid)->update(['emp_id' => $request['empNo'], 'name' => $request['empName'], 'type' => '1']);
+            } else {
+                $update = User::where('id', '=', $userid)->update(['emp_id' => $request['empNo'], 'name' => $request['empName'], 'type' => '0']);
+            }
+            if ($update == true) {
+                return redirect()->back()->with('message', 'Successfully updated details!');
+            } else {
+                return redirect()->back()->with('message', 'Form has not updated, Try again later!');
+            }
         }
-        if ($update == true) {
+        else{
+            return redirect()->back()->with('message', 'Form has not updated, Try again later!');
+        }
 
-            return redirect()->back()->with('alert', 'Data insert successfully');
-        } else {
-            return redirect()->back()->with('alert', 'Details are not updated');
-        }
     }
     public function destroymonthwise(Request $request)
     {
         $record = Record::with('user')->where('user_id', $request->id)->whereYear('lunch_dates', '=', date('Y'))->whereMonth('lunch_dates', '=', $request->idis)->get();
         if (count($record) > 1) {
             $record->each->delete();
-            return redirect('/daily-dishes');
+            return redirect()->back()->with('alert', 'Deleted successfully');
         } else {
             $record = Record::with('user')->where('user_id', $request->id)->first();
             $record->delete();
-            return redirect('/daily-dishes');
+            return redirect()->back()->with('alert', 'Deleted successfully');
         }
     }
 
@@ -145,12 +154,9 @@ class AdminController extends Controller
 
     public function trainees(Request $request)
     {
-        // dd($request->all());
-        if ($request->all() == null) {
-            $idis = date('Y-m-d');
-        } else {
-            $idis = $request->idis2;
-        }
+
+        $idis = $request->idis2;
+
         $trainees = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereYear('records.lunch_dates', '=', date('Y'))->whereMonth('records.lunch_dates', '=', $request->idis2)->where('users.type', '0')->select(DB::raw('DISTINCT users.id,users.emp_id,users.email, users.name,COUNT(is_taken) AS uniquerecord'))->groupBy('users.email')->get();
         if ($request->ajax()) {
             $idis = $request->idis2;
@@ -172,7 +178,7 @@ class AdminController extends Controller
                     $query3 = $query2[0]["emp_id"];
                     $query4 = $query2[0]["name"];
                     $query5 = $query2[0]["email"];
-                    $actionBtn = '<a href="' . route('admin.admindashboard.destroymonthwise', [$userdata->id, $idis]) . '" class="btn btn-danger btn-sm" ><i class="bi bi-trash"></i></a>';
+                    $actionBtn = '<a  class="btn traineedelete btn-danger btn-sm" data-id="' . $userdata->id . '" data-idis="' . $idis . '"><i class="bi bi-trash"></i></a>';
                     $actionBtn = $actionBtn . '<button class="btn btn-primary btn-sm ms-2 " id="edit-item"data-toggle="modal" data-userid="' . $query1 . '" data-id="' . $query3 . '" data-name="' . $query4 . '" data-email="' . $query5 . '" data-target="edit-modal" ><i class="bi bi-pencil"></i></button>';
                     return $actionBtn;
                 })
@@ -184,14 +190,9 @@ class AdminController extends Controller
 
     public function employees(Request $request)
     {
-        $idis = date('m');
-        if ($request->idis == null) {
 
-            $idis = date('m');
-        } else {
+        $idis = $request->idis;
 
-            $idis = $request->idis;
-        }
         if ($request->ajax()) {
             $idis = $request->idis;
             $uniquerecord = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereYear('records.lunch_dates', '=', date('Y'))->whereMonth('records.lunch_dates', '=', $request->idis)->where('users.type', '1')->select(DB::raw('DISTINCT users.id,users.emp_id,users.email, users.name,COUNT(is_taken) AS uniquerecord'))->groupBy('users.email')->get();
@@ -215,7 +216,7 @@ class AdminController extends Controller
                     $query3 = $query2[0]["emp_id"];
                     $query4 = $query2[0]["name"];
                     $query5 = $query2[0]["email"];
-                    $actionBtn = '<a href="' . route('admin.admindashboard.destroymonthwise', [$userdata->id, $idis]) . '" class="btn btn-danger btn-sm" ><i class="bi bi-trash"></i></a>';
+                    $actionBtn = '<a  class="btn employeedelete btn-danger btn-sm" data-id="' . $userdata->id . '" data-idis="' . $idis . '"><i class="bi bi-trash"></i></a>';
                     $actionBtn = $actionBtn . '<button class="btn btn-primary btn-sm ms-2 " id="edit-item"data-toggle="modal" data-userid="' . $query1 . '" data-id="' . $query3 . '" data-name="' . $query4 . '" data-email="' . $query5 . '" data-target="edit-modal" ><i class="bi bi-pencil"></i></button>';
                     return $actionBtn;
                 })

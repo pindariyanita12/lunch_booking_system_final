@@ -49,7 +49,7 @@ Route::domain('https://lunch-admin.dev.local')->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::post('/add-weekend', [LunchDateController::class, 'addWeekend'])->middleware('auth', 'can:isAdmin');
     Route::get('/destroy', [AdminController::class, 'destroy'])->name('admin.admindashboard.destroy');
-    Route::get('/destroymonthwise/{id}/{idis}', [AdminController::class, 'destroymonthwise'])->name('admin.admindashboard.destroymonthwise');
+    Route::get('/destroymonthwise', [AdminController::class, 'destroymonthwise'])->name('admin.admindashboard.destroymonthwise');
     Route::post('/edit', [AdminController::class, 'useredit'])->name('admin.admindashboard.edit');
     Route::get('/daily-dishes', [AdminController::class, 'dailyDishes'])->name('admin.dailydishes.dailyDishes');
     Route::get('/daily-dishes/trainees', [AdminController::class, 'trainees'])->name('admin.dailydishes.trainees');

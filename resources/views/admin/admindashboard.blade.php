@@ -11,7 +11,6 @@
     <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.js"></script>
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
@@ -27,8 +26,14 @@
 
 <body>
     @include('admin.navbar')
-    <br>
 
+    <br>
+    @if (session()->has('alert'))
+        <div class="alert alert-success">
+            <button type="button" class="close" data-dismiss="alert">x</button>
+            {{ session()->get('alert') }}
+        </div>
+    @endif
     <div class="container">
 
         <div class="row">
@@ -95,14 +100,13 @@
 <script type="text/javascript">
     var dateis = $('#showdate').val();
     var mydatatable;
-    if ($('#showdate').val() == null) {
-        // alert("null");
+    if (dateis == null) {
         var now = new Date();
         var day = ("0" + now.getDate()).slice(-2);
         var month = ("0" + (now.getMonth() + 1)).slice(-2);
         dateis = now.getFullYear() + "-" + (month) + "-" + (day);
     } else {
-        date = $('#showdate').val()
+        dateis = $('#showdate').val()
     }
 
     function initPage() {
@@ -137,7 +141,10 @@
     });
 
     $('#showdate').change(function() {
-        mydatatable.ajax.reload();
+
+        dateis = $('#showdate').val();
+        initPage();
+
     });
 
     $(document).on('click', '.abc', function(e) {
@@ -145,7 +152,6 @@
         var idis = $(this).data('id');
         swal({
                 title: "Are you sure!",
-                type: "error",
                 confirmButtonClass: "btn-danger",
                 confirmButtonText: "Yes!",
                 showCancelButton: true,
@@ -159,6 +165,7 @@
                             id: idis,
                         },
                         success: function(data) {
+                            alert("Deleted successfully");
                             location.reload()
                         }
                     });

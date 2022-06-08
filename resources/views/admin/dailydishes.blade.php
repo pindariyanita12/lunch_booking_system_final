@@ -10,6 +10,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
@@ -38,6 +40,10 @@
         #idis2 {
             width: 250px;
         }
+
+        #showemployee {
+            width: 100%;
+        }
     </style>
 
 
@@ -45,11 +51,28 @@
 
 <body>
     @include('admin.navbar')
+
     <div>
+        @if (count($errors) > 0)
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <button type="button" class="close" data-dismiss="alert">x</button> {{ $error }}
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         @if (session()->has('message'))
             <div class="alert alert-success">
                 <button type="button" class="close" data-dismiss="alert">x</button>
                 {{ session()->get('message') }}
+            </div>
+        @endif
+
+        @if (session()->has('alert'))
+            <div class="alert alert-success">
+                <button type="button" class="close" data-dismiss="alert">x</button>
+                {{ session()->get('alert') }}
             </div>
         @endif
     </div>
@@ -121,9 +144,9 @@
             </div>
             <div class="tab-pane" id="tab3">
                 <form action='' method="get">
-                    <select name="id" style="cursor: Pointer;" class="form-select form-select-sm-1  text-black border-0"
-                        id="idis2">
-
+                    <select name="idis2" style="cursor: Pointer;"
+                        class="form-select form-select-sm-1  text-black border-0" id="idis2">
+                        <option value="" selected disabled>Select Month</option>
                         @for ($m = 1; $m <= 12; $m++)
                             <option value="{{ $m }}">{{ date('F', mktime(0, 0, 0, $m, 1, date('Y'))) }}
                             </option>
@@ -149,25 +172,29 @@
     </div>
     <!-- edit Modal -->
     <div class="modal" tabindex="-1" id="exampleModal">
+
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Modal title</h5>
+                    <h5 class="modal-title">Edit Detail</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>some content</p>
                     <form action="{{ route('admin.admindashboard.edit') }}" method="POST">
                         @csrf
                         <input type="text" name="empId" id="empId" value="" hidden />
-                        <input type="text" name="empNo" id="empNo" value="" />
+                        <input type="text" name="empNo" placeholder="Only numeric values are allowed" id="empNo"
+                            value="" />
                         <input type="text" name="empName" id="empName" value="" />
                         <input type="text" name="empMail" id="empMail" value="" readonly />
+
                 </div>
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary">Save changes</button>
                     </form>
+
                 </div>
             </div>
         </div>
@@ -176,24 +203,20 @@
 
 </body>
 <script type="text/javascript">
-    var monthis = $('#idis').find(":selected").val();
-    var monthis2 = $('#idis2').find(":selected").val();
+    var monthis = $('#idis').val();
+    var monthis2 = $('#idis2').val();
     var $table1, $table2, $table3;
 
-    if ($('#idis').val() == null || $('#idis').val() == undefined) {
-        var now = new Date();
-        var day = ("0" + now.getDate()).slice(-2);
-        var month = ("0" + (now.getMonth() + 1)).slice(-2);
-        monthis = (month);
-        // alert(monthis);
+    if (monthis == null || monthis == undefined) {
+        var noww = new Date();
+        var monthh = ("0" + (noww.getMonth() + 1)).slice(-1);
+        monthis = (monthh);
     } else {
-        // alert("id")
         monthis = $('#idis').val()
     }
-    if ($('#idis2').find(":selected").val() == null || $('#idis2').find(":selected").val() == undefined) {
+    if (monthis2 == null || monthis2 == undefined) {
         var now = new Date();
-        var day = ("0" + now.getDate()).slice(-2);
-        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+        var month = ("0" + (now.getMonth() + 1)).slice(-1);
         monthis2 = (month);
     } else {
         monthis2 = $('#idis2').val()
@@ -201,6 +224,7 @@
 
     function initPage1() {
         $table1 = $('#dataTable').DataTable({
+            destroy: true,
             processing: true,
             serverSide: false,
             dom: 'lrBfrtip',
@@ -240,6 +264,7 @@
     function initPage2() {
 
         $table2 = $('#showemployee').DataTable({
+            autoWidth: false,
             processing: true,
             destroy: true,
             serverSide: false,
@@ -288,7 +313,8 @@
     function initPage3() {
 
         $table3 = $('#showtrainee').DataTable({
-            // destroy: true,
+            autoWidth: false,
+            destroy: true,
             processing: true,
             serverSide: false,
             dom: 'lrBfrtip',
@@ -348,12 +374,12 @@
     });
 
     $('#idis').change(function() {
-        console.log(monthis);
-        $table2.ajax.reload();
+        monthis = $('#idis').val();
+        initPage2();
     });
     $('#idis2').change(function() {
-        console.log(monthis2);
-        $table3.ajax.reload();
+        monthis2 = $('#idis2').val();
+        initPage3();
     });
 
     $(document).on("click", "#edit-item", function() {
@@ -367,6 +393,64 @@
         $(".modal-body #empId").val(myBookNo);
         let modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('exampleModal'))
         modal.show();
+    });
+
+    $(document).on('click', '.employeedelete', function(e) {
+        e.preventDefault();
+        var idiss = $(this).data('id');
+        var empid = $(this).data('idis');
+
+        swal({
+                title: "Are you sure!",
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Yes!",
+                showCancelButton: true,
+            }, )
+            .then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        type: "GET",
+                        url: "{{ route('admin.admindashboard.destroymonthwise') }}",
+                        data: {
+                            id: idiss,
+                            idis: empid
+                        },
+                        success: function(data) {
+                            alert("Deleted successfully");
+                            location.reload()
+                        }
+                    });
+                }
+            });
+    });
+
+    $(document).on('click', '.traineedelete', function(e) {
+        e.preventDefault();
+        var idiss = $(this).data('id');
+        var traineeid = $(this).data('idis');
+
+        swal({
+                title: "Are you sure!",
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Yes!",
+                showCancelButton: true,
+            }, )
+            .then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        type: "GET",
+                        url: "{{ route('admin.admindashboard.destroymonthwise') }}",
+                        data: {
+                            id: idiss,
+                            idis: traineeid
+                        },
+                        success: function(data) {
+                            alert("Deleted successfully");
+                            location.reload()
+                        }
+                    });
+                }
+            });
     });
 </script>
 
