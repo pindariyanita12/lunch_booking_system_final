@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 |
  */
 
-Route::domain('https://lunch-api.dev.local')->group(function () {
+Route::domain(env('API_URL'))->group(function () {
     Route::post('/getdata', [AuthController::class, 'get_data'])->name('getdata');
     Route::post('/signin', [AuthController::class, 'signin'])->name('signin');
     Route::group(['middleware' => 'isActive'], function () {

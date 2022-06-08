@@ -135,7 +135,7 @@
                         <tr>
                             <th>Emp id</th>
                             <th>Employee Name</th>
-                            <th>Total</th>
+                            <th>Total Dishes</th>
                             <th>Action</th>
 
                         </tr>
@@ -161,7 +161,7 @@
                         <tr>
                             <th>Emp id</th>
                             <th>Nonemployee Name</th>
-                            <th>Total</th>
+                            <th>Total Dishes</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -225,6 +225,7 @@
     function initPage1() {
         $table1 = $('#dataTable').DataTable({
             destroy: true,
+            autoWidth: false,
             processing: true,
             serverSide: false,
             dom: 'lrBfrtip',
@@ -311,7 +312,6 @@
     }
 
     function initPage3() {
-
         $table3 = $('#showtrainee').DataTable({
             autoWidth: false,
             destroy: true,
@@ -367,6 +367,15 @@
         });
     }
     $(document).ready(function() {
+
+        $('a[data-toggle="tab"]').on('show.bs.tab', function(e) {
+            localStorage.removeItem('activeTab');
+            localStorage.setItem('activeTab', $(e.target).attr('href'));
+        });
+        var activeTab = localStorage.getItem('activeTab');
+        if (activeTab) {
+            $('[href="' + activeTab + '"]').tab('show');
+        }
         initPage1();
         initPage2();
         initPage3();

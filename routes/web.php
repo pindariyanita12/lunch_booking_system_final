@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
  */
 
 //user route
-Route::domain('https://lunch-app.dev.local')->group(function () {
+Route::domain(env('APP_URL'))->group(function () {
     Route::get('/', function () {
         return view('user.login');
     });
@@ -38,11 +38,11 @@ Route::domain('https://lunch-app.dev.local')->group(function () {
 });
 
 //admin route
-Route::domain('https://lunch-admin.dev.local')->group(function () {
+Route::domain(env('ADMIN_URL'))->group(function () {
     Route::get('/', function () {
         return view('auth.login');
     });
-    Route::get('/lang/{locale}',[AdminController::class,'lang']);
+    Route::get('/lang/{locale}', [AdminController::class, 'lang']);
     Route::get('/admindashboard', [AdminController::class, 'show'])->name('admin.admindashboard.show')->middleware('auth', 'can:isAdmin');
     Route::get('/offday', [AdminController::class, 'offday']);
     Auth::routes();
