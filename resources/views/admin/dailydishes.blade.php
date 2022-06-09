@@ -170,37 +170,7 @@
             </div>
         </div>
     </div>
-    <!-- edit Modal -->
-    <div class="modal" tabindex="-1" id="exampleModal">
-
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Edit Detail</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="{{ route('admin.admindashboard.edit') }}" method="POST">
-                        @csrf
-                        <input type="text" name="empId" id="empId" value="" hidden />
-                        <input type="text" name="empNo" placeholder="Only numeric values are allowed" id="empNo"
-                            value="" />
-                        <input type="text" name="empName" id="empName" value="" />
-                        <input type="text" name="empMail" id="empMail" value="" readonly />
-
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
-                    </form>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-
+    
 </body>
 <script type="text/javascript">
     var monthis = $('#idis').val();
@@ -438,7 +408,7 @@
         var idiss = $(this).data('id');
         var traineeid = $(this).data('idis');
 
-        swal({
+        swal({  
                 title: "Are you sure!",
                 confirmButtonClass: "btn-danger",
                 confirmButtonText: "Yes!",

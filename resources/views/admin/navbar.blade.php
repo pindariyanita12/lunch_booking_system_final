@@ -17,6 +17,9 @@
                 <li class="nav-item">
                     <a class="nav-link text-white" href="/daily-dishes">Reports</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/totalemployee">Employee</a>
+                </li>
         </div>
         </ul>
 
@@ -24,13 +27,14 @@
              @php $locale = session()->get('locale'); @endphp
             <li class="nav-item dropdown bg-dark">
                 <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Language
+                    {{ session('locale') }}
                 </a>
                 <ul class="dropdown-menu" >
-                    <li><a class="dropdown-item" href="/lang/en">English</a></li>
+                    <li><a class="dropdown-item" selected href="/lang/en">English</a></li>
 
                     <li><a class="dropdown-item" href="/lang/hi">Hindi</a></li>
                 </ul>
+
             </li>
             <li class="nav-item dropdown">
                 <a id="navbarDropdown" class="nav-link dropdown-toggle text-white" href="#" role="button"

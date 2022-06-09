@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Yajra\DataTables\Html\Button;
+use DataTables;
 
 class AdminController extends Controller
 {
@@ -93,7 +94,7 @@ class AdminController extends Controller
     {
         $validated = $request->validate([
             'empNo' => 'numeric|nullable',
-            'empName' => 'string',
+            'empName' => ' required |regex:/^[a-zA-Z]/u',
         ]);
         if ($validated == true) {
             $userid = $request->empId;
@@ -179,7 +180,6 @@ class AdminController extends Controller
                     $query4 = $query2[0]["name"];
                     $query5 = $query2[0]["email"];
                     $actionBtn = '<a  class="btn traineedelete btn-danger btn-sm" data-id="' . $userdata->id . '" data-idis="' . $idis . '"><i class="bi bi-trash"></i></a>';
-                    $actionBtn = $actionBtn . '<button class="btn btn-primary btn-sm ms-2 " id="edit-item"data-toggle="modal" data-userid="' . $query1 . '" data-id="' . $query3 . '" data-name="' . $query4 . '" data-email="' . $query5 . '" data-target="edit-modal" ><i class="bi bi-pencil"></i></button>';
                     return $actionBtn;
                 })
                 ->rawColumns(['actions'])
@@ -236,5 +236,62 @@ class AdminController extends Controller
             ->buttons(
                 Button::make('csv'),
             );
+    }
+
+    public function getEmployee(Request $request){
+        if ($request->ajax()) {
+            $data = User::where('is_admin','=','0')->get();
+            // dd($data);
+            return Datatables::of($data)
+                    ->addIndexColumn()
+                    ->addColumn('action', function($data){
+                            $userid= $data->id;
+                            // dd($userid);
+                            $query = User::where('id', '=', $userid)->get();
+                            $query2 = json_decode($query, true);
+                            $query1 = $query2[0]["id"];
+                            $query3 = $query2[0]["emp_id"];
+                            $query4 = $query2[0]["name"];
+                            $query5 = $query2[0]["email"];
+                            $actionBtn = '<a  class="btn empdelete btn-danger btn-sm" data-id="' . $userid . '" ><i class="bi bi-trash"></i></a>';
+                            $actionBtn = $actionBtn . '<button class="btn btn-primary btn-sm ms-2 " id="edit-emp"data-toggle="modal" data-userid="' . $query1 . '" data-id="' . $query3 . '" data-name="' . $query4 . '" data-email="' . $query5 . '" data-target="edit-modal" ><i class="bi bi-pencil"></i></button>'; 
+                            return $actionBtn;
+                    })
+                    ->rawColumns(['action'])
+                    ->make(true);
+        }
+        return view('admin.employee');
+    }
+
+    public function empDelete(Request $request){
+        // dd($request->id);
+        $delete = DB::table('users')->where('id', $request->id)->delete();
+        return redirect()->back()->with('alert', 'Deleted successfully');
+    }
+
+    public function addEmployee(Request $request){
+        $empNo = $request->emp_no;
+        $validate =$request->validate([
+                "emp_no" => "numeric",
+                'emp_name' => 'required |regex:/^[a-zA-Z]/u',
+                'emp_email' => 'required | email | unique:users,email' 
+        ]);
+        if($validate == true && $empNo != null){
+            User::insert([
+                "emp_id" => $request->emp_no,
+                "name" =>$request->emp_name,
+                "email" => $request->emp_email ,
+                "type" =>"1"
+            ]);
+        }
+        else{
+            User::insert([
+                "name" =>$request->emp_name,
+                "email" => $request->emp_email ,
+                "type" =>"0"
+            ]);
+        }
+        return redirect()->back();
+        
     }
 }
