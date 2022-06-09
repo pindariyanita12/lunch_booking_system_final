@@ -20,6 +20,24 @@
     </script>
     <title>Login</title>
 </head>
+
+<body>
+    <div class="login-container mx-auto">
+        <div class="image">
+            <img src="{{ url('/Images/simform_logo.png') }}" class="img-fluid" alt="Responsive image">
+        </div>
+        <br>
+        <h3 class="login-heading"><i>Welcome Simformer,</i></h3>
+        <hr>
+        <form>
+            <div class="login-button">
+                <button type="button" onclick="checkLogin()" id="login-btn" class="btn btn-primary"><img
+                        src="{{ url('/Images/microsoft (1).png') }}" alt="outlook" style="float: left;" width="25px"
+                        height="22px">Login Using Outlook</button>
+            </div>
+        </form>
+    </div>
+</body>
 <script>
 
     sessionStorage.removeItem('user_id')
@@ -51,21 +69,4 @@
             });
     }
 </script>
-<body>
-    <div class="login-container mx-auto">
-        <div class="image">
-            <img src="{{ url('/Images/simform_logo.png') }}" class="img-fluid" alt="Responsive image">
-        </div>
-        <br>
-        <h3 class="login-heading"><i>Welcome Simformer,</i></h3>
-        <hr>
-        <form>
-            <div class="login-button">
-                <button type="button" onclick="checkLogin()" id="login-btn" class="btn btn-primary"><img
-                        src="{{ url('/Images/microsoft (1).png') }}" alt="outlook" style="float: left;" width="25px"
-                        height="22px">Login Using Outlook</button>
-            </div>
-        </form>
-    </div>
-</body>
 </html>
