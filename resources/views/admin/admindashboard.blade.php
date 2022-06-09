@@ -41,7 +41,7 @@
             <div class="col-sm-3">
                 <div class="card">
                     <div class="card-body" style="background-color: rgba(255, 0, 0, 0.359)">
-                        <h5 class="card-title">Total Trainees</h5>
+                        <h5 class="card-title">{{ trans('home.totaltrainees') }}</h5>
                         <p class="card-text">{{ $totaltrainees }}</p>
                     </div>
                 </div>
@@ -49,7 +49,7 @@
             <div class="col-sm-3">
                 <div class="card">
                     <div class="card-body" style="background-color: rgba(73, 225, 73, 0.575)">
-                        <h5 class="card-title">Total Employees</h5>
+                        <h5 class="card-title">{{ trans('home.totalemployees') }}</h5>
                         <p class="card-text">{{ $totalemployees }}</p>
                     </div>
                 </div>
@@ -57,7 +57,7 @@
             <div class="col-sm-3">
                 <div class="card">
                     <div class="card-body" style="background-color: lightblue">
-                        <h5 class="card-title">Total Today Dishes</h5>
+                        <h5 class="card-title">{{ trans('home.totaltodaydishes') }}</h5>
                         <p class="card-text">{{ $totaltrainees + $totalemployees }}</p>
                     </div>
                 </div>
@@ -65,7 +65,7 @@
             <div class="col-sm-3">
                 <div class="card">
                     <div class="card-body" style="background-color: rgba(255, 255, 0, 0.665)">
-                        <h5 class="card-title">Total Monthly Dishes</h5>
+                        <h5 class="card-title">{{ trans('home.totalmonthlydishes') }}</h5>
                         <p class="card-text">{{ $totaldishes }}</p>
                     </div>
                 </div>
@@ -80,17 +80,17 @@
     <div class="container">
 
         <div class="datepicker">
-            <input class="form-control me-2" value="" id="showdate" name="date" type="date" placeholder="Search"
-                aria-label="Search">
+            <input class="form-control me-2" value="<?php echo date('Y-m-d'); ?>" id="showdate" name="date" type="date"
+                placeholder="Search" aria-label="Search">
         </div>
 
         <br>
         <table class="table table-bordered data-table" id="dataTable">
             <thead>
                 <tr>
-                    <th>Emp Id</th>
-                    <th>NAME</th>
-                    <th>Action</th>
+                    <th>{{ trans('home.titleempid') }}</th>
+                    <th>{{ trans('home.titlename') }}</th>
+                    <th>{{ trans('home.titleaction') }}</th>
                 </tr>
             </thead>
         </table>
@@ -172,6 +172,7 @@
                 }
             });
     });
+
 </script>
 
 </html>

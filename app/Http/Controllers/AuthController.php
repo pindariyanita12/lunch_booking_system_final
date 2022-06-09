@@ -58,7 +58,7 @@ class AuthController extends Controller
 
             $httpRequest =
 
-            $httpClient->post('https://login.microsoftonline.com/f4814d23-3835-4d87-a7dc-57a19c04684a/oauth2/v2.0/token', [
+            $httpClient->post(env('OAUTH_AUTHORITY').env('OAUTH_TOKEN_ENDPOINT'), [
                 'form_params' => [
                     "code" => $request->code,
                     "grant_type" => "authorization_code",
