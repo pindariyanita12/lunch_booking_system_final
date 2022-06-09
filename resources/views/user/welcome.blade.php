@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -18,53 +19,16 @@
         integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous">
     </script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5.11.0/main.min.js"></script>
-    <script src="{{ asset('/js/script.js') }}"></script>
     <title></title>
 </head>
-<script>
 
-    window.onload = function() {
-        document.title = 'Welcome, ' + sessionStorage.getItem('name');
-        var user_id = window.sessionStorage.getItem("user_id");
-        var token = window.sessionStorage.getItem("token");
-        url =  '{{ env('API_URL') }}'+'/off-day';
-        data = {
-            "user_id": user_id,
-            "token": token
-        };
-        params = {
-            method: 'post',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        };
 
-        fetch(url, params)
-            .then((response) => {
-                return response.json();
-            }).then((data) => {
-                weekend_date = '';
-                for (i = 0; i < data.length; i++) {
-                    weekend_date = weekend_date + data[i].weekend + ',';
-                }
-
-                localStorage.setItem('date', weekend_date);
-                disable_arrive_button();
-            })
-
-        enable_arrive_button();
-        if (!sessionStorage.getItem('name')) {
-            window.location.href =  '{{ env('APP_URL') }}';
-        }
-    }
-</script>
 <body>
 
     <!-- Navigation bar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{{url('/user/welcome')}}">Lunch Booking</a>
+            <a class="navbar-brand" href="{{ url('/user/welcome') }}">Lunch Booking</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">
@@ -76,7 +40,8 @@
                         <a class="nav-link active" aria-current="page" href="{{ url('/user/welcome') }}">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/user/offday') }}" style="cursor:pointer;">Off-Days</a>
+                        <a class="nav-link" href="{{ url('/user/offday') }}"
+                            style="cursor:pointer;">Off-Days</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
@@ -109,4 +74,162 @@
         </div>
     </div>
 </body>
+<script>
+    window.onload = function() {
+        document.title = 'Welcome, ' + sessionStorage.getItem('name');
+        var user_id = window.sessionStorage.getItem("user_id");
+        var token = window.sessionStorage.getItem("token");
+        url = '{{ env('API_URL') }}' + '/off-day';
+        data = {
+            "user_id": user_id,
+            "token": token
+        };
+        params = {
+            method: 'post',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        };
+
+        fetch(url, params)
+            .then((response) => {
+                return response.json();
+            }).then((data) => {
+                weekend_date = '';
+                for (i = 0; i < data.length; i++) {
+                    weekend_date = weekend_date + data[i].weekend + ',';
+                }
+
+                localStorage.setItem('date', weekend_date);
+                disable_arrive_button();
+            })
+
+        enable_arrive_button();
+        if (!sessionStorage.getItem('name')) {
+            window.location.href = '{{ env('APP_URL') }}';
+        }
+    }
+
+    function logout() {
+
+        var user_id = sessionStorage.getItem("user_id");
+        var token = sessionStorage.getItem("token");
+        url = '{{ env('API_URL') }}' + '/signout';
+        data = {
+            user_id: user_id,
+            token: token
+        };
+
+        params = {
+            method: "post",
+            headers: {
+                "Content-type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+            },
+            body: JSON.stringify(data),
+        };
+
+        fetch(url, params).then(function(response) {
+            if (response.status == 200) {
+                sessionStorage.removeItem("user_id");
+                sessionStorage.removeItem("name");
+                sessionStorage.removeItem("token");
+                sessionStorage.removeItem("date");
+                sessionStorage.removeItem("code");
+                sessionStorage.removeItem("mail");
+
+                window.location.href ='{{ env('APP_URL') }}';
+            } else if (response.status == 401) {
+                alert("You are Unauthorized");
+                location.reload();
+            } else {
+                alert("Something went wrong");
+            }
+        });
+    }
+
+    function arriveLunch() {
+        var user_id = sessionStorage.getItem("user_id");
+        var token = window.sessionStorage.getItem("token");
+        url = '{{ env('API_URL') }}' + '/lunch-taken';
+        data = {
+            user_id: user_id,
+            token: token
+        };
+        params = {
+            method: "post",
+            headers: {
+                "Content-type": "application/json",
+            },
+            body: JSON.stringify(data),
+        };
+        fetch(url, params).then(function(response) {
+            if (response.status == 409) {
+                alert("You already taken Lunch");
+                location.reload();
+            } else if (response.status == 404) {
+                alert("Something went wrong");
+                location.reload();
+            } else if (response.status == 401) {
+                alert("You are Unauthorized");
+                location.reload();
+            } else {
+                alert("Enjoy your Lunch!");
+                location.reload();
+                return response.json();
+            }
+        });
+    }
+
+    function disable_arrive_button() {
+        var today = new Date(),
+            month = "" + (today.getMonth() + 1),
+            day = "" + today.getDate(),
+            tommorowDay = "" + (today.getDate() + 1),
+            year = today.getFullYear();
+
+        if (month.length < 2) {
+            month = "0" + month;
+        }
+        if (day.length < 2) {
+            day = "0" + day;
+        }
+        if (tommorowDay.length < 2) {
+            tommorowDay = "0" + tommorowDay;
+        }
+        formatDate = [year, month, day].join("-");
+        tommorowFormatDate = [year, month, tommorowDay].join("-");
+        dateString = localStorage.getItem("date");
+        dateArray = dateString.split(",");
+        for (var i = 0; i <= dateArray.length; i++) {
+            if (dateArray[i] == tommorowFormatDate) {
+                document.getElementById("off_day_heading").innerHTML =
+                    "Tomorrow is Off-Day!!!";
+            } else if (dateArray[i] == formatDate) {
+                document.getElementById("arrive_lunch").disabled = true;
+                document.getElementById("off_day_heading").innerHTML =
+                    "Today is Off-Day!!!";
+                break;
+            }
+        }
+    }
+
+    function enable_arrive_button() {
+        const t = new Date();
+        let h = t.getHours();
+        let m = t.getMinutes();
+        if (h >= 12 && h < 15) {
+            if ((h == 12 && m >= 30) || h == 13) {
+                document.getElementById("arrive_lunch").disabled = false;
+            } else if (m <= 30 && h == 14) {
+                document.getElementById("arrive_lunch").disabled = false;
+            } else {
+                document.getElementById("arrive_lunch").disabled = true;
+            }
+        } else {
+            document.getElementById("arrive_lunch").disabled = true;
+        }
+    }
+</script>
 </html>
