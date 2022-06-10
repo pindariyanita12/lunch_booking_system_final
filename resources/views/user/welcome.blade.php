@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -15,19 +15,15 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
         integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous">
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
-        integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
-    </script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.8.10/themes/smoothness/jquery-ui.css" type="text/css">
+
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5.11.0/main.min.js"></script>
     <title></title>
 </head>
 
 
 <body>
-
     <!-- Navigation bar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white">
         <div class="container-fluid">
@@ -86,43 +82,47 @@
 </body>
 <script>
     window.onload = function() {
-        document.title = 'Welcome, ' + sessionStorage.getItem('name');
-        var user_id = window.sessionStorage.getItem("user_id");
-        var token = window.sessionStorage.getItem("token");
-        url = '{{ env('API_URL') }}' + '/off-day';
-        data = {
-            "user_id": user_id,
-            "token": token
-        };
-        params = {
-            method: 'post',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        };
+            document.title = 'Welcome, ' + sessionStorage.getItem('name');
+            if (localStorage.getItem('taken') == '1') {
+            var user_id = window.sessionStorage.getItem("user_id");
+            var token = window.sessionStorage.getItem("token");
+            url = '{{ env('API_URL') }}' + '/off-day';
+            data = {
+                "user_id": user_id,
+                "token": token
+            };
+            params = {
+                method: 'post',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            };
 
-        fetch(url, params)
-            .then((response) => {
-                return response.json();
-            }).then((data) => {
-                weekend_date = '';
-                for (i = 0; i < data.length; i++) {
-                    weekend_date = weekend_date + data[i].weekend + ',';
-                }
+            fetch(url, params)
+                .then((response) => {
+                    return response.json();
+                }).then((data) => {
+                    weekend_date = '';
+                    for (i = 0; i < data.length; i++) {
+                        weekend_date = weekend_date + data[i].weekend + ',';
+                    }
 
-                localStorage.setItem('date', weekend_date);
-                disable_arrive_button();
-            })
+                    localStorage.setItem('date', weekend_date);
+                    disable_arrive_button();
+                })
+            enable_arrive_button();
+            disableafterlunch();
+        }
 
-        enable_arrive_button();
+
         if (!sessionStorage.getItem('name')) {
             window.location.href = '{{ env('APP_URL') }}';
         }
     }
 
     function logout() {
-
+        localStorage.removeItem('taken');
         var user_id = sessionStorage.getItem("user_id");
         var token = sessionStorage.getItem("token");
         url = '{{ env('API_URL') }}' + '/signout';
@@ -177,6 +177,8 @@
         fetch(url, params).then(function(response) {
             if (response.status == 409) {
                 alert("You already taken Lunch");
+                localStorage.setItem('taken', '1');
+                disableafterlunch();
                 location.reload();
             } else if (response.status == 404) {
                 alert("Something went wrong");
@@ -186,11 +188,14 @@
                 location.reload();
             } else {
                 alert("Enjoy your Lunch!");
+                localStorage.setItem('taken', '1');
+                disableafterlunch();
                 location.reload();
                 return response.json();
             }
         });
     }
+
 
     function disable_arrive_button() {
         var today = new Date(),
@@ -226,11 +231,12 @@
     }
 
     function enable_arrive_button() {
+
         const t = new Date();
         let h = t.getHours();
         let m = t.getMinutes();
-        if (h >= 12 && h <= 16) {
-            if ((h == 12 && m >= 30) || h == 13 || h == 14 || h == 15 || (h == 16 && m == 0)) {
+        if (h >= 12 && h <= 17) {
+            if ((h == 12 && m >= 30) || h == 13 || h == 14 || h == 15 || (h == 17)) {
                 document.getElementById("arrive_lunch").disabled = false;
             } else {
                 document.getElementById("arrive_lunch").disabled = true;
@@ -238,6 +244,13 @@
         } else {
             document.getElementById("arrive_lunch").disabled = true;
         }
+    }
+
+    function disableafterlunch() {
+
+        document.getElementById("arrive_lunch").disabled = true;
+        document.getElementById("arrive_lunch").innerText = 'Lunch Taken';
+
     }
 </script>
 

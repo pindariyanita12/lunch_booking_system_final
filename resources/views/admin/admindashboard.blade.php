@@ -137,6 +137,9 @@
     }
 
     $(document).ready(function() {
+        window.setTimeout(function() {
+        window.location.reload();
+    }, 20000);
         initPage();
     });
 
