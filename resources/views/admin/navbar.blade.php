@@ -11,7 +11,7 @@
                     <a class="nav-link active text-white" aria-current="page" href="/admindashboard">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="/offday">Off Days</a>
+                    <a class="nav-link text-white" href="/offday" >Off Days</a>
                 </li>
 
                 <li class="nav-item">
@@ -26,8 +26,15 @@
         <ul class="navbar-nav ms-auto mb-0 ">
              @php $locale = session()->get('locale'); @endphp
             <li class="nav-item dropdown bg-dark">
-                <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    {{ session('locale') }}
+                <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" >
+                    @if(session('locale')== '')
+                        English
+                    
+                    @elseif(session('locale') == 'en')
+                        English
+                    @elseif(session('locale') == 'hi')
+                        Hindi
+                    @endif
                 </a>
                 <ul class="dropdown-menu" >
                     <li><a class="dropdown-item" selected href="/lang/en">English</a></li>
@@ -39,7 +46,7 @@
             <li class="nav-item dropdown">
                 <a id="navbarDropdown" class="nav-link dropdown-toggle text-white" href="#" role="button"
                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                    {{ Auth::user()->name }}
+                    {{ trans(Auth::user()->name) }}
                 </a>
 
                 <div class="dropdown-menu dropdown-menu-end text-black" aria-labelledby="navbarDropdown">

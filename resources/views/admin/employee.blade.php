@@ -6,38 +6,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" rel="stylesheet"> 
     <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.css"> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.js"></script> 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script> 
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script> 
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
-    </script>
+    </script> 
     <style>
         h3{
             text-align:center;
             margin-top:35px;
         }
+        /* #edit-emp{
+            margin-left:4px;
+        }
+         */
     </style>
 </head>
 <body>
     @include('admin.navbar')
     <div class="container">
+    @if (count($errors) > 0)
+
+<div class="alert alert-danger">
+
+<ul>
+
+@foreach ($errors->all() as $error)
+
+<button type="button" class="close" data-dismiss="alert">x</button> {{ $error }}
+
+@endforeach
+
+</ul>
+
+</div>
+
+@endif
     <div class="d-flex justify-content-center mb-3">
         <h3>Total Employees</h3>
         <button type="button" id="addemp" class="btn btn-primary" style="height: 47px;margin-top:30px;margin-left: 15px;" ><i class="bi bi-plus"> Add Employee</i></button>
     </div>
-    <div>
-    <table class="table table-bordered data-table"> 
+    <div class="row table-responsive">
+    <table class="table table-bordered data-table "> 
         <thead>
             <tr>
                 <th>EMP_ID</th>
                 <th>Name</th>
-                <th>Email</th>
-                <th width="100px">Action</th>
+                <th>Email</th>  
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>

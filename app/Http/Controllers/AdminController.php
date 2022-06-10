@@ -217,7 +217,6 @@ class AdminController extends Controller
                     $query4 = $query2[0]["name"];
                     $query5 = $query2[0]["email"];
                     $actionBtn = '<a  class="btn employeedelete btn-danger btn-sm" data-id="' . $userdata->id . '" data-idis="' . $idis . '"><i class="bi bi-trash"></i></a>';
-                    $actionBtn = $actionBtn . '<button class="btn btn-primary btn-sm ms-2 " id="edit-item"data-toggle="modal" data-userid="' . $query1 . '" data-id="' . $query3 . '" data-name="' . $query4 . '" data-email="' . $query5 . '" data-target="edit-modal" ><i class="bi bi-pencil"></i></button>';
                     return $actionBtn;
                 })
                 ->rawColumns(['actions'])
@@ -242,7 +241,7 @@ class AdminController extends Controller
         if ($request->ajax()) {
             $data = User::where('is_admin','=','0')->get();
             // dd($data);
-            return Datatables::of($data)
+            return datatables()->of($data)
                     ->addIndexColumn()
                     ->addColumn('action', function($data){
                             $userid= $data->id;
@@ -254,7 +253,7 @@ class AdminController extends Controller
                             $query4 = $query2[0]["name"];
                             $query5 = $query2[0]["email"];
                             $actionBtn = '<a  class="btn empdelete btn-danger btn-sm" data-id="' . $userid . '" ><i class="bi bi-trash"></i></a>';
-                            $actionBtn = $actionBtn . '<button class="btn btn-primary btn-sm ms-2 " id="edit-emp"data-toggle="modal" data-userid="' . $query1 . '" data-id="' . $query3 . '" data-name="' . $query4 . '" data-email="' . $query5 . '" data-target="edit-modal" ><i class="bi bi-pencil"></i></button>'; 
+                            $actionBtn = $actionBtn . '<button class="btn btn-primary btn-sm ms-2" id="edit-emp"data-toggle="modal" data-userid="' . $query1 . '" data-id="' . $query3 . '" data-name="' . $query4 . '" data-email="' . $query5 . '" data-target="edit-modal" ><i class="bi bi-pencil"></i></button>'; 
                             return $actionBtn;
                     })
                     ->rawColumns(['action'])

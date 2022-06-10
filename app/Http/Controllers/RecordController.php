@@ -14,7 +14,7 @@ class RecordController extends Controller
         $date = date('Y-m-d', strtotime($date));
         $check = Record::where('user_id', $request->user_id)->where('is_taken', 1)->whereDate('created_at', '=', $date)->orderby('created_At', 'DESC')->first();
 
-        if ($check) {
+        if ($check) {  
             return response(['message' => 'You already taken lunch'], 409);
         } else {
             $record = Record::create(['user_id' => $request->user_id]);
