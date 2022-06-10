@@ -33,7 +33,7 @@
     <div class="container mt-5" style="height:300px">
         <br>
         <div class="heading">
-            <h2>Select Off Days</h2>
+            <h2>{{trans('home.selectoffdays')}}</h2>
         </div>
         <hr>
         <div class="date-container">
@@ -54,7 +54,7 @@
                 </div>
 
                 <div class="date-button">
-                    <button class="btn1 btn-primary bg-dark" style="width: 90%;height: 40px;">Add dates</button>
+                    <button class="btn1 btn-primary bg-dark" style="width: 90%;height: 40px;">{{trans('home.adddates')}}</button>
                 </div>
             </form>
         </div>

@@ -37,13 +37,20 @@
                     </li>
                 </ul>
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <li class="nav-item mt-1 me-1" id="myname">
-                        Welcome,
-                        <script>
-                            document.write(window.sessionStorage.getItem('name'));
-                        </script>
+
+                    <li class="nav-item dropdown bg-white">
+                        <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Welcome,
+                            <script>
+                                document.write(window.sessionStorage.getItem('name'));
+                            </script>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" onclick="logout()" style="cursor: pointer">Logout</a></li>
+                        </ul>
                     </li>
-                    <button class="btn btn-success" onclick="logout()">Logout</button>
+
                 </ul>
             </div>
         </div>

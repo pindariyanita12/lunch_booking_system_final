@@ -83,14 +83,14 @@
     <div class="container">
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link active" data-toggle="tab" aria-expanded="true" href="#tab1">Daily Dishes</a>
+                <a class="nav-link active" data-toggle="tab" aria-expanded="true" href="#tab1">{{ trans('home.dailydishes') }}</a>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
-                    aria-expanded="false">Employee Monthwise</a>
+                    aria-expanded="false">{{ trans('home.monthwisereport') }}</a>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" data-toggle="tab" aria-expanded="false" href="#tab2">Employee</a></li>
-                    <li><a class="dropdown-item" data-toggle="tab" aria-expanded="false" href="#tab3">Non-Employee</a>
+                    <li><a class="dropdown-item" data-toggle="tab" aria-expanded="false" href="#tab2">{{ trans('home.employeewise') }}</a></li>
+                    <li><a class="dropdown-item" data-toggle="tab" aria-expanded="false" href="#tab3">{{ trans('home.traineewise') }}</a>
                     </li>
 
                 </ul>
@@ -103,8 +103,8 @@
 
                     <thead>
                         <tr>
-                            <th>Date</th>
-                            <th>Total</th>
+                            <th>{{ trans('home.date') }}</th>
+                            <th>{{ trans('home.totaldishes') }}</th>
                         </tr>
                     </thead>
 
@@ -120,7 +120,7 @@
                 <form action='' method="get">
                     <select name="id" style="cursor: Pointer;" class="form-select form-select-sm-1  text-black border-0"
                         id="idis">
-                        <option value="" selected disabled>Select Month</option>
+                        <option value="" selected disabled><?php echo date('M')?></option>
                         @for ($m = 1; $m <= 12; $m++)
                             <option value="{{ $m }}">{{ date('F', mktime(0, 0, 0, $m, 1, date('Y'))) }}
                             </option>
@@ -133,10 +133,10 @@
 
                     <thead>
                         <tr>
-                            <th>Emp id</th>
-                            <th>Employee Name</th>
-                            <th>Total Dishes</th>
-                            <th>Action</th>
+                            <th>{{trans('home.titleempid')}}</th>
+                            <th>{{trans('home.titlename')}}</th>
+                            <th>{{trans('home.totaldishes')}}</th>
+                            <th>{{trans('home.titleaction')}}</th>
 
                         </tr>
                     </thead>
@@ -146,7 +146,7 @@
                 <form action='' method="get">
                     <select name="idis2" style="cursor: Pointer;"
                         class="form-select form-select-sm-1  text-black border-0" id="idis2">
-                        <option value="" selected disabled>Select Month</option>
+                        <option value="" selected disabled><?php echo date('M')?></option>
                         @for ($m = 1; $m <= 12; $m++)
                             <option value="{{ $m }}">{{ date('F', mktime(0, 0, 0, $m, 1, date('Y'))) }}
                             </option>
@@ -159,10 +159,10 @@
 
                     <thead>
                         <tr>
-                            <th>Emp id</th>
-                            <th>Nonemployee Name</th>
-                            <th>Total Dishes</th>
-                            <th>Action</th>
+                            <th>{{trans('home.titleempid')}}</th>
+                            <th>{{trans('home.titletraineename')}}</th>
+                            <th>{{trans('home.totaldishes')}}</th>
+                            <th>{{trans('home.titleaction')}}</th>
                         </tr>
                     </thead>
 
@@ -170,37 +170,7 @@
             </div>
         </div>
     </div>
-    <!-- edit Modal -->
-    <div class="modal" tabindex="-1" id="exampleModal">
-
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Edit Detail</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="{{ route('admin.admindashboard.edit') }}" method="POST">
-                        @csrf
-                        <input type="text" name="empId" id="empId" value="" hidden />
-                        <input type="text" name="empNo" placeholder="Only numeric values are allowed" id="empNo"
-                            value="" />
-                        <input type="text" name="empName" id="empName" value="" />
-                        <input type="text" name="empMail" id="empMail" value="" readonly />
-
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
-                    </form>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-
+    
 </body>
 <script type="text/javascript">
     var monthis = $('#idis').val();
@@ -438,7 +408,7 @@
         var idiss = $(this).data('id');
         var traineeid = $(this).data('idis');
 
-        swal({
+        swal({  
                 title: "Are you sure!",
                 confirmButtonClass: "btn-danger",
                 confirmButtonText: "Yes!",

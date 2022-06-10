@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\LunchDate;
 use App\Models\Record;
 use App\Models\User;
+use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
@@ -30,7 +31,7 @@ class AdminController extends Controller
         if ($request->all() == null) {
             $dateis = date('Y-m-d');
         } else {
-        $dateis = $request->date;
+            $dateis = $request->date;
         }
         $uniquerecord = Record::select(DB::raw('DISTINCT Date(lunch_dates) as lunchdate,count(is_taken) as totaldishes'))->whereYear('lunch_dates', '=', date('Y'))->whereMonth('lunch_dates', date('m'))->groupBy('lunchdate')->get();
 
@@ -93,7 +94,7 @@ class AdminController extends Controller
     {
         $validated = $request->validate([
             'empNo' => 'numeric|nullable',
-            'empName' => 'string',
+            'empName' => ' required |regex:/^[a-zA-Z]/u',
         ]);
         if ($validated == true) {
             $userid = $request->empId;
@@ -107,8 +108,7 @@ class AdminController extends Controller
             } else {
                 return redirect()->back()->with('message', 'Form has not updated, Try again later!');
             }
-        }
-        else{
+        } else {
             return redirect()->back()->with('message', 'Form has not updated, Try again later!');
         }
 
@@ -179,7 +179,6 @@ class AdminController extends Controller
                     $query4 = $query2[0]["name"];
                     $query5 = $query2[0]["email"];
                     $actionBtn = '<a  class="btn traineedelete btn-danger btn-sm" data-id="' . $userdata->id . '" data-idis="' . $idis . '"><i class="bi bi-trash"></i></a>';
-                    $actionBtn = $actionBtn . '<button class="btn btn-primary btn-sm ms-2 " id="edit-item"data-toggle="modal" data-userid="' . $query1 . '" data-id="' . $query3 . '" data-name="' . $query4 . '" data-email="' . $query5 . '" data-target="edit-modal" ><i class="bi bi-pencil"></i></button>';
                     return $actionBtn;
                 })
                 ->rawColumns(['actions'])
@@ -217,7 +216,6 @@ class AdminController extends Controller
                     $query4 = $query2[0]["name"];
                     $query5 = $query2[0]["email"];
                     $actionBtn = '<a  class="btn employeedelete btn-danger btn-sm" data-id="' . $userdata->id . '" data-idis="' . $idis . '"><i class="bi bi-trash"></i></a>';
-                    $actionBtn = $actionBtn . '<button class="btn btn-primary btn-sm ms-2 " id="edit-item"data-toggle="modal" data-userid="' . $query1 . '" data-id="' . $query3 . '" data-name="' . $query4 . '" data-email="' . $query5 . '" data-target="edit-modal" ><i class="bi bi-pencil"></i></button>';
                     return $actionBtn;
                 })
                 ->rawColumns(['actions'])
@@ -236,5 +234,61 @@ class AdminController extends Controller
             ->buttons(
                 Button::make('csv'),
             );
+    }
+
+    public function getEmployee(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = User::where('is_admin', '=', '0')->get();
+            return datatables()::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($data) {
+                    $userid = $data->id;
+                    $query = User::where('id', '=', $userid)->get();
+                    $query2 = json_decode($query, true);
+                    $query1 = $query2[0]["id"];
+                    $query3=($query2[0]["emp_id"] == '0' ? "NA" : $query2[0]["emp_id"]);
+                    $query4 = $query2[0]["name"];
+                    $query5 = $query2[0]["email"];
+                    $actionBtn = '<a  class="btn empdelete btn-danger btn-sm" data-id="' . $userid . '" ><i class="bi bi-trash"></i></a>';
+                    $actionBtn = $actionBtn . '<button class="btn btn-primary btn-sm ms-2 " id="edit-emp"data-toggle="modal" data-userid="' . $query1 . '" data-id="' . $query3 . '" data-name="' . $query4 . '" data-email="' . $query5 . '" data-target="edit-modal" ><i class="bi bi-pencil"></i></button>';
+                    return $actionBtn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+        return view('admin.employee');
+    }
+
+    public function empDelete(Request $request)
+    {
+        $delete = DB::table('users')->where('id', $request->id)->delete();
+        return redirect()->back()->with('alert', 'Deleted successfully');
+    }
+
+    public function addEmployee(Request $request)
+    {
+        $empNo = $request->emp_no;
+        $validate = $request->validate([
+            "emp_no" => "numeric | unique:users,emp_id",
+            'emp_name' => 'required |regex:/^[a-zA-Z]/u',
+            'emp_email' => 'required | email | unique:users,email',
+        ]);
+        if ($validate == true && $empNo != null) {
+            User::insert([
+                "emp_id" => $request->emp_no,
+                "name" => $request->emp_name,
+                "email" => $request->emp_email,
+                "type" => "1",
+            ]);
+        } else {
+            User::insert([
+                "name" => $request->emp_name,
+                "email" => $request->emp_email,
+                "type" => "0",
+            ]);
+        }
+        return redirect()->back()->with('alert', 'Added successfully');
+
     }
 }

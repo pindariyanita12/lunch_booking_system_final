@@ -18,6 +18,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
         integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous">
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5.11.0/main.min.js"></script>
     <title></title>
 </head>
@@ -45,13 +48,20 @@
                     </li>
                 </ul>
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <li class="nav-item mt-1 me-1" id="myname">
-                        Welcome,
-                        <script>
-                            document.write(window.sessionStorage.getItem('name'));
-                        </script>
+
+                    <li class="nav-item dropdown bg-white">
+                        <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Welcome,
+                            <script>
+                                document.write(window.sessionStorage.getItem('name'));
+                            </script>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" onclick="logout()" style="cursor: pointer">Logout</a></li>
+                        </ul>
                     </li>
-                    <button class="btn btn-success" onclick="logout()">Logout</button>
+
                 </ul>
             </div>
         </div>
@@ -139,7 +149,7 @@
                 sessionStorage.removeItem("code");
                 sessionStorage.removeItem("mail");
 
-                window.location.href ='{{ env('APP_URL') }}';
+                window.location.href = '{{ env('APP_URL') }}';
             } else if (response.status == 401) {
                 alert("You are Unauthorized");
                 location.reload();
@@ -219,10 +229,8 @@
         const t = new Date();
         let h = t.getHours();
         let m = t.getMinutes();
-        if (h >= 12 && h < 15) {
-            if ((h == 12 && m >= 30) || h == 13) {
-                document.getElementById("arrive_lunch").disabled = false;
-            } else if (m <= 30 && h == 14) {
+        if (h >= 12 && h <= 16) {
+            if ((h == 12 && m >= 30) || h == 13 || h == 14 || h == 15 || (h == 16 && m == 0)) {
                 document.getElementById("arrive_lunch").disabled = false;
             } else {
                 document.getElementById("arrive_lunch").disabled = true;
@@ -232,4 +240,5 @@
         }
     }
 </script>
+
 </html>
