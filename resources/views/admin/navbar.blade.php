@@ -17,6 +17,9 @@
                 <li class="nav-item">
                     <a class="nav-link text-white" href="/daily-dishes">{{ trans('home.reports') }}</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/totalemployee">{{ trans('home.employees') }}</a>
+                </li>
         </div>
         </ul>
 
@@ -24,14 +27,27 @@
             @php $locale = session()->get('locale'); @endphp
 
             <li class="nav-item dropdown bg-dark">
-                <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                    English
+                <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    @if(session('locale')== '')
+
+                    {{ trans('home.english') }}
+
+                    @elseif(session('locale') == 'en')
+
+                    {{ trans('home.english') }}
+
+                    @elseif(session('locale') == 'hi')
+
+                    {{ trans('home.hindi') }}
+
+                    @endif
                 </a>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="/lang/en" <?php  if(session()->get('locale')=='en'){ echo 'selected';}?> >English</a></li>
-                    <li><a class="dropdown-item" href="/lang/hi" <?php  if(session()->get('locale')=='hi'){ echo 'selected';}?>>Hindi</a></li>
+                <ul class="dropdown-menu" >
+                    <li><a class="dropdown-item" selected href="/lang/en">{{ trans('home.english') }}</a></li>
+
+                    <li><a class="dropdown-item" href="/lang/hi">{{ trans('home.hindi') }}</a></li>
                 </ul>
+
             </li>
             <li class="nav-item dropdown">
                 <a id="navbarDropdown" class="nav-link dropdown-toggle text-white" href="#" role="button"

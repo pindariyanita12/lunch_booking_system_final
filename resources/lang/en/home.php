@@ -25,5 +25,11 @@ return [
     'dailydishes'=>'Daily Dishes',
     'monthwisereport'=>'Monthwise Reports',
     'employeewise'=>'Employee',
-    'traineewise'=>'Non Employee'
+    'traineewise'=>'Non Employee',
+    'titleemail'=>'Email',
+    'employees'=>'Employees',
+    'editdetail'=>'Edit Details',
+    'addemployee'=>'Add Employee',
+    'english'=>'English',
+    'hindi'=>'Hindi'
 ];

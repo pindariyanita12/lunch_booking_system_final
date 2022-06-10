@@ -83,7 +83,7 @@ class AuthController extends Controller
             $isactive = User::create([
 
                 'emp_id' => null,
-                'name' => $user->getgivenName(),
+                'name' => $user->getgivenName(),    
                 'email' => $user->getmail(),
                 'department' => null,
                 'password' => '23',

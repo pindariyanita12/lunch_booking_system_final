@@ -27,5 +27,12 @@ return [
     'dailydishes'=>'दैनिक व्यंजन',
     'monthwisereport'=>'मासिक रिपोर्ट',
     'employeewise'=>'कर्मचारी',
-    'traineewise'=>'प्रशिक्षु'
+    'traineewise'=>'प्रशिक्षु',
+    'titleemail'=>'ईमेल',
+    'employees'=>'कर्मचारियों',
+    'editdetail'=>'एडिट डिटेल',
+    'addemployee'=>'कर्मचारी जोड़ें',
+    'english'=>'इंग्लिश ',
+    'hindi'=>'हिंदी '
+
 ];

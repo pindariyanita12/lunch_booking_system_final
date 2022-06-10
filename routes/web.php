@@ -43,6 +43,12 @@ Route::domain(env('ADMIN_URL'))->group(function () {
     Route::get('/', function () {
         return view('auth.login');
     });
+    Route::get('/totalemployee', function () {
+        return view('admin.employee');
+    });
+    Route::get('/empdelete', [AdminController::class, 'empDelete'])->name('admin.admindashboard.empdelete');
+    Route::post('/addemployee',[AdminController::class,'addEmployee'])->name('admin.admindashboard.empadd');
+    Route::get('user/listing',[AdminController::class,'getEmployee'])->name('user.list');
     Route::get('/lang/{locale}', [AdminController::class, 'lang']);
     Route::get('/admindashboard', [AdminController::class, 'show'])->name('admin.admindashboard.show')->middleware('auth', 'can:isAdmin');
     Route::get('/offday', [AdminController::class, 'offday']);
