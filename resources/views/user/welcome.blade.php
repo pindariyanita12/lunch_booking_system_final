@@ -82,47 +82,45 @@
 </body>
 <script>
     window.onload = function() {
-            document.title = 'Welcome, ' + sessionStorage.getItem('name');
-            if (localStorage.getItem('taken') == '1') {
-            var user_id = window.sessionStorage.getItem("user_id");
-            var token = window.sessionStorage.getItem("token");
-            url = '{{ env('API_URL') }}' + '/off-day';
-            data = {
-                "user_id": user_id,
-                "token": token
-            };
-            params = {
-                method: 'post',
-                headers: {
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            };
+        document.title = 'Welcome, ' + sessionStorage.getItem('name');
+        var user_id = window.sessionStorage.getItem("user_id");
+        var token = window.sessionStorage.getItem("token");
+        url = '{{ env('API_URL') }}' + '/off-day';
+        data = {
+            "user_id": user_id,
+            "token": token
+        };
+        params = {
+            method: 'post',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        };
 
-            fetch(url, params)
-                .then((response) => {
-                    return response.json();
-                }).then((data) => {
-                    weekend_date = '';
-                    for (i = 0; i < data.length; i++) {
-                        weekend_date = weekend_date + data[i].weekend + ',';
-                    }
+        fetch(url, params)
+            .then((response) => {
+                return response.json();
+            }).then((data) => {
+                weekend_date = '';
+                for (i = 0; i < data.length; i++) {
+                    weekend_date = weekend_date + data[i].weekend + ',';
+                }
 
-                    localStorage.setItem('date', weekend_date);
-                    disable_arrive_button();
-                })
-            enable_arrive_button();
+                localStorage.setItem('date', weekend_date);
+                disable_arrive_button();
+            })
+        enable_arrive_button();
+        if (sessionStorage.getItem('taken') == '1') {
             disableafterlunch();
         }
-
-
         if (!sessionStorage.getItem('name')) {
             window.location.href = '{{ env('APP_URL') }}';
         }
     }
 
     function logout() {
-        localStorage.removeItem('taken');
+        sessionStorage.removeItem('taken');
         var user_id = sessionStorage.getItem("user_id");
         var token = sessionStorage.getItem("token");
         url = '{{ env('API_URL') }}' + '/signout';
@@ -177,7 +175,7 @@
         fetch(url, params).then(function(response) {
             if (response.status == 409) {
                 alert("You already taken Lunch");
-                localStorage.setItem('taken', '1');
+                sessionStorage.setItem('taken', '1');
                 disableafterlunch();
                 location.reload();
             } else if (response.status == 404) {
@@ -188,7 +186,7 @@
                 location.reload();
             } else {
                 alert("Enjoy your Lunch!");
-                localStorage.setItem('taken', '1');
+                sessionStorage.setItem('taken', '1');
                 disableafterlunch();
                 location.reload();
                 return response.json();
@@ -235,8 +233,8 @@
         const t = new Date();
         let h = t.getHours();
         let m = t.getMinutes();
-        if (h >= 12 && h <= 17) {
-            if ((h == 12 && m >= 30) || h == 13 || h == 14 || h == 15 || (h == 17)) {
+        if (h >= 12 && h <= 16) {
+            if ((h == 12 && m >= 20) || h == 13 || h == 14 || h == 15 || (h == 16 && m == 0)) {
                 document.getElementById("arrive_lunch").disabled = false;
             } else {
                 document.getElementById("arrive_lunch").disabled = true;
