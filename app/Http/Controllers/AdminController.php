@@ -28,6 +28,7 @@ class AdminController extends Controller
     //admin dashboard
     public function show(Request $request)
     {
+
         if ($request->all() == null) {
             $dateis = date('Y-m-d');
         } else {
@@ -42,14 +43,11 @@ class AdminController extends Controller
         $totalemployees = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereDate('records.lunch_dates', '=', $dateis)->where('users.type', '1')->select(DB::raw('COUNT(is_taken) AS uniquerecord'))->first();
 
         if ($request->ajax()) {
-            if ($dateis == null) {
-                $dateis = date('Y-m-d');
-            }
-            $record = Record::with('user')->whereDate('lunch_dates', '=', $dateis)->orderBy('lunch_dates', 'DESC')->get();
 
+            $dateis = $request->date;
+            $record = Record::with('user')->whereDate('lunch_dates', '=', $dateis)->orderBy('lunch_dates', 'DESC')->get();
             return datatables()->of($record)
                 ->editColumn('userempid', function ($userdata) {
-
                     return empty($userdata->user->emp_id) ? "NA" : $userdata->user->emp_id;
                 })
                 ->editColumn('username', function ($userdata) {
@@ -156,7 +154,6 @@ class AdminController extends Controller
     {
 
         $idis = $request->idis2;
-
         $trainees = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereYear('records.lunch_dates', '=', date('Y'))->whereMonth('records.lunch_dates', '=', $request->idis2)->where('users.type', '0')->select(DB::raw('DISTINCT users.id,users.emp_id,users.email, users.name,COUNT(is_taken) AS uniquerecord'))->groupBy('users.email')->get();
         if ($request->ajax()) {
             $idis = $request->idis2;
@@ -247,7 +244,7 @@ class AdminController extends Controller
                     $query = User::where('id', '=', $userid)->get();
                     $query2 = json_decode($query, true);
                     $query1 = $query2[0]["id"];
-                    $query3=($query2[0]["emp_id"] == '0' ? "NA" : $query2[0]["emp_id"]);
+                    $query3 = ($query2[0]["emp_id"] == '0' ? "NA" : $query2[0]["emp_id"]);
                     $query4 = $query2[0]["name"];
                     $query5 = $query2[0]["email"];
                     $actionBtn = '<a  class="btn empdelete btn-danger btn-sm" data-id="' . $userid . '" ><i class="bi bi-trash"></i></a>';
@@ -269,12 +266,13 @@ class AdminController extends Controller
     public function addEmployee(Request $request)
     {
         $empNo = $request->emp_no;
-        $validate = $request->validate([
-            "emp_no" => "numeric | unique:users,emp_id",
-            'emp_name' => 'required |regex:/^[a-zA-Z]/u',
-            'emp_email' => 'required | email | unique:users,email',
-        ]);
-        if ($validate == true && $empNo != null) {
+
+        if ($empNo != null) {
+            $validate = $request->validate([
+                "emp_no" => "numeric | unique:users,emp_id",
+                'emp_name' => 'required |regex:/^[a-zA-Z]/u',
+                'emp_email' => 'required | email | unique:users,email',
+            ]);
             User::insert([
                 "emp_id" => $request->emp_no,
                 "name" => $request->emp_name,

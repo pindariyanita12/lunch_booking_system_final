@@ -33,8 +33,12 @@
             margin-bottom: 20px;
         }
 
-        h3 {
+        h2 {
             text-align: center;
+            margin-top: 35px;
+        }
+
+        #addemp {
             margin-top: 35px;
         }
     </style>
@@ -58,13 +62,16 @@
                 {{ session()->get('alert') }}
             </div>
         @endif
-        <div class="d-flex justify-content-center mb-3">
-            <h3>{{ trans('home.totalemployees') }}</h3>
-            <br>
-            <button type="button" id="addemp" class="btn btn-primary"
-                style="height: 47px;margin-top:30px;margin-left: 15px;"><i
-                    class="bi bi-plus"></i>{{ trans('home.addemployee') }}</button>
+        <div class="row">
+
+            <div class="col-10">
+                <h2>{{ trans('home.totalemployees') }}</h2>
+            </div>
+
+            <div class="col-2"> <button id="addemp" class="btn btn-primary"><i
+                        class="bi bi-plus"></i>{{ trans('home.addemployee') }}</button></div>
         </div>
+
     </div>
     <div class="container">
         <table class="table table-bordered data-table" id="dataTable">
@@ -170,7 +177,7 @@
     function initPage() {
         var table = $('.data-table').DataTable({
             processing: true,
-            serverSide: false,
+            serverSide: true,
             responsive: true,
             dom: 'lrBfrtip',
             ajax: "{{ route('user.list') }}",

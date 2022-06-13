@@ -170,7 +170,7 @@
             </div>
         </div>
     </div>
-    
+
 </body>
 <script type="text/javascript">
     var monthis = $('#idis').val();
@@ -197,7 +197,7 @@
             destroy: true,
             autoWidth: false,
             processing: true,
-            serverSide: false,
+            serverSide: true,
             dom: 'lrBfrtip',
             buttons: [
 
@@ -238,7 +238,7 @@
             autoWidth: false,
             processing: true,
             destroy: true,
-            serverSide: false,
+            serverSide: true,
             dom: 'lrBfrtip',
             buttons: [
 
@@ -286,7 +286,7 @@
             autoWidth: false,
             destroy: true,
             processing: true,
-            serverSide: false,
+            serverSide: true,
             dom: 'lrBfrtip',
             buttons: [
 
@@ -408,7 +408,7 @@
         var idiss = $(this).data('id');
         var traineeid = $(this).data('idis');
 
-        swal({  
+        swal({
                 title: "Are you sure!",
                 confirmButtonClass: "btn-danger",
                 confirmButtonText: "Yes!",
