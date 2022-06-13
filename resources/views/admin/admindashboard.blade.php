@@ -17,6 +17,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
     </script>
+
     <style>
         .datepicker {
             width: 250px;
@@ -110,10 +111,12 @@
     }
 
     function initPage() {
-        mydatatable = $('.data-table').DataTable({
+        mydatatable = $('#dataTable').DataTable({
             destroy: true,
             processing: true,
-            serverSide: false,
+            serverSide: true,
+            ordering: false,
+            dom: 'lrBfrtip',
             ajax: {
                 url: "{{ route('admin.admindashboard.show') }}",
                 data: {
@@ -122,11 +125,11 @@
             },
             columns: [{
                     data: 'userempid',
-                    name: 'Emp Id'
+                    name: 'userempid'
                 },
                 {
                     data: 'username',
-                    name: 'Name'
+                    name: 'username'
                 },
                 {
                     data: 'action',
@@ -138,8 +141,8 @@
 
     $(document).ready(function() {
         window.setTimeout(function() {
-        window.location.reload();
-    }, 20000);
+            window.location.reload();
+        }, 20000);
         initPage();
     });
 
