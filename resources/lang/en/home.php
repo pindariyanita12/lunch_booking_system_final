@@ -31,5 +31,9 @@ return [
     'editdetail'=>'Edit Details',
     'addemployee'=>'Add Employee',
     'english'=>'English',
-    'hindi'=>'Hindi'
+    'hindi'=>'Hindi',
+    'referralname'=>'Referral Name',
+    'guestname'=>'Guest Name',
+    'totalguests'=>'Total Guests',
+    'addguests'=>'Add Guests'
 ];

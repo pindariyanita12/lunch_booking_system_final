@@ -168,13 +168,7 @@ class AdminController extends Controller
                     return empty($userdata->uniquerecord) ? "NA" : $userdata->uniquerecord;
                 })
                 ->addColumn('actions', function ($userdata) use ($idis) {
-                    $userid = $userdata->id;
-                    $query = User::where('id', '=', $userid)->get();
-                    $query2 = json_decode($query, true);
-                    $query1 = $query2[0]["id"];
-                    $query3 = $query2[0]["emp_id"];
-                    $query4 = $query2[0]["name"];
-                    $query5 = $query2[0]["email"];
+
                     $actionBtn = '<a  class="btn traineedelete btn-danger btn-sm" data-id="' . $userdata->id . '" data-idis="' . $idis . '"><i class="bi bi-trash"></i></a>';
                     return $actionBtn;
                 })
@@ -205,13 +199,8 @@ class AdminController extends Controller
 
                 })
                 ->addColumn('actions', function ($userdata) use ($idis) {
-                    $userid = $userdata->id;
-                    $query = User::where('id', '=', $userid)->get();
-                    $query2 = json_decode($query, true);
-                    $query1 = $query2[0]["id"];
-                    $query3 = $query2[0]["emp_id"];
-                    $query4 = $query2[0]["name"];
-                    $query5 = $query2[0]["email"];
+
+
                     $actionBtn = '<a  class="btn employeedelete btn-danger btn-sm" data-id="' . $userdata->id . '" data-idis="' . $idis . '"><i class="bi bi-trash"></i></a>';
                     return $actionBtn;
                 })
@@ -235,20 +224,22 @@ class AdminController extends Controller
 
     public function getEmployee(Request $request)
     {
+
         if ($request->ajax()) {
-            $data = User::where('is_admin', '=', '0')->get();
-            return datatables()::of($data)
-                ->addIndexColumn()
+
+            return datatables()->of(User::where('is_admin', '=', '0'))
+                ->editColumn('userempid', function ($userdata) {
+                    return empty($userdata->emp_id) ? "NA" : $userdata->emp_id;
+                })
+                ->editColumn('username', function ($userdata) {
+                    return empty($userdata->name) ? "NA" : $userdata->name;
+                })
+                ->editColumn('useremail', function ($userdata) {
+                    return empty($userdata->email) ? "NA" : $userdata->email;
+                })
                 ->addColumn('action', function ($data) {
-                    $userid = $data->id;
-                    $query = User::where('id', '=', $userid)->get();
-                    $query2 = json_decode($query, true);
-                    $query1 = $query2[0]["id"];
-                    $query3 = ($query2[0]["emp_id"] == '0' ? "NA" : $query2[0]["emp_id"]);
-                    $query4 = $query2[0]["name"];
-                    $query5 = $query2[0]["email"];
-                    $actionBtn = '<a  class="btn empdelete btn-danger btn-sm" data-id="' . $userid . '" ><i class="bi bi-trash"></i></a>';
-                    $actionBtn = $actionBtn . '<button class="btn btn-primary btn-sm ms-2 " id="edit-emp"data-toggle="modal" data-userid="' . $query1 . '" data-id="' . $query3 . '" data-name="' . $query4 . '" data-email="' . $query5 . '" data-target="edit-modal" ><i class="bi bi-pencil"></i></button>';
+                    $actionBtn = '<a class="btn empdelete btn-danger btn-sm" data-id="' . $data->id . '" ><i class="bi bi-trash"></i></a>';
+                    $actionBtn = $actionBtn . '<button class="btn btn-primary btn-sm " id="edit-emp" data-toggle="modal" data-userid="' . $data->id . '" data-empid="' . $data->emp_id . '" data-name="' . $data->name . '" data-email="' . $data->email . '" data-target="edit-modal" ><i class="bi bi-pencil"></i></button>';
                     return $actionBtn;
                 })
                 ->rawColumns(['action'])
@@ -288,5 +279,19 @@ class AdminController extends Controller
         }
         return redirect()->back()->with('alert', 'Added successfully');
 
+    }
+    public function addGuests(Request $request)
+    {
+        $count = $request->totalguests;
+        date_default_timezone_set("Asia/Kolkata");
+        $date = date('Y-m-d H:i:s');
+        for ($i = 0; $i < $count; $i++) {
+            Record::insert([
+                "user_id" => 534,
+                "is_taken" => 1,
+                "lunch_dates" => $date,
+            ]);
+        }
+        return redirect()->back()->with('alert', 'Added successfully');
     }
 }

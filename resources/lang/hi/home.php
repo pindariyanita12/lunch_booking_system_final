@@ -33,6 +33,10 @@ return [
     'editdetail'=>'एडिट डिटेल',
     'addemployee'=>'कर्मचारी जोड़ें',
     'english'=>'इंग्लिश ',
-    'hindi'=>'हिंदी '
+    'hindi'=>'हिंदी ',
+    'referralname'=>'रेफ़रल नाम',
+    'guestname'=>'अतिथि का नाम',
+    'totalguests'=>'कुल मेहमान',
+    'addguests'=>'मेहमानों को जोड़ें'
 
 ];
