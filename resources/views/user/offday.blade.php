@@ -16,6 +16,15 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5.11.0/main.min.js"></script>
     <title>Off Days</title>
+    <style>
+       img {
+            height: 50px;
+            margin: auto;
+            display: block;
+            margin-top: 15%;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -55,11 +64,21 @@
             </div>
         </div>
     </nav>
-    <div id='calendar'></div>
+
+    <div class="row full-calendar">
+        <div id='calendar'></div>
+    </div>
+    <div id="loading" style="display:none;">
+        <img id="loading-image" src="https://c.tenor.com/wpSo-8CrXqUAAAAi/loading-loading-forever.gif"
+            alt="Loading..." />
+    </div>
 </body>
 
 <script>
-    window.onload = offDay();
+    $(document).ready(function() {
+        $('#loading').css('display', 'block');
+        offDay();
+    });
 
     function logout() {
 
@@ -152,4 +171,5 @@
         calendar.render();
     }
 </script>
+
 </html>
