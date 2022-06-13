@@ -197,7 +197,7 @@
             destroy: true,
             autoWidth: false,
             processing: true,
-            serverSide: false,
+            serverSide: true,
             dom: 'lrBfrtip',
             buttons: [
 
@@ -238,7 +238,7 @@
             autoWidth: false,
             processing: true,
             destroy: true,
-            serverSide: false,
+            serverSide: true,
             dom: 'lrBfrtip',
             buttons: [
 
@@ -273,9 +273,9 @@
                 },
                 {
                     data: 'actions',
-                    name: 'actions'
+                    name: 'actions',
+                   
                 },
-
             ]
         });
 
@@ -286,7 +286,7 @@
             autoWidth: false,
             destroy: true,
             processing: true,
-            serverSide: false,
+            serverSide: true,
             dom: 'lrBfrtip',
             buttons: [
 

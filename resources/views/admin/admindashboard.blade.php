@@ -113,7 +113,7 @@
         mydatatable = $('.data-table').DataTable({
             destroy: true,
             processing: true,
-            serverSide: false,
+            serverSide: true,
             ajax: {
                 url: "{{ route('admin.admindashboard.show') }}",
                 data: {
@@ -130,7 +130,9 @@
                 },
                 {
                     data: 'action',
-                    name: 'action'
+                    name: 'action',
+                    orderable: false, 
+                    searchable: true 
                 },
             ]
         });

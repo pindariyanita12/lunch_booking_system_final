@@ -34,11 +34,8 @@ class AdminController extends Controller
         $dateis = $request->date;
         }
         $uniquerecord = Record::select(DB::raw('DISTINCT Date(lunch_dates) as lunchdate,count(is_taken) as totaldishes'))->whereYear('lunch_dates', '=', date('Y'))->whereMonth('lunch_dates', date('m'))->groupBy('lunchdate')->get();
-
         $totalmonthlydishes = $uniquerecord->sum('totaldishes');
-
         $totaltrainees = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereDate('records.lunch_dates', '=', $dateis)->where('users.type', '0')->select(DB::raw('COUNT(is_taken) AS uniquerecord'))->first();
-
         $totalemployees = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereDate('records.lunch_dates', '=', $dateis)->where('users.type', '1')->select(DB::raw('COUNT(is_taken) AS uniquerecord'))->first();
 
         if ($request->ajax()) {
@@ -239,21 +236,11 @@ class AdminController extends Controller
 
     public function getEmployee(Request $request){
         if ($request->ajax()) {
-            $data = User::where('is_admin','=','0')->get();
-            // dd($data);
-            return datatables()->of($data)
+            return datatables()->of(User::where('is_admin','=','0'))
                     ->addIndexColumn()
                     ->addColumn('action', function($data){
-                            $userid= $data->id;
-                            // dd($userid);
-                            $query = User::where('id', '=', $userid)->get();
-                            $query2 = json_decode($query, true);
-                            $query1 = $query2[0]["id"];
-                            $query3 = $query2[0]["emp_id"];
-                            $query4 = $query2[0]["name"];
-                            $query5 = $query2[0]["email"];
-                            $actionBtn = '<a  class="btn empdelete btn-danger btn-sm" data-id="' . $userid . '" ><i class="bi bi-trash"></i></a>';
-                            $actionBtn = $actionBtn . '<button class="btn btn-primary btn-sm ms-2" id="edit-emp"data-toggle="modal" data-userid="' . $query1 . '" data-id="' . $query3 . '" data-name="' . $query4 . '" data-email="' . $query5 . '" data-target="edit-modal" ><i class="bi bi-pencil"></i></button>'; 
+                            $actionBtn = '<a  class="btn empdelete btn-danger btn-sm" data-id="' . $data->id . '" ><i class="bi bi-trash"></i></a>';
+                            $actionBtn = $actionBtn . '<button class="btn btn-primary btn-sm ms-2" id="edit-emp"data-toggle="modal" data-userid="' . $data->id . '" data-empid="' . $data->emp_id . '" data-name="' . $data->name . '" data-email="' . $data->email . '" data-target="edit-modal" ><i class="bi bi-pencil"></i></button>'; 
                             return $actionBtn;
                     })
                     ->rawColumns(['action'])
@@ -263,23 +250,23 @@ class AdminController extends Controller
     }
 
     public function empDelete(Request $request){
-        // dd($request->id);
         $delete = DB::table('users')->where('id', $request->id)->delete();
         return redirect()->back()->with('alert', 'Deleted successfully');
     }
 
     public function addEmployee(Request $request){
         $empNo = $request->emp_no;
-        $validate =$request->validate([
+        
+        if($empNo != null){
+            $validate =$request->validate([
                 "emp_no" => "numeric",
                 'emp_name' => 'required |regex:/^[a-zA-Z]/u',
                 'emp_email' => 'required | email | unique:users,email' 
-        ]);
-        if($validate == true && $empNo != null){
+            ]);
             User::insert([
                 "emp_id" => $request->emp_no,
                 "name" =>$request->emp_name,
-                "email" => $request->emp_email ,
+                "email" => $request->emp_email,
                 "type" =>"1"
             ]);
         }
@@ -291,6 +278,5 @@ class AdminController extends Controller
             ]);
         }
         return redirect()->back();
-        
     }
 }
