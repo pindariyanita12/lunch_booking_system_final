@@ -21,6 +21,39 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.8.10/themes/smoothness/jquery-ui.css" type="text/css">
 
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@5.11.0/main.min.js"></script>
+    <style>
+        #spinner:not([hidden]) {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #spinner::after {
+            content: "";
+            width: 80px;
+            height: 80px;
+            border: 2px solid #f3f3f3;
+            border-top: 3px solid #f25a41;
+            border-radius: 100%;
+            will-change: transform;
+            animation: spin 1s infinite linear
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
     <title></title>
 </head>
 
@@ -81,8 +114,10 @@
                 Lunch</button>
         </div>
     </div>
+    <div hidden id="spinner">Logging you out...</div>
 </body>
 <script>
+    const spinner = document.getElementById("spinner");
     window.onload = function() {
         document.title = 'Welcome, ' + sessionStorage.getItem('name');
         var user_id = window.sessionStorage.getItem("user_id");
@@ -113,7 +148,7 @@
                 disable_arrive_button();
             })
         enable_arrive_button();
-        if (Cookies.get('taken')== '1') {
+        if (Cookies.get('taken') == '1') {
             disableafterlunch();
         }
         if (!sessionStorage.getItem('name')) {
@@ -122,6 +157,7 @@
     }
 
     function logout() {
+        spinner.removeAttribute('hidden');
         sessionStorage.removeItem('taken');
         var user_id = sessionStorage.getItem("user_id");
         var token = sessionStorage.getItem("token");
@@ -141,6 +177,7 @@
         };
 
         fetch(url, params).then(function(response) {
+            spinner.setAttribute('hidden', '');
             if (response.status == 200) {
                 sessionStorage.removeItem("user_id");
                 sessionStorage.removeItem("name");
@@ -178,7 +215,7 @@
             if (response.status == 409) {
                 alert("You already taken Lunch");
                 Cookies.set('taken', '1', {
-                    expires: 	0.5
+                    expires: 0.5
                 });
                 disableafterlunch();
                 location.reload();
@@ -191,7 +228,7 @@
             } else {
                 alert("Enjoy your Lunch!");
                 Cookies.set('taken', '1', {
-                    expires: 	0.5
+                    expires: 0.5
                 });
                 disableafterlunch();
                 location.reload();
