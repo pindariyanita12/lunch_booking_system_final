@@ -15,6 +15,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
         integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous">
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.1/js.cookie.min.js"></script>
+
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.8.10/themes/smoothness/jquery-ui.css" type="text/css">
 
@@ -111,7 +113,7 @@
                 disable_arrive_button();
             })
         enable_arrive_button();
-        if (sessionStorage.getItem('taken') == '1') {
+        if (Cookies.get('taken')== '1') {
             disableafterlunch();
         }
         if (!sessionStorage.getItem('name')) {
@@ -175,7 +177,9 @@
         fetch(url, params).then(function(response) {
             if (response.status == 409) {
                 alert("You already taken Lunch");
-                sessionStorage.setItem('taken', '1');
+                Cookies.set('taken', '1', {
+                    expires: 	0.5
+                });
                 disableafterlunch();
                 location.reload();
             } else if (response.status == 404) {
@@ -186,14 +190,15 @@
                 location.reload();
             } else {
                 alert("Enjoy your Lunch!");
-                sessionStorage.setItem('taken', '1');
+                Cookies.set('taken', '1', {
+                    expires: 	0.5
+                });
                 disableafterlunch();
                 location.reload();
                 return response.json();
             }
         });
     }
-
 
     function disable_arrive_button() {
         var today = new Date(),
