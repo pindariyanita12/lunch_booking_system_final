@@ -114,7 +114,7 @@
                 <div class="modal-body">
                     <form role="form" action="/addguests" method="POST">
                         @csrf
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label class="control-label mt-3">{{ trans('home.guestname') }}</label>
                             <div>
                                 <input type="text" class="form-control input-lg" name="guestname" id="guestname"
@@ -126,7 +126,7 @@
                             <div>
                                 <input type="text" class="form-control input-lg" name="referral" id="referral" value="">
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="form-group">
                             <label class="control-label mt-3">{{ trans('home.totalguests') }}</label>
                             <div>

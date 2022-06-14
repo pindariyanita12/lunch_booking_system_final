@@ -44,6 +44,11 @@
         #showemployee {
             width: 100%;
         }
+
+        table.dataTable tbody tr td {
+            word-wrap: break-word;
+            word-break: break-all;
+        }
     </style>
 
 
@@ -83,14 +88,17 @@
     <div class="container">
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link active" data-toggle="tab" aria-expanded="true" href="#tab1">{{ trans('home.dailydishes') }}</a>
+                <a class="nav-link active" data-toggle="tab" aria-expanded="true"
+                    href="#tab1">{{ trans('home.dailydishes') }}</a>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
                     aria-expanded="false">{{ trans('home.monthwisereport') }}</a>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" data-toggle="tab" aria-expanded="false" href="#tab2">{{ trans('home.employeewise') }}</a></li>
-                    <li><a class="dropdown-item" data-toggle="tab" aria-expanded="false" href="#tab3">{{ trans('home.traineewise') }}</a>
+                    <li><a class="dropdown-item" data-toggle="tab" aria-expanded="false"
+                            href="#tab2">{{ trans('home.employeewise') }}</a></li>
+                    <li><a class="dropdown-item" data-toggle="tab" aria-expanded="false"
+                            href="#tab3">{{ trans('home.traineewise') }}</a>
                     </li>
 
                 </ul>
@@ -113,6 +121,7 @@
                     <h3 class="text-center">{{ trans('home.dailydishestotal') }}
                         : {{ $totaldishes }}</h3>
                 </div>
+                <br>
             </div>
 
             <div class="tab-pane" id="tab2">
@@ -120,7 +129,7 @@
                 <form action='' method="get">
                     <select name="id" style="cursor: Pointer;" class="form-select form-select-sm-1  text-black border-0"
                         id="idis">
-                        <option value="" selected disabled><?php echo date('M')?></option>
+                        <option value="" selected disabled><?php echo date('M'); ?></option>
                         @for ($m = 1; $m <= 12; $m++)
                             <option value="{{ $m }}">{{ date('F', mktime(0, 0, 0, $m, 1, date('Y'))) }}
                             </option>
@@ -133,10 +142,10 @@
 
                     <thead>
                         <tr>
-                            <th>{{trans('home.titleempid')}}</th>
-                            <th>{{trans('home.titlename')}}</th>
-                            <th>{{trans('home.totaldishes')}}</th>
-                            <th>{{trans('home.titleaction')}}</th>
+                            <th>{{ trans('home.titleempid') }}</th>
+                            <th>{{ trans('home.titlename') }}</th>
+                            <th>{{ trans('home.totaldishes') }}</th>
+                            <th>{{ trans('home.titleaction') }}</th>
 
                         </tr>
                     </thead>
@@ -146,7 +155,7 @@
                 <form action='' method="get">
                     <select name="idis2" style="cursor: Pointer;"
                         class="form-select form-select-sm-1  text-black border-0" id="idis2">
-                        <option value="" selected disabled><?php echo date('M')?></option>
+                        <option value="" selected disabled><?php echo date('M'); ?></option>
                         @for ($m = 1; $m <= 12; $m++)
                             <option value="{{ $m }}">{{ date('F', mktime(0, 0, 0, $m, 1, date('Y'))) }}
                             </option>
@@ -159,10 +168,10 @@
 
                     <thead>
                         <tr>
-                            <th>{{trans('home.titleempid')}}</th>
-                            <th>{{trans('home.titletraineename')}}</th>
-                            <th>{{trans('home.totaldishes')}}</th>
-                            <th>{{trans('home.titleaction')}}</th>
+                            <th>{{ trans('home.titleempid') }}</th>
+                            <th>{{ trans('home.titletraineename') }}</th>
+                            <th>{{ trans('home.totaldishes') }}</th>
+                            <th>{{ trans('home.titleaction') }}</th>
                         </tr>
                     </thead>
 
