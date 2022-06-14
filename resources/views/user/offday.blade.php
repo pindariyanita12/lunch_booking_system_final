@@ -177,7 +177,7 @@
                 return response.json();
             })
             .then((data) => {
-                date = data.map((obj) => {
+                date = data.offday.map((obj) => {
                     return {
                         title: "off-day",
                         start: obj.weekend,

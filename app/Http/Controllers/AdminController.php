@@ -87,10 +87,10 @@ class AdminController extends Controller
             return redirect()->back()->with('alert', 'Deleted successfully');
         }
     }
-    public function useredit(Request $request)
+    public function employeeEdit(Request $request)
     {
         $validated = $request->validate([
-            'empNo' => 'numeric|nullable',
+            'empNo' => 'numeric|unique:users,emp_id',
             'empName' => ' required |regex:/^[a-zA-Z]/u',
         ]);
         if ($validated == true) {
@@ -147,7 +147,7 @@ class AdminController extends Controller
     {
         if ($request->ajax()) {
             $idis = $request->idis2;
-            return datatables()->of( DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereYear('records.lunch_dates', '=', date('Y'))->whereMonth('records.lunch_dates', '=', $request->idis2)->where('users.type', '0')->select(DB::raw('DISTINCT users.id,users.emp_id,users.email, users.name,COUNT(is_taken) AS uniquerecord'))->groupBy('users.email')->get())
+            return datatables()->of(DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereYear('records.lunch_dates', '=', date('Y'))->whereMonth('records.lunch_dates', '=', $request->idis2)->where('users.type', '0')->select(DB::raw('DISTINCT users.id,users.emp_id,users.email, users.name,COUNT(is_taken) AS uniquerecord'))->groupBy('users.email')->get())
                 ->editColumn('trainee_id', function ($userdata) {
                     return empty($userdata->emp_id) ? "NA" : $userdata->emp_id;
                 })
@@ -186,7 +186,6 @@ class AdminController extends Controller
 
                 })
                 ->addColumn('actions', function ($userdata) use ($idis) {
-
 
                     $actionBtn = '<a  class="btn employeedelete btn-danger btn-sm" data-id="' . $userdata->id . '" data-idis="' . $idis . '"><i class="bi bi-trash"></i></a>';
                     return $actionBtn;
@@ -270,6 +269,10 @@ class AdminController extends Controller
     }
     public function addGuests(Request $request)
     {
+        $validate = $request->validate([
+            "empNo" => "numeric",
+        ]);
+
         $count = $request->totalguests;
         date_default_timezone_set("Asia/Kolkata");
         $date = date('Y-m-d H:i:s');
@@ -281,5 +284,39 @@ class AdminController extends Controller
             ]);
         }
         return redirect()->back()->with('alert', 'Added successfully');
+    }
+
+    public function addManualRecord(Request $request)
+    {
+        $validate = $request->validate([
+            "empNo" => "numeric",
+        ]);
+        $empNo = $request->empNo;
+        $date = date("Y-m-d");
+        $date = date('Y-m-d', strtotime($date));
+
+        $findemp = User::where('emp_id', $empNo)->first();
+        if ($findemp == null) {
+            return redirect()->back()->with('alert', 'No simformer registered on this Id');
+        }
+        $userid = $findemp->id;
+        $checkrecord = Record::where('user_id', $userid)->whereDate('lunch_dates', $date)->first();
+
+        if ($checkrecord) {
+            return redirect()->back()->with('alert', 'Already taken');
+
+        } else {
+
+
+            $userid = $findemp->id;
+
+            Record::insert([
+                "user_id" => $userid,
+                "is_taken" => 1,
+                "lunch_dates" => $date,
+            ]);
+            return redirect()->back()->with('alert', 'Added successfully');
+        }
+
     }
 }
