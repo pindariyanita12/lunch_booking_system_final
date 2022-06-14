@@ -45,8 +45,7 @@ class AdminController extends Controller
         if ($request->ajax()) {
 
             $dateis = $request->date;
-            $record = Record::with('user')->whereDate('lunch_dates', '=', $dateis)->orderBy('lunch_dates', 'DESC')->get();
-            return datatables()->of($record)
+            return datatables()->of(Record::with('user')->whereDate('lunch_dates', '=', $dateis)->orderBy('lunch_dates', 'DESC')->get())
                 ->editColumn('userempid', function ($userdata) {
                     return empty($userdata->user->emp_id) ? "NA" : $userdata->user->emp_id;
                 })
@@ -126,15 +125,15 @@ class AdminController extends Controller
 
     public function dailyDishes(Request $request)
     {
-        $trainees = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereYear('records.lunch_dates', '=', date('Y'))->where('users.type', '0')->select(DB::raw('DISTINCT users.id,users.emp_id,users.email, users.name,COUNT(is_taken) AS uniquerecord'))->groupBy('users.email')->get();
+
 
         $uniquerecord = Record::select(DB::raw('DISTINCT Date(lunch_dates) as lunchdate,count(is_taken) as totaldishes'))->whereYear('lunch_dates', '=', date('Y'))->whereMonth('lunch_dates', date('m'))->groupBy('lunchdate')->get();
 
         $totaldishes = $uniquerecord->sum('totaldishes');
 
         if ($request->ajax()) {
-            $uniquerecord = Record::select(DB::raw('DISTINCT Date(lunch_dates) as lunchdate,count(is_taken) as totaldishes'))->whereYear('lunch_dates', '=', date('Y'))->whereMonth('lunch_dates', date('m'))->groupBy('lunchdate')->get();
-            return datatables()->of($uniquerecord, $trainees)
+            $trainees = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereYear('records.lunch_dates', '=', date('Y'))->where('users.type', '0')->select(DB::raw('DISTINCT users.id,users.emp_id,users.email, users.name,COUNT(is_taken) AS uniquerecord'))->groupBy('users.email')->get();
+            return datatables()->of(Record::select(DB::raw('DISTINCT Date(lunch_dates) as lunchdate,count(is_taken) as totaldishes'))->whereYear('lunch_dates', '=', date('Y'))->whereMonth('lunch_dates', date('m'))->groupBy('lunchdate')->get(), $trainees)
                 ->editColumn('date', function ($userdata) {
                     return empty($userdata->lunchdate) ? "NA" : $userdata->lunchdate;
                 })
@@ -152,12 +151,9 @@ class AdminController extends Controller
 
     public function trainees(Request $request)
     {
-
-        $idis = $request->idis2;
-        $trainees = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereYear('records.lunch_dates', '=', date('Y'))->whereMonth('records.lunch_dates', '=', $request->idis2)->where('users.type', '0')->select(DB::raw('DISTINCT users.id,users.emp_id,users.email, users.name,COUNT(is_taken) AS uniquerecord'))->groupBy('users.email')->get();
         if ($request->ajax()) {
             $idis = $request->idis2;
-            return datatables()->of($trainees)
+            return datatables()->of( DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereYear('records.lunch_dates', '=', date('Y'))->whereMonth('records.lunch_dates', '=', $request->idis2)->where('users.type', '0')->select(DB::raw('DISTINCT users.id,users.emp_id,users.email, users.name,COUNT(is_taken) AS uniquerecord'))->groupBy('users.email')->get())
                 ->editColumn('trainee_id', function ($userdata) {
                     return empty($userdata->emp_id) ? "NA" : $userdata->emp_id;
                 })
@@ -181,12 +177,9 @@ class AdminController extends Controller
     public function employees(Request $request)
     {
 
-        $idis = $request->idis;
-
         if ($request->ajax()) {
             $idis = $request->idis;
-            $uniquerecord = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereYear('records.lunch_dates', '=', date('Y'))->whereMonth('records.lunch_dates', '=', $request->idis)->where('users.type', '1')->select(DB::raw('DISTINCT users.id,users.emp_id,users.email, users.name,COUNT(is_taken) AS uniquerecord'))->groupBy('users.email')->get();
-            return datatables()->of($uniquerecord)
+            return datatables()->of(DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereYear('records.lunch_dates', '=', date('Y'))->whereMonth('records.lunch_dates', '=', $request->idis)->where('users.type', '1')->select(DB::raw('DISTINCT users.id,users.emp_id,users.email, users.name,COUNT(is_taken) AS uniquerecord'))->groupBy('users.email')->get())
                 ->editColumn('emp_id', function ($userdata) {
 
                     return empty($userdata->emp_id) ? "NA" : $userdata->emp_id;
@@ -239,8 +232,9 @@ class AdminController extends Controller
                 })
                 ->addColumn('action', function ($data) {
                     $actionBtn = '<a class="btn empdelete btn-danger btn-sm" data-id="' . $data->id . '" ><i class="bi bi-trash"></i></a>';
-                    $actionBtn = $actionBtn . '<button class="btn btn-primary btn-sm " id="edit-emp" data-toggle="modal" data-userid="' . $data->id . '" data-empid="' . $data->emp_id . '" data-name="' . $data->name . '" data-email="' . $data->email . '" data-target="edit-modal" ><i class="bi bi-pencil"></i></button>';
+                    $actionBtn = $actionBtn . '&nbsp; <button class="btn btn-primary btn-sm" id="edit-emp" data-toggle="modal" data-userid="' . $data->id . '" data-empid="' . $data->emp_id . '" data-name="' . $data->name . '" data-email="' . $data->email . '" data-target="edit-modal" ><i class="bi bi-pencil"></i></button>';
                     return $actionBtn;
+
                 })
                 ->rawColumns(['action'])
                 ->make(true);
@@ -287,7 +281,7 @@ class AdminController extends Controller
         $date = date('Y-m-d H:i:s');
         for ($i = 0; $i < $count; $i++) {
             Record::insert([
-                "user_id" => 534,
+                "user_id" => ENV('USER_ID'),
                 "is_taken" => 1,
                 "lunch_dates" => $date,
             ]);
