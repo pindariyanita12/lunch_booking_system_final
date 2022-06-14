@@ -145,8 +145,8 @@
                 Lunch</button>
         </div>
     </div>
-    <div hidden id="spinner">Logging you out...</div>
-    <div hidden id="spinnerforarrivelunch">Processing...</div>
+    <div hidden id="spinner"></div>
+    <div hidden id="spinnerforarrivelunch"></div>
 </body>
 <script>
     const spinner = document.getElementById("spinner");

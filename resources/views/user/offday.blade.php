@@ -104,13 +104,12 @@
         <img id="loading-image" src="https://c.tenor.com/wpSo-8CrXqUAAAAi/loading-loading-forever.gif"
             alt="Loading..." />
     </div>
-    <div hidden id="spinner">Logging you out...</div>
+    <div hidden id="spinner"></div>
 </body>
 
 <script>
     const spinner = document.getElementById("spinner");
     $(document).ready(function() {
-        $('#loading').css('display', 'block');
         offDay();
     });
 
@@ -134,6 +133,7 @@
         };
 
         fetch(url, params).then(function(response) {
+
             spinner.setAttribute('hidden', '');
 
             if (response.status == 200) {
@@ -155,6 +155,7 @@
     }
 
     function offDay() {
+        $('#loading').css('display', 'block');
         var user_id = sessionStorage.getItem("user_id");
         var token = sessionStorage.getItem("token");
         url = '{{ env('API_URL') }}' + '/off-day';
@@ -170,7 +171,9 @@
             body: JSON.stringify(data),
         };
         fetch(url, params)
+
             .then((response) => {
+                $('#loading').css('display', 'none');
                 return response.json();
             })
             .then((data) => {
