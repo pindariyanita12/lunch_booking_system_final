@@ -125,23 +125,17 @@ class AdminController extends Controller
 
     public function dailyDishes(Request $request)
     {
-
-
         $uniquerecord = Record::select(DB::raw('DISTINCT Date(lunch_dates) as lunchdate,count(is_taken) as totaldishes'))->whereYear('lunch_dates', '=', date('Y'))->whereMonth('lunch_dates', date('m'))->groupBy('lunchdate')->get();
 
         $totaldishes = $uniquerecord->sum('totaldishes');
 
         if ($request->ajax()) {
-            $trainees = DB::table('records')->join('users', 'users.id', '=', 'records.user_id')->whereYear('records.lunch_dates', '=', date('Y'))->where('users.type', '0')->select(DB::raw('DISTINCT users.id,users.emp_id,users.email, users.name,COUNT(is_taken) AS uniquerecord'))->groupBy('users.email')->get();
-            return datatables()->of(Record::select(DB::raw('DISTINCT Date(lunch_dates) as lunchdate,count(is_taken) as totaldishes'))->whereYear('lunch_dates', '=', date('Y'))->whereMonth('lunch_dates', date('m'))->groupBy('lunchdate')->get(), $trainees)
+            return datatables()->of(Record::select(DB::raw('DISTINCT Date(lunch_dates) as lunchdate,count(is_taken) as totaldishes'))->whereYear('lunch_dates', '=', date('Y'))->whereMonth('lunch_dates', date('m'))->groupBy('lunchdate')->get())
                 ->editColumn('date', function ($userdata) {
                     return empty($userdata->lunchdate) ? "NA" : $userdata->lunchdate;
                 })
                 ->editColumn('total', function ($userdata) {
                     return empty($userdata->totaldishes) ? "NA" : $userdata->totaldishes;
-                })
-                ->addColumn('traineename', function ($userdata1) use ($trainees) {
-                    return empty($trainees->name) ? "NA" : $trainees->name;
                 })
                 ->rawColumns(['actions'])
                 ->make(true);
