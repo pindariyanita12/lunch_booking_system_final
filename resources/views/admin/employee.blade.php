@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -64,16 +62,17 @@
         @endif
         <div class="row">
 
-            <div class="col-10">
+            <div class="col-12">
                 <h2>{{ trans('home.totalemployees') }}</h2>
             </div>
-
-            <div class="col-2"> <button id="addemp" class="btn btn-primary"><i
-                        class="bi bi-plus"></i>{{ trans('home.addemployee') }}</button></div>
         </div>
 
     </div>
     <div class="container">
+        <div class="mb-2 float-end"> <button id="addemp" class="btn btn-primary"><i
+                    class="bi bi-plus"></i>{{ trans('home.addemployee') }}</button>
+        </div>
+
         <table class="table table-bordered data-table" id="dataTable">
             <thead>
                 <tr>
@@ -83,10 +82,9 @@
                     <th>{{ trans('home.titleaction') }}</th>
                 </tr>
             </thead>
-            <tbody>
-            </tbody>
         </table>
     </div>
+
     <!-- edit Modal -->
     <div class="modal" tabindex="-1" id="exampleModal">
         <div class="modal-dialog">
@@ -175,12 +173,14 @@
 </body>
 <script type="text/javascript">
     function initPage() {
-        var table = $('.data-table').DataTable({
+        var table = $('#dataTable').DataTable({
+            destroy: true,
             processing: true,
             serverSide: true,
-            responsive: true,
             dom: 'lrBfrtip',
-            ajax: "{{ route('user.list') }}",
+            ajax: {
+                url: "{{ route('user.list') }}"
+            },
             buttons: [
 
                 {
@@ -209,9 +209,7 @@
                 },
                 {
                     data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false
+                    name: 'action'
                 },
             ]
         });
@@ -219,8 +217,7 @@
     $(document).ready(function() {
         initPage();
     });
-</script>
-<script>
+
     $(document).on("click", "#edit-emp", function() {
         var myBookId = $(this).data('id');
         var myBookNo = $(this).data('userid');

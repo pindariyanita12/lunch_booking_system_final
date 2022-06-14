@@ -22,6 +22,10 @@
         .datepicker {
             width: 250px;
         }
+
+        #addguests {
+            margin-top: 35px;
+        }
     </style>
 </head>
 
@@ -71,7 +75,9 @@
                     </div>
                 </div>
             </div>
+
         </div>
+
     </div>
 
     <br>
@@ -79,7 +85,9 @@
     </h3>
 
     <div class="container">
-
+        <div class=" mb-2 float-end"> <button id="addguests" class="btn btn-primary"><i
+                    class="bi bi-plus"></i>{{ trans('home.addguests') }}</button>
+        </div>
         <div class="datepicker">
             <input class="form-control me-2" value="<?php echo date('Y-m-d'); ?>" id="showdate" name="date" type="date"
                 placeholder="Search" aria-label="Search">
@@ -96,6 +104,45 @@
             </thead>
         </table>
     </div>
+    <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">{{ trans('home.addguests') }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form role="form" action="/addguests" method="POST">
+                        @csrf
+                        <div class="form-group">
+                            <label class="control-label mt-3">{{ trans('home.guestname') }}</label>
+                            <div>
+                                <input type="text" class="form-control input-lg" name="guestname" id="guestname"
+                                    value="" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label mt-3">{{ trans('home.referralname') }}</label>
+                            <div>
+                                <input type="text" class="form-control input-lg" name="referral" id="referral" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label mt-3">{{ trans('home.totalguests') }}</label>
+                            <div>
+                                <input type="number" min=0 class="form-control input-lg" name="totalguests"
+                                    id="totalguests" value="" required>
+                            </div>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 <script type="text/javascript">
@@ -109,6 +156,10 @@
     } else {
         dateis = $('#showdate').val()
     }
+    $(document).on("click", "#addguests", function() {
+        let modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('addModal'))
+        modal.show();
+    });
 
     function initPage() {
         mydatatable = $('#dataTable').DataTable({
@@ -140,8 +191,8 @@
     }
 
     $(document).ready(function() {
-        window.setTimeout(function() {
-            window.location.reload();
+        setInterval(function() {
+            mydatatable.ajax.reload();
         }, 20000);
         initPage();
     });

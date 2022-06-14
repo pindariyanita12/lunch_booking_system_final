@@ -48,6 +48,7 @@ Route::domain(env('ADMIN_URL'))->group(function () {
     });
     Route::get('/empdelete', [AdminController::class, 'empDelete'])->name('admin.admindashboard.empdelete');
     Route::post('/addemployee',[AdminController::class,'addEmployee'])->name('admin.admindashboard.empadd');
+    Route::post('/addguests',[AdminController::class,'addGuests'])->name('admin.admindashboard.addguests');
     Route::get('user/listing',[AdminController::class,'getEmployee'])->name('user.list');
     Route::get('/lang/{locale}', [AdminController::class, 'lang']);
     Route::get('/admindashboard', [AdminController::class, 'show'])->name('admin.admindashboard.show')->middleware('auth', 'can:isAdmin');
