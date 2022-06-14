@@ -35,5 +35,6 @@ return [
     'referralname'=>'Referral Name',
     'guestname'=>'Guest Name',
     'totalguests'=>'Total Guests',
-    'addguests'=>'Add Guests'
+    'addguests'=>'Add Guests',
+    'addmanualrecord'=>'Manual Entry'
 ];

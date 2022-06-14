@@ -37,6 +37,7 @@ return [
     'referralname'=>'रेफ़रल नाम',
     'guestname'=>'अतिथि का नाम',
     'totalguests'=>'कुल मेहमान',
-    'addguests'=>'मेहमानों को जोड़ें'
+    'addguests'=>'मेहमानों को जोड़ें',
+    'addmanualrecord'=>'प्रविष्टि जोड़ें'
 
 ];

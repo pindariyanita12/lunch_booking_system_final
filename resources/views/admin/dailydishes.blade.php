@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <title>Datewise Records</title>
     <meta charset="utf-8">
@@ -182,6 +181,15 @@
 
 </body>
 <script type="text/javascript">
+    function getMonthName(month) {
+        const d = new Date();
+        d.setMonth(month - 1);
+        const monthName = d.toLocaleString("default", {
+            month: "long"
+        });
+        return monthName;
+
+    }
     var monthis = $('#idis').val();
     var monthis2 = $('#idis2').val();
     var $table1, $table2, $table3;
@@ -213,6 +221,7 @@
                 {
                     extend: 'csv',
                     text: 'Export CSV',
+                    filename: 'Daily Dishes '+ '-' + getMonthName(monthis) ,
                     className: 'btn-space',
                     exportOptions: {
                         orthogonal: null
@@ -254,6 +263,7 @@
                 {
                     extend: 'csv',
                     text: 'Export CSV',
+                    filename:getMonthName(monthis) + ' record Employee',
                     className: 'btn-space',
                     exportOptions: {
                         orthogonal: null,
@@ -302,6 +312,7 @@
                 {
                     extend: 'csv',
                     text: 'Export CSV',
+                    filename: getMonthName(monthis2)+' record Trainee',
                     className: 'btn-space',
                     exportOptions: {
                         orthogonal: null,

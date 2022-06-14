@@ -26,6 +26,10 @@
         #addguests {
             margin-top: 35px;
         }
+
+        #addmanualrecord {
+            margin-top: 35px;
+        }
     </style>
 </head>
 
@@ -33,6 +37,15 @@
     @include('admin.navbar')
 
     <br>
+    @if (count($errors) > 0)
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <button type="button" class="close" data-dismiss="alert">x</button> {{ $error }}
+                @endforeach
+            </ul>
+        </div>
+    @endif
     @if (session()->has('alert'))
         <div class="alert alert-success">
             <button type="button" class="close" data-dismiss="alert">x</button>
@@ -75,9 +88,7 @@
                     </div>
                 </div>
             </div>
-
         </div>
-
     </div>
 
     <br>
@@ -85,8 +96,11 @@
     </h3>
 
     <div class="container">
-        <div class=" mb-2 float-end"> <button id="addguests" class="btn btn-primary"><i
-                    class="bi bi-plus"></i>{{ trans('home.addguests') }}</button>
+        <div class=" mb-2 float-end">
+            <button id="addguests" class="btn btn-primary">
+                <i class="bi bi-plus"></i>{{ trans('home.addguests') }}</button>
+                <button id="addmanualrecord" class="btn btn-primary"><i
+                    class="bi bi-plus"></i>{{ trans('home.addmanualrecord') }}</button>
         </div>
         <div class="datepicker">
             <input class="form-control me-2" value="<?php echo date('Y-m-d'); ?>" id="showdate" name="date" type="date"
@@ -114,24 +128,39 @@
                 <div class="modal-body">
                     <form role="form" action="/addguests" method="POST">
                         @csrf
-                        {{-- <div class="form-group">
-                            <label class="control-label mt-3">{{ trans('home.guestname') }}</label>
-                            <div>
-                                <input type="text" class="form-control input-lg" name="guestname" id="guestname"
-                                    value="" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label mt-3">{{ trans('home.referralname') }}</label>
-                            <div>
-                                <input type="text" class="form-control input-lg" name="referral" id="referral" value="">
-                            </div>
-                        </div> --}}
+
                         <div class="form-group">
                             <label class="control-label mt-3">{{ trans('home.totalguests') }}</label>
                             <div>
                                 <input type="number" min=0 class="form-control input-lg" name="totalguests"
                                     id="totalguests" value="" required>
+                            </div>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">{{ trans('home.addmanualrecord') }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form role="form" action="/addmanualrecord" method="POST">
+                        @csrf
+                        <div class="form-group">
+                            <label class="control-label">{{ trans('home.titleempid') }}</label>
+                            <div>
+                                <input type="text" class="form-control input-lg" name="empNo"
+                                    placeholder="Only numeric values are allowed" id="empNo">
                             </div>
                         </div>
                 </div>
@@ -160,13 +189,17 @@
         let modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('addModal'))
         modal.show();
     });
+    $(document).on("click", "#addmanualrecord", function() {
+        let modal2 = bootstrap.Modal.getOrCreateInstance(document.getElementById('addModal2'))
+        modal2.show();
+    });
 
     function initPage() {
         mydatatable = $('#dataTable').DataTable({
             destroy: true,
             processing: true,
             serverSide: true,
-            ordering: false,
+            ordering: true,
             dom: 'lrBfrtip',
             ajax: {
                 url: "{{ route('admin.admindashboard.show') }}",

@@ -53,6 +53,7 @@
                 transform: rotate(360deg);
             }
         }
+
         #spinnerforarrivelunch:not([hidden]) {
             position: fixed;
             top: 0;
@@ -141,8 +142,8 @@
         <hr>
 
         <div class="request-button">
-            <button class="btn btn-primary" style="width: 70%;" id="arrive_lunch" onclick="arriveLunch()">Arrive for
-                Lunch</button>
+            <button class="btn btn-primary" style="width: 70%;" id="arrive_lunch" onclick="arriveLunch()">Sign for
+                lunch</button>
         </div>
     </div>
     <div hidden id="spinner"></div>
@@ -173,18 +174,20 @@
             .then((response) => {
                 return response.json();
             }).then((data) => {
+
+                if (data.is_taken) {
+                    disableafterlunch();
+                }
                 weekend_date = '';
-                for (i = 0; i < data.length; i++) {
-                    weekend_date = weekend_date + data[i].weekend + ',';
+                for (i = 0; i < data.offday.length; i++) {
+                    weekend_date = weekend_date + data.offday[i].weekend + ',';
                 }
 
                 localStorage.setItem('date', weekend_date);
                 disable_arrive_button();
             })
         enable_arrive_button();
-        if (Cookies.get('taken') == '1') {
-            disableafterlunch();
-        }
+
         if (!sessionStorage.getItem('name')) {
             window.location.href = '{{ env('APP_URL') }}';
         }
@@ -250,9 +253,7 @@
             spinnerforarrivelunch.setAttribute('hidden', '');
             if (response.status == 409) {
                 alert("You already taken Lunch");
-                Cookies.set('taken', '1', {
-                    expires: 0.5
-                });
+
                 disableafterlunch();
                 location.reload();
             } else if (response.status == 404) {
@@ -263,9 +264,7 @@
                 location.reload();
             } else {
                 alert("Enjoy your Lunch!");
-                Cookies.set('taken', '1', {
-                    expires: 0.5
-                });
+
                 disableafterlunch();
                 location.reload();
                 return response.json();
