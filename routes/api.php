@@ -22,7 +22,5 @@ Route::domain(env('API_URL'))->group(function () {
     Route::post('/signin', [AuthController::class, 'signin'])->name('signin');
     Route::group(['middleware' => 'isActive'], function () {
         Route::post('/off-day', [LunchDateController::class, 'showWeekend'])->name('userOffday');
-        Route::post('/lunch-taken', [RecordController::class, 'lunchTaken'])->name('lunchTaken');
-        Route::post('/signout', [AuthController::class, 'signout'])->name('signout');
     });
 });

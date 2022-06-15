@@ -6,22 +6,17 @@ use Illuminate\Http\Request;
 
 class RecordController extends Controller
 {
-
     //checks whether lunch taken or not
     public function lunchTaken(Request $request)
     {
-
-        $date = date("Y-m-d");
-        $date = date('Y-m-d', strtotime($date));
-        $check = Record::where('user_id', $request->user_id)->where('is_taken', 1)->whereDate('lunch_dates', '=', $date)->first();
-        if ($check) {
-            return response(['message' => 'You already taken lunch'], 409);
+        $isLunchTaken = Record::where('user_id', auth()->user()->id)->where('is_taken', 1)->whereDate('lunch_dates', '=', date('Y-m-d'))->exists();
+        if ($isLunchTaken) {
+            \Session::flash('alert', 'You already taken lunch');
+            return redirect()->back();
         } else {
-            $record = Record::create(['user_id' => $request->user_id]);
-            $record->is_taken = 1;
-            $record->save();
-
-            return response(['message' => 'Successfully Taken Lunch'], 200);
+            $record = Record::create(['user_id' => auth()->user()->id, 'is_taken'=> 1]);
+            \Session::flash('alert', 'Enjoy your lunch');
+            return redirect()->back();
         }
     }
 }
