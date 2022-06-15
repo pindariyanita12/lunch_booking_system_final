@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Record;
 use App\Models\User;
 use App\TokenStore\TokenCache;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Microsoft\Graph\Graph;
@@ -37,37 +37,28 @@ class AuthController extends Controller
 
     public function signout(Request $request)
     {
-        $tokenCache = new TokenCache();
-        $tokenCache->clearTokens();
-        $isactive = User::where('id', $request->user_id)->first();
-        if ($isactive) {
-            $isactive->is_active = 0;
-            $isactive->save();
-            return response(["message" => "Success"], 200);
-        } else {
-            return response(["Unauthorized"], 401);
-        }
+        auth()->user()->update(['is_active', 0]);
+        auth()->logout();
+        return redirect('/');
 
     }
 
     //get user data api
-    public function get_data(Request $request)
+    public function handler(Request $request)
     {
 
         $httpClient = new \GuzzleHttp\Client();
 
-            $httpRequest =
-
-            $httpClient->post(env('OAUTH_AUTHORITY').env('OAUTH_TOKEN_ENDPOINT'), [
-                'form_params' => [
-                    "code" => $request->code,
-                    "grant_type" => "authorization_code",
-                    "tenant" => ENV('OAUTH_TENANT_ID'),
-                    "client_id" => ENV('OAUTH_APP_ID'),
-                    "client_secret" => ENV('OAUTH_APP_SECRET'),
-                    "redirect_uri" => ENV('OAUTH_REDIRECT_URI'),
-                ],
-            ]);
+        $httpRequest = $httpClient->post(env('OAUTH_AUTHORITY') . env('OAUTH_TOKEN_ENDPOINT'), [
+            'form_params' => [
+                "code" => $request->code,
+                "grant_type" => "authorization_code",
+                "tenant" => ENV('OAUTH_TENANT_ID'),
+                "client_id" => ENV('OAUTH_APP_ID'),
+                "client_secret" => ENV('OAUTH_APP_SECRET'),
+                "redirect_uri" => ENV('OAUTH_REDIRECT_URI'),
+            ],
+        ]);
 
         $response = json_decode($httpRequest->getBody()->getContents());
         $remember_token = $response->access_token;
@@ -77,30 +68,25 @@ class AuthController extends Controller
         $user = $graph->createRequest("GET", "/me")
             ->setReturnType(Model\User::class)
             ->execute();
-        $isactive = User::where('email', $user->getmail())->first();
-        if (!$isactive) {
+        $user = User::where('email', $user->getmail())->first();
 
-            $isactive = User::create([
-
+        if (!$user) {
+            $user = User::create([
                 'emp_id' => null,
-                'name' => $user->getgivenName(),    
+                'name' => $user->getgivenName(),
                 'email' => $user->getmail(),
                 'department' => null,
                 'password' => '23',
                 'is_admin' => 0,
-                'is_active' => 0,
+                'is_active' => 1,
                 'remember_token' => $remember_token,
             ]);
-            $isactive->is_active = 1;
-            $isactive->remember_token = $remember_token;
-            $isactive->save();
         } else {
-
-            $isactive->is_active = 1;
-            $isactive->remember_token = $remember_token;
-            $isactive->save();
+            $user->is_active = 1;
+            $user->remember_token = $remember_token; //ms access token, we reused column
+            $user->save();
         }
-        return response(["user" => $isactive]);
+        \Auth::login($user); // let's make this user logged in using laravel
+        return redirect()->route('user.welcome');
     }
-
 }

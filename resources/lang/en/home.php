@@ -36,5 +36,6 @@ return [
     'guestname'=>'Guest Name',
     'totalguests'=>'Total Guests',
     'addguests'=>'Add Guests',
-    'addmanualrecord'=>'Manual Entry'
+    'addmanualrecord'=>'Manual Entry',
+    'titlelunchdates'=>'Lunch dates'
 ];

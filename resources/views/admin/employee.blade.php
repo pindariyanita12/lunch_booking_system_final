@@ -240,14 +240,16 @@
     });
 
     $(document).on("click", "#edit-emp", function() {
-        var myBookId = $(this).data('id');
-        var myBookNo = $(this).data('userid');
-        var myBookName = $(this).data('name');
-        var myBookemail = $(this).data('email');
-        $(".modal-body #empNo").val(myBookId);
-        $(".modal-body #empName").val(myBookName);
-        $(".modal-body #empMail").val(myBookemail);
-        $(".modal-body #empId").val(myBookNo);
+
+        var empId = $(this).data('empid');
+        var empNo = $(this).data('userid');
+        var empName = $(this).data('name');
+        var empemail = $(this).data('email');
+        $(".modal-body #empNo").val(empId);
+        $(".modal-body #empName").val(empName);
+        $(".modal-body #empMail").val(empemail);
+        $(".modal-body #empId").val(empNo);
+
         let modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('exampleModal'))
         modal.show();
     });

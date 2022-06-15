@@ -110,7 +110,8 @@ class AdminController extends Controller
         }
 
     }
-    public function destroymonthwise(Request $request)
+
+    public function destroyMonthwise(Request $request)
     {
         $record = Record::with('user')->where('user_id', $request->id)->whereYear('lunch_dates', '=', date('Y'))->whereMonth('lunch_dates', '=', $request->idis)->get();
         if (count($record) > 1) {
@@ -227,7 +228,6 @@ class AdminController extends Controller
                     $actionBtn = '<a class="btn empdelete btn-danger btn-sm" data-id="' . $data->id . '" ><i class="bi bi-trash"></i></a>';
                     $actionBtn = $actionBtn . '&nbsp; <button class="btn btn-primary btn-sm" id="edit-emp" data-toggle="modal" data-userid="' . $data->id . '" data-empid="' . $data->emp_id . '" data-name="' . $data->name . '" data-email="' . $data->email . '" data-target="edit-modal" ><i class="bi bi-pencil"></i></button>';
                     return $actionBtn;
-
                 })
                 ->rawColumns(['action'])
                 ->make(true);
@@ -246,23 +246,34 @@ class AdminController extends Controller
         $empNo = $request->emp_no;
 
         if ($empNo != null) {
+
             $validate = $request->validate([
                 "emp_no" => "numeric | unique:users,emp_id",
                 'emp_name' => 'required |regex:/^[a-zA-Z]/u',
                 'emp_email' => 'required | email | unique:users,email',
             ]);
-            User::insert([
-                "emp_id" => $request->emp_no,
-                "name" => $request->emp_name,
-                "email" => $request->emp_email,
-                "type" => "1",
-            ]);
+            $userExist = User::where('emp_id', $empNo)->where('email', '=', $request->emp_email)->first();
+            if ($userExist) {
+                return redirect()->back()->with('alert', 'Already Present');
+            } else {
+                User::insert([
+                    "emp_id" => $request->emp_no,
+                    "name" => $request->emp_name,
+                    "email" => $request->emp_email,
+                    "type" => "1",
+                ]);
+            }
         } else {
-            User::insert([
-                "name" => $request->emp_name,
-                "email" => $request->emp_email,
-                "type" => "0",
-            ]);
+            $traineeExist = User::where('email', '=', $request->emp_email)->first();
+            if ($traineeExist) {
+                return redirect()->back()->with('alert', 'Already Present');
+            } else {
+                User::insert([
+                    "name" => $request->emp_name,
+                    "email" => $request->emp_email,
+                    "type" => "0",
+                ]);
+            }
         }
         return redirect()->back()->with('alert', 'Added successfully');
 
@@ -276,9 +287,12 @@ class AdminController extends Controller
         $count = $request->totalguests;
         date_default_timezone_set("Asia/Kolkata");
         $date = date('Y-m-d H:i:s');
+
+        $finduserid = User::where('emp_id', env('EMP_ID'))->first();
+
         for ($i = 0; $i < $count; $i++) {
             Record::insert([
-                "user_id" => ENV('USER_ID'),
+                "user_id" => $finduserid->id,
                 "is_taken" => 1,
                 "lunch_dates" => $date,
             ]);
@@ -289,9 +303,10 @@ class AdminController extends Controller
     public function addManualRecord(Request $request)
     {
         $validate = $request->validate([
-            "empNo" => "numeric",
+            "empNo" => "string",
         ]);
-        $empNo = $request->empNo;
+        $empNo = strtok($request->empNo, ' ');
+        date_default_timezone_set('Asia/Kolkata');
         $date = date("Y-m-d");
         $date = date('Y-m-d', strtotime($date));
 
@@ -307,16 +322,28 @@ class AdminController extends Controller
 
         } else {
 
-
             $userid = $findemp->id;
 
             Record::insert([
                 "user_id" => $userid,
                 "is_taken" => 1,
-                "lunch_dates" => $date,
+                "lunch_dates" => date('Y-m-d H:i:s'),
             ]);
             return redirect()->back()->with('alert', 'Added successfully');
         }
 
+    }
+    public function autoComplete(Request $request)
+    {
+        $res = User::select("emp_id", "name")
+            ->where("emp_id", "LIKE", "{$request->search}%")
+            ->get();
+
+        $response = array();
+        foreach ($res as $employee) {
+            $response[] = array("value" => $employee->emp_id . ' -' . $employee->name, "label" => $employee->emp_id . ' -' . $employee->name);
+        }
+
+        return response()->json($response);
     }
 }

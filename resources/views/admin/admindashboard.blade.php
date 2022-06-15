@@ -4,10 +4,13 @@
 <head>
     <title>Lunch Booking System</title>
     <meta charset="utf-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.js"></script>
@@ -17,6 +20,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
     </script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
     <style>
         .datepicker {
@@ -29,6 +33,10 @@
 
         #addmanualrecord {
             margin-top: 35px;
+        }
+        table.dataTable tbody tr td {
+            word-wrap: break-word;
+            word-break: break-all;
         }
     </style>
 </head>
@@ -56,7 +64,7 @@
 
         <div class="row">
 
-            <div class="col-sm-3">
+            <div class="col-xl-3 col-lg-6 mt-2">
                 <div class="card">
                     <div class="card-body" style="background-color: rgba(255, 0, 0, 0.359)">
                         <h5 class="card-title">{{ trans('home.totaltrainees') }}</h5>
@@ -64,7 +72,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-3">
+            <div class="col-xl-3 col-lg-6 mt-2">
                 <div class="card">
                     <div class="card-body" style="background-color: rgba(73, 225, 73, 0.575)">
                         <h5 class="card-title">{{ trans('home.totalemployees') }}</h5>
@@ -72,7 +80,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-3">
+            <div class="col-xl-3 col-lg-6 mt-2">
                 <div class="card">
                     <div class="card-body" style="background-color: lightblue">
                         <h5 class="card-title">{{ trans('home.totaltodaydishes') }}</h5>
@@ -80,7 +88,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-3">
+            <div class="col-xl-3 col-lg-6 mt-2">
                 <div class="card">
                     <div class="card-body" style="background-color: rgba(255, 255, 0, 0.665)">
                         <h5 class="card-title">{{ trans('home.totalmonthlydishes') }}</h5>
@@ -92,14 +100,14 @@
     </div>
 
     <br>
-    <h3 class="text-center">{{ trans('home.admindashboardtitle') }} <?php echo ' ' . '(' . date('Y-m-d') . ')'; ?>
+    <h3 class="text-center">{{ trans('home.admindashboardtitle') }} <?php echo ' ' . '(' . date('d/m/Y') . ')'; ?>
     </h3>
 
     <div class="container">
         <div class=" mb-2 float-end">
             <button id="addguests" class="btn btn-primary">
                 <i class="bi bi-plus"></i>{{ trans('home.addguests') }}</button>
-                <button id="addmanualrecord" class="btn btn-primary"><i
+            <button id="addmanualrecord" class="btn btn-primary"><i
                     class="bi bi-plus"></i>{{ trans('home.addmanualrecord') }}</button>
         </div>
         <div class="datepicker">
@@ -112,8 +120,10 @@
             <thead>
                 <tr>
                     <th>{{ trans('home.titleempid') }}</th>
+                    <th>{{ trans('home.titlelunchdates') }}</th>
                     <th>{{ trans('home.titlename') }}</th>
                     <th>{{ trans('home.titleaction') }}</th>
+
                 </tr>
             </thead>
         </table>
@@ -153,8 +163,10 @@
                     <h5 class="modal-title" id="exampleModalLabel">{{ trans('home.addmanualrecord') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+
                 <div class="modal-body">
-                    <form role="form" action="/addmanualrecord" method="POST">
+                    <form name="autocomplete-textbox" id="autocomplete-textbox" role="form" action="/addmanualrecord"
+                        method="POST">
                         @csrf
                         <div class="form-group">
                             <label class="control-label">{{ trans('home.titleempid') }}</label>
@@ -199,7 +211,9 @@
             destroy: true,
             processing: true,
             serverSide: true,
-            ordering: true,
+            order: [
+                [1, 'desc']
+            ],
             dom: 'lrBfrtip',
             ajax: {
                 url: "{{ route('admin.admindashboard.show') }}",
@@ -210,6 +224,10 @@
             columns: [{
                     data: 'userempid',
                     name: 'userempid'
+                },
+                {
+                    data: 'lunch_dates',
+                    name: 'lunch_dates'
                 },
                 {
                     data: 'username',
@@ -228,8 +246,37 @@
             mydatatable.ajax.reload();
         }, 20000);
         initPage();
-    });
+        autoComplete();
 
+    });
+    var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+
+    function autoComplete() {
+        $("#empNo").autocomplete({
+            source: function(request, response) {
+
+                // Fetch data
+                $.ajax({
+                    url: "{{ route('autocomplete') }}",
+                    type: 'post',
+                    dataType: "json",
+                    data: {
+                        _token: CSRF_TOKEN,
+                        search: request.term
+                    },
+                    success: function(data) {
+                        response(data);
+                    }
+                });
+            },
+            appendTo : '#addModal2',
+            select: function(event, ui) {
+                $('#empNo').val(ui.item.label);
+                $('#employeeid').val(ui.item.value);
+                return false;
+            }
+        });
+    }
     $('#showdate').change(function() {
 
         dateis = $('#showdate').val();

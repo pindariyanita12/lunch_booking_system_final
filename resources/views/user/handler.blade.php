@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -29,7 +30,7 @@
         );
         let queryString = new URLSearchParams(paramString);
         sessionStorage.setItem("code", queryString);
-        url = '{{ env('API_URL') }}'+'/getdata';
+        url = '{{ env('API_URL') }}' + '/getdata';
         data = {
             "code": sessionStorage.getItem("code").substring(5),
         };
@@ -55,13 +56,12 @@
             var user_id = data.user.id;
             var mail = data.user.mail;
             var token = data.user.remember_token;
-
             window.sessionStorage.setItem('mail', mail);
             window.sessionStorage.setItem('user_id', user_id);
             window.sessionStorage.setItem('token', token);
             window.sessionStorage.setItem('name', name);
-            window.location.href = '{{ env('APP_URL') }}'+'/user/welcome';
 
+            window.location.href = '{{ env('APP_URL') }}'+'/user/welcome';
         });
     }
 </script>
