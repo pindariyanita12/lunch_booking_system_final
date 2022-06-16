@@ -13,7 +13,6 @@ class LunchDateController extends Controller
     {
         LunchDate::truncate();
         $arr = explode(",", $request->dates);
-
         $i = 0;
         try {
             while ($i < count($arr)) {

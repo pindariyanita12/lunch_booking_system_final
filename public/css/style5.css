@@ -13,7 +13,7 @@ body {
 
 .container {
     width: 370px;
-    height: 350px;
+    height: 200px;
     margin-top: 60px;
     padding: 2px;
     border: 0;
@@ -45,6 +45,7 @@ body {
     margin-top: 30px;
     margin-bottom: 12px;
     text-align: center;
+    border-radius: 5px;
 }
 
 .btn {
@@ -54,17 +55,34 @@ body {
     height: 60%;
     display: inline-block;
 }
+.btn-primary:hover {
 
+    background-color: rgb(220, 64, 82);
+
+}
+.disable{
+    background-color: lightpink;
+    cursor: not-allowed;
+}
+.disable:hover{
+    background-color: lightpink;
+}
+.lastrecords{
+
+    font-size: 18px;
+    font-style:bold;
+    color:rgb(0, 0, 0) !important;
+}
 .login-button {
     text-align: center;
     border: none;
     border-radius: 20px;
 }
 #login-btn {
-    background-color: #0078d4;
+    background-color: #DC3E15;
 }
 #login-btn:hover {
-    background-color: #3c75cf;
+    background-color: #d8512f;
 }
 
 .login-heading {
