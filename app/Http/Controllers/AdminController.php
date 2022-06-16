@@ -44,8 +44,7 @@ class AdminController extends Controller
 
         if ($request->ajax()) {
 
-            $dateis = $request->date;
-            return datatables()->of(Record::with('user')->whereDate('lunch_dates', '=', $dateis)->orderBy('lunch_dates', 'DESC')->get())
+            return datatables()->of(Record::with('user')->whereDate('lunch_dates', '=', $request->date)->orderBy('lunch_dates', 'DESC')->get())
                 ->editColumn('userempid', function ($userdata) {
                     return empty($userdata->user->emp_id) ? "NA" : $userdata->user->emp_id;
                 })
@@ -74,39 +73,35 @@ class AdminController extends Controller
         return view('admin.offday', ['dates' => $d]);
     }
 
+    //delete particular record
     public function destroy(Request $request)
     {
-        $record = Record::with('user')->where('id', $request->id)->whereYear('lunch_dates', '=', date('Y'))->get();
-        if (count($record) > 1) {
-            $record->each->delete();
-            return redirect()->back()->with('alert', 'Deleted successfully');
+        $record = Record::with('user')->where('id', $request->id)->whereYear('lunch_dates', '=', date('Y'))->delete();
+        return redirect()->back()->with('alert', 'Deleted successfully');
 
-        } else {
-            $record = Record::with('user')->where('id', $request->id)->first();
-            $record->delete();
-            return redirect()->back()->with('alert', 'Deleted successfully');
-        }
     }
+
+    //edit employee
     public function employeeEdit(Request $request)
     {
         $validated = $request->validate([
-            'empNo' => 'numeric|unique:users,emp_id',
+            'empNo' => 'numeric|unique:users,emp_id|nullable',
             'empName' => ' required |regex:/^[a-zA-Z]/u',
         ]);
-        if ($validated == true) {
-            $userid = $request->empId;
-            if ($request['empNo'] != null) {
-                $update = User::where('id', '=', $userid)->update(['emp_id' => $request['empNo'], 'name' => $request['empName'], 'type' => '1']);
-            } else {
-                $update = User::where('id', '=', $userid)->update(['emp_id' => $request['empNo'], 'name' => $request['empName'], 'type' => '0']);
-            }
-            if ($update == true) {
+
+        try {
+            if ($request->empNo != null) {
+                User::where('id', '=', $request->empId)->update(['emp_id' => $request->empNo, 'name' => $request->empName, 'type' => '1']);
                 return redirect()->back()->with('message', 'Successfully updated details!');
+
             } else {
-                return redirect()->back()->with('message', 'Form has not updated, Try again later!');
+                User::where('id', '=', $request->empId)->update(['name' => $request->empName]);
+                return redirect()->back()->with('message', 'Successfully updated details!');
+
             }
-        } else {
-            return redirect()->back()->with('message', 'Form has not updated, Try again later!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('message', 'Something went wrong, Try again later!');
+
         }
 
     }
@@ -243,16 +238,13 @@ class AdminController extends Controller
 
     public function addEmployee(Request $request)
     {
-        $empNo = $request->emp_no;
-
-        if ($empNo != null) {
-
-            $validate = $request->validate([
-                "emp_no" => "numeric | unique:users,emp_id",
-                'emp_name' => 'required |regex:/^[a-zA-Z]/u',
-                'emp_email' => 'required | email | unique:users,email',
-            ]);
-            $userExist = User::where('emp_id', $empNo)->where('email', '=', $request->emp_email)->first();
+        $validate = $request->validate([
+            "emp_no" => "numeric | unique:users,emp_id|nullable",
+            'emp_name' => 'required |regex:/^[a-zA-Z]/u',
+            'emp_email' => 'required | email | unique:users,email',
+        ]);
+        if ($request->emp_no != null) {
+            $userExist = User::where('emp_id', $request->emp_no)->where('email', '=', $request->emp_email)->first();
             if ($userExist) {
                 return redirect()->back()->with('alert', 'Already Present');
             } else {
@@ -283,18 +275,13 @@ class AdminController extends Controller
         $validate = $request->validate([
             "empNo" => "numeric",
         ]);
-
-        $count = $request->totalguests;
         date_default_timezone_set("Asia/Kolkata");
-        $date = date('Y-m-d H:i:s');
-
         $finduserid = User::where('emp_id', env('EMP_ID'))->first();
-
-        for ($i = 0; $i < $count; $i++) {
+        for ($i = 0; $i < $request->totalguests; $i++) {
             Record::insert([
                 "user_id" => $finduserid->id,
                 "is_taken" => 1,
-                "lunch_dates" => $date,
+                "lunch_dates" => date('Y-m-d H:i:s'),
             ]);
         }
         return redirect()->back()->with('alert', 'Added successfully');
@@ -307,25 +294,16 @@ class AdminController extends Controller
         ]);
         $empNo = strtok($request->empNo, ' ');
         date_default_timezone_set('Asia/Kolkata');
-        $date = date("Y-m-d");
-        $date = date('Y-m-d', strtotime($date));
-
         $findemp = User::where('emp_id', $empNo)->first();
         if ($findemp == null) {
             return redirect()->back()->with('alert', 'No simformer registered on this Id');
         }
-        $userid = $findemp->id;
-        $checkrecord = Record::where('user_id', $userid)->whereDate('lunch_dates', $date)->first();
-
+        $checkrecord = Record::where('user_id', $findemp->id)->whereDate('lunch_dates', date("Y-m-d"))->first();
         if ($checkrecord) {
             return redirect()->back()->with('alert', 'Already taken');
-
         } else {
-
-            $userid = $findemp->id;
-
             Record::insert([
-                "user_id" => $userid,
+                "user_id" => $findemp->id,
                 "is_taken" => 1,
                 "lunch_dates" => date('Y-m-d H:i:s'),
             ]);

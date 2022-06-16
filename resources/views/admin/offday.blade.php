@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>Offdays</title>
     <meta charset="UTF-8">
@@ -17,23 +18,28 @@
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
 </head>
+
 <body>
     @include('admin.navbar')
-<div>
-    @if (session()->has('message'))
-    <div class="alert alert-success">
-        <button type="button" class="close" data-dismiss="alert"></button>
-        {{ session()->get('message') }}
+    <div>
+        @if (session()->has('message'))
+            <div class="alert alert-success">
+                {{ session()->get('message') }}
+                <button type="button" class="close" data-dismiss="alert">x</button>
+
+            </div>
+        @endif
+
     </div>
-@endif
-</div>
     <br>
-    <h3 class="text-center">{{trans('home.offdaytitle')}}</h3>
+    <h3 class="text-center">{{ trans('home.offdaytitle') }}</h3>
     <div class="container mt-5" style="height:300px">
         <br>
         <div class="heading">
-            <h2>{{trans('home.selectoffdays')}}</h2>
+            <h2>{{ trans('home.selectoffdays') }}</h2>
         </div>
         <hr>
         <div class="date-container">
@@ -54,7 +60,8 @@
                 </div>
 
                 <div class="date-button">
-                    <button class="btn1 btn-primary bg-dark" style="width: 90%;height: 40px;">{{trans('home.adddates')}}</button>
+                    <button class="btn1 btn-primary bg-dark"
+                        style="width: 90%;height: 40px;">{{ trans('home.adddates') }}</button>
                 </div>
             </form>
         </div>
@@ -68,4 +75,5 @@
         });
     </script>
 </body>
+
 </html>

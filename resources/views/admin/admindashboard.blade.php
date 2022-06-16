@@ -5,7 +5,6 @@
     <title>Lunch Booking System</title>
     <meta charset="utf-8">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -34,6 +33,7 @@
         #addmanualrecord {
             margin-top: 35px;
         }
+
         table.dataTable tbody tr td {
             word-wrap: break-word;
             word-break: break-all;
@@ -49,15 +49,17 @@
         <div class="alert alert-danger">
             <ul>
                 @foreach ($errors->all() as $error)
-                    <button type="button" class="close" data-dismiss="alert">x</button> {{ $error }}
+                    {{ $error }}
+                    <button type="button" class="close" data-dismiss="alert">x</button>
                 @endforeach
             </ul>
         </div>
     @endif
     @if (session()->has('alert'))
         <div class="alert alert-success">
-            <button type="button" class="close" data-dismiss="alert">x</button>
             {{ session()->get('alert') }}
+            <button type="button" class="close" data-dismiss="alert">x</button>
+
         </div>
     @endif
     <div class="container">
@@ -269,7 +271,7 @@
                     }
                 });
             },
-            appendTo : '#addModal2',
+            appendTo: '#addModal2',
             select: function(event, ui) {
                 $('#empNo').val(ui.item.label);
                 $('#employeeid').val(ui.item.value);

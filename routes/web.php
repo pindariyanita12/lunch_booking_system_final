@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Route;
 Route::domain(env('APP_URL'))->group(function () {
     Route::get('/', function () {
         return view('user.login');
-    });
+    })->name('user.login');
     Route::get('/handler', 'AuthController@handler');
 
     Route::group(['middleware' => 'auth'], function(){
@@ -38,12 +38,9 @@ Route::domain(env('APP_URL'))->group(function () {
 
 //admin route
 Route::domain(env('ADMIN_URL'))->group(function () {
-
+    Auth::routes(['register' => false]);
     Route::get('/', function () {
         return view('auth.login');
-    });
-    Route::get('/register', function () {
-        return redirect('login');
     });
     Route::get('/totalemployee', function () {
         return view('admin.employee');
@@ -55,9 +52,7 @@ Route::domain(env('ADMIN_URL'))->group(function () {
     Route::get('/lang/{locale}', [AdminController::class, 'lang']);
     Route::get('/admindashboard', [AdminController::class, 'show'])->name('admin.admindashboard.show')->middleware('auth', 'can:isAdmin');
     Route::get('/offday', [AdminController::class, 'offday']);
-    Auth::routes();
-
-    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::post('/add-weekend', [LunchDateController::class, 'addWeekend'])->middleware('auth', 'can:isAdmin');
     Route::get('/destroy', [AdminController::class, 'destroy'])->name('admin.admindashboard.destroy');
     Route::get('/destroymonthwise', [AdminController::class, 'destroyMonthwise'])->name('admin.admindashboard.destroymonthwise');
