@@ -35,7 +35,7 @@
     </div>
 
     <footer class="text-center mt-4" style="font-size:18px">
-        <div class="text-center text-white" style="background-color: lightpink; font-style:bold;">
+        <div class="text-center text-white" style="background-color: rgb(239, 83, 102); font-style:bold;">
             <p>You can sign for lunch between 12:30 AM to 4:00 PM, From: Monday to Friday</p>
         </div>
 
